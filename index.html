@@ -106,6 +106,11 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 .test-nav button:disabled{opacity:.45;cursor:not-allowed}
 .test-nav-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
 .test-nav-actions button{width:100%;padding:10px}
+.test-nav-actions .home-question{grid-column:1/-1;background:#fff0cf}
+.test-nav button.answered{background:#d6efd5;border-color:#397a45}
+.test-nav button.active{background:#9e2f27;color:#fff;border-color:#642019}
+.nav-help{font-size:13px;margin:4px 0 9px}
+
 
 
 .skill-popup{
@@ -226,25 +231,17 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
   background:#fff4c8;font-weight:700;line-height:1.4
 }
 
-
-.adventure-name{position:absolute;top:5px;left:12px;z-index:6;background:rgba(255,248,223,.92);border:2px solid #73512a;border-radius:8px;padding:3px 9px;font-size:12px;font-weight:bold;pointer-events:none}
-#topoMapWrap .topo-stage img{object-fit:contain}
 </style>
 </head>
 <body>
 <section id="landing" class="screen center active">
-<div class="panel landing"><div class="ship"><svg viewBox="0 0 220 150" width="100%"><path d="M35 105 Q110 140 185 105 L170 135 H55Z" fill="#5b3219" stroke="#2d170c" stroke-width="5"/><path d="M110 22V112" stroke="#3b2415" stroke-width="7"/><path d="M114 30 Q170 48 116 80Z" fill="#eee0b6" stroke="#3b2415" stroke-width="4"/><path d="M105 42 Q58 55 105 88Z" fill="#b43c2c" stroke="#3b2415" stroke-width="4"/></svg></div><h1 class="logo">MAP HUNT</h1><div class="subtitle">The Lost Treasure</div><div style="margin-top:6px;font-size:15px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.78">By Ajani Waterman</div><p class="tag">Join Captain Redbeard’s crew as the ship’s newest navigator. Read the island map, crack grid references, calculate bearings, and reach the treasure before the rival pirates.</p><div id="challengeIdentity" style="max-width:430px;margin:16px auto;padding:15px;border:2px solid #8d622e;border-radius:14px;background:#fff4d6;text-align:left">
-<label for="studentName" style="display:block;font-weight:bold">Student name</label><input id="studentName" maxlength="90" autocomplete="name" placeholder="First and last name" style="width:100%;padding:10px;margin:5px 0 10px;border:2px solid #725333;border-radius:7px">
-<label for="studentClass" style="display:block;font-weight:bold">Class</label><input id="studentClass" maxlength="40" placeholder="e.g. 3 Beta" style="width:100%;padding:10px;margin:5px 0;border:2px solid #725333;border-radius:7px">
-<fieldset style="margin:10px 0;padding:12px;border:2px solid #725333;border-radius:9px"><legend style="font-weight:bold">Choose your learning level</legend><label style="display:block;margin:5px 0"><input type="radio" name="learningLevel" value="third" checked> Third Form — 12 questions: grid references, distances, directions and bearings</label><label style="display:block;margin:5px 0"><input type="radio" name="learningLevel" value="csec"> CSEC (Fourth & Fifth Form) — full game and topographic maps</label></fieldset><p style="font-size:13px;margin:9px 0 0">Three different islands earn up to 3 participation bonus marks. Treasure is found only above 80% accuracy. Your progress is saved on this device.</p>
-<p id="identityError" style="color:#a52d25;font-weight:bold" role="alert"></p>
-</div><button id="startBtn" class="primary">⚓ Start Adventure</button><p>A mapwork adventure for Third, Fourth and Fifth Form students · 6 random treasure islands · 4 original survey sheets</p></div>
+<div class="panel landing"><div class="ship"><svg viewBox="0 0 220 150" width="100%"><path d="M35 105 Q110 140 185 105 L170 135 H55Z" fill="#5b3219" stroke="#2d170c" stroke-width="5"/><path d="M110 22V112" stroke="#3b2415" stroke-width="7"/><path d="M114 30 Q170 48 116 80Z" fill="#eee0b6" stroke="#3b2415" stroke-width="4"/><path d="M105 42 Q58 55 105 88Z" fill="#b43c2c" stroke="#3b2415" stroke-width="4"/></svg></div><h1 class="logo">MAP HUNT</h1><div class="subtitle">The Lost Treasure</div><div style="margin-top:6px;font-size:15px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.78">By Ajani Waterman</div><p class="tag">Join Captain Redbeard’s crew as the ship’s newest navigator. Read the island map, crack grid references, calculate bearings, and reach the treasure before the rival pirates.</p><button id="startBtn" class="primary">⚓ Start Adventure</button><p>A mapwork adventure for Third and Fourth Form students</p></div>
 </section>
 <section id="tutorial" class="screen center"><div class="panel tutorial"><div class="tutorial-grid"><div><div class="captain">🏴‍☠️</div><h2 style="text-align:center">Captain Redbeard</h2></div><div><div class="bubble">“Ahoy, Navigator! Every correct answer reveals the next clue. Use the map, grid, compass rose and legend. You have three attempts before I reveal the answer.”</div><div class="steps"><div class="step"><b>🗺️</b>Study the map</div><div class="step"><b>🧭</b>Solve the clue</div><div class="step"><b>🏆</b>Find the treasure</div></div><div style="margin-top:20px;text-align:right"><button id="beginBtn" class="primary">Begin Expedition →</button></div></div></div></div></section>
 <section id="game" class="screen game"><div class="game-shell">
 <div class="hud"><div><div style="display:flex;justify-content:space-between"><span>Expedition Progress</span><span id="progressText">Clue 1 of 10</span></div><div class="track"><div id="progressFill" class="fill"></div></div></div><div class="stat">⭐ XP: <b id="xp">0</b></div><div class="stat">🪙 Gold: <b id="gold">0</b></div></div>
 <div class="game-grid">
-<div class="map-card" id="mapCard"><div id="adventureName" class="adventure-name">Treasure Island</div>
+<div class="map-card" id="mapCard">
 <svg class="map-svg" viewBox="0 0 840 700" aria-label="Island map beneath a coordinate grid">
 <defs>
 <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ed0d5"/><stop offset="1" stop-color="#5ba8b0"/></linearGradient>
@@ -253,43 +250,23 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 <rect width="840" height="700" fill="url(#sea)"/>
 <text x="420" y="28" text-anchor="middle" font-size="24" font-weight="bold">ISLA DEL TESORO</text>
 <!-- map details below grid -->
-<g id="adventureIsland"></g>
 <g id="mapBase">
-<defs>
- <path id="islandOutline" d="M100 185 Q118 136 161 133 L184 104 Q206 105 231 91 L258 100 Q281 77 309 101 Q339 112 372 94 Q398 70 430 89 Q465 77 485 104 Q511 124 510 153 Q505 179 534 187 Q565 200 591 181 L627 172 Q649 139 672 157 Q684 177 671 201 Q687 224 703 228 Q728 231 725 250 Q746 262 737 286 Q757 299 747 322 Q737 342 710 342 Q688 359 698 387 Q722 412 704 442 Q710 478 680 493 Q645 510 606 496 Q565 480 535 494 Q500 512 463 500 Q430 489 407 501 Q370 485 344 496 Q315 484 289 494 Q259 485 228 490 Q198 480 190 455 Q170 429 174 405 Q164 374 148 359 Q127 347 116 324 Q89 312 84 280 Q69 250 83 218Z"/>
- <clipPath id="islandClip"><use href="#islandOutline"/></clipPath>
- <linearGradient id="map1Land" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#e8dda0"/><stop offset=".55" stop-color="#f3e7b0"/><stop offset="1" stop-color="#d8d09a"/></linearGradient>
- <pattern id="map1Trees" width="23" height="25" patternUnits="userSpaceOnUse"><path d="M7 7v9m-5-5 5 4 5-4m8-8v9m-4-5 4 4 3-4" stroke="#4d9c54" stroke-width="1.8" fill="none"/></pattern>
-</defs>
-<use href="#islandOutline" fill="#d4f1c7" stroke="#b0d2a8" stroke-width="13" opacity=".48"/>
-<use href="#islandOutline" fill="url(#map1Land)" stroke="#76572b" stroke-width="3.5"/>
-<g clip-path="url(#islandClip)">
- <path d="M103 195 Q205 150 294 160 Q345 175 379 206 Q400 251 370 293 Q287 311 205 288 Q119 267 103 195Z" fill="#dfd093" opacity=".65"/>
- <path d="M148 171 C192 123 272 115 322 155 C386 182 406 252 367 281 C324 314 224 291 178 265 C132 243 120 200 148 171Z" fill="none" stroke="#a47b3d" stroke-width="2.6"/>
- <path d="M172 180 C217 147 282 149 321 178 C360 201 368 247 341 264 C297 288 218 266 192 242 C171 224 159 198 172 180Z" fill="none" stroke="#a47b3d" stroke-width="2.4"/>
- <path d="M202 187 C241 164 293 172 314 199 C338 228 325 251 298 253 C256 265 214 243 202 221 C195 208 194 196 202 187Z" fill="none" stroke="#a47b3d" stroke-width="2.5"/>
- <path d="M230 198 C259 185 294 193 299 216 C307 240 277 247 254 235 C235 229 219 209 230 198Z" fill="none" stroke="#a47b3d" stroke-width="2.4"/>
- <text x="270" y="223" text-anchor="middle" font-size="20" fill="#654722" font-weight="bold">200</text>
- <text x="198" y="287" font-size="19" fill="#654722" font-weight="bold">100</text><text x="194" y="255" font-size="12" fill="#654722" font-weight="bold">125</text><text x="205" y="235" font-size="12" fill="#654722" font-weight="bold">150</text><text x="240" y="191" font-size="12" fill="#654722" font-weight="bold">175</text>
- <path d="M470 192 Q519 172 567 209 Q592 232 583 294 Q542 316 484 285 Q462 246 470 192Z" fill="#8bc56c" opacity=".75"/>
- <path d="M470 192 Q519 172 567 209 Q592 232 583 294 Q542 316 484 285 Q462 246 470 192Z" fill="url(#map1Trees)"/>
- <path d="M183 424 Q220 404 249 430 L253 465 Q212 484 187 455Z" fill="#8dc66e" opacity=".8"/>
- <path d="M183 424 Q220 404 249 430 L253 465 Q212 484 187 455Z" fill="url(#map1Trees)"/>
- <path d="M384 101 Q417 81 454 105 L461 134 Q424 157 391 132Z" fill="#a8d46d" opacity=".65"/>
- <path d="M102 191 Q130 178 152 200 L151 246 Q125 257 102 234Z" fill="url(#map1Trees)"/>
-</g>
-</g>
-
+<path d="M128 130 Q185 76 275 94 Q365 50 448 100 Q555 73 653 139 Q718 185 697 270 Q748 335 704 410 Q730 500 642 552 Q552 624 455 575 Q350 621 267 567 Q166 584 112 507 Q59 437 103 357 Q52 271 100 198 Q94 157 128 130Z" fill="#e7ca78" stroke="#7a5a2b" stroke-width="6"/>
+<path d="M128 130 Q185 76 275 94 Q365 50 448 100 Q555 73 653 139 Q718 185 697 270 Q748 335 704 410 Q730 500 642 552 Q552 624 455 575 Q350 621 267 567 Q166 584 112 507 Q59 437 103 357 Q52 271 100 198 Q94 157 128 130Z" fill="url(#sand)" opacity=".8"/>
+<path d="M235 164 Q290 116 348 165 Q393 206 356 240 Q300 272 244 231Z" fill="#9b8a63" opacity=".9"/>
+<path d="M257 171l34-56 32 55M300 170l39-74 45 78" fill="#8d7d5d" stroke="#65563e" stroke-width="5"/>
+<path d="M506 175 Q553 142 610 180 Q636 211 598 244 Q547 267 503 236Z" fill="#5d955d"/>
+<g stroke="#2f6534" stroke-width="10" stroke-linecap="round"><line x1="525" y1="167" x2="525" y2="244"/><line x1="555" y1="156" x2="555" y2="247"/><line x1="584" y1="170" x2="584" y2="242"/></g>
+<path d="M178 350 Q245 291 318 337 T468 337 Q541 330 602 374" fill="none" stroke="#3a93bd" stroke-width="16" stroke-linecap="round"/>
 <path d="M180 350 Q245 291 318 337 T468 337 Q541 330 602 374" fill="none" stroke="#bceaf0" stroke-width="5" stroke-linecap="round" opacity=".7"/>
-
+<path d="M165 475 Q230 432 290 465 T420 477" fill="none" stroke="#785f39" stroke-width="8" stroke-dasharray="12 8"/>
 <ellipse cx="550" cy="470" rx="70" ry="38" fill="#78a964" opacity=".55"/>
 <ellipse cx="220" cy="520" rx="55" ry="26" fill="#78a964" opacity=".45"/>
-<path id="treasureTrail" d="M235 472 Q300 468 332 420 T405 365 Q433 345 458 326" fill="none" stroke="#8a603a" stroke-width="4" stroke-dasharray="8 8" stroke-linecap="round"/>
 </g>
 <!-- symbols -->
-<g id="lighthouse" transform="translate(145,190)"><rect x="-7" y="-13" width="14" height="24" fill="#f8f0d7" stroke="#5a3521" stroke-width="2"/><path d="M-10-13H10L6-20H-6Z" fill="#b73b30" stroke="#5a3521" stroke-width="2"/><line x1="-7" y1="-3" x2="7" y2="-3" stroke="#b73b30" stroke-width="4"/><circle class="symbol-centre" cx="0" cy="0" r="3.8" fill="#ffffff" stroke="#9e2f27" stroke-width="2"/></g>
+<g id="lighthouse" transform="translate(122,90)"><rect x="-7" y="-13" width="14" height="24" fill="#f8f0d7" stroke="#5a3521" stroke-width="2"/><path d="M-10-13H10L6-20H-6Z" fill="#b73b30" stroke="#5a3521" stroke-width="2"/><line x1="-7" y1="-3" x2="7" y2="-3" stroke="#b73b30" stroke-width="4"/><circle class="symbol-centre" cx="0" cy="0" r="3.8" fill="#ffffff" stroke="#9e2f27" stroke-width="2"/></g>
 <g id="camp" transform="translate(604,448)"><path d="M0-14L13 12H-13Z" fill="#aa3f2b" stroke="#54291a" stroke-width="2"/><circle class="symbol-centre" cx="0" cy="0" r="3.8" fill="#ffffff" stroke="#9e2f27" stroke-width="2"/></g>
-<g id="skull" transform="translate(666,211)">
+<g id="skull" transform="translate(686,184)">
 <line x1="-15" y1="14" x2="15" y2="-14" stroke="#4b3826" stroke-width="3.5" stroke-linecap="round"/>
 <line x1="-15" y1="-14" x2="15" y2="14" stroke="#4b3826" stroke-width="3.5" stroke-linecap="round"/>
 <circle r="13" fill="#efe3bf" stroke="#4b3826" stroke-width="2.5"/>
@@ -302,35 +279,8 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 <circle class="symbol-centre" cx="0" cy="0" r="3.8" fill="#ffffff" stroke="#9e2f27" stroke-width="2"/></g>
 <g id="cave" transform="translate(373,250)"><path d="M-15 12V0Q0-20 15 0V12Z" fill="#5c4938" stroke="#2e241b" stroke-width="2"/><path d="M-7 12V2Q0-8 7 2V12Z" fill="#111"/><circle class="symbol-centre" cx="0" cy="0" r="3.8" fill="#ffffff" stroke="#9e2f27" stroke-width="2"/></g>
 <g id="tree" transform="translate(522,364)"><rect x="-3" y="3" width="6" height="12" fill="#76502b"/><circle cy="-4" r="12" fill="#4d8a50" stroke="#2f5a33" stroke-width="2"/><circle class="symbol-centre" cx="0" cy="0" r="3.8" fill="#ffffff" stroke="#9e2f27" stroke-width="2"/></g>
-<g id="well" transform="translate(282,465)"><circle r="12" fill="none" stroke="#375c70" stroke-width="4"/><line x1="-12" y1="-14" x2="12" y2="-14" stroke="#5a3521" stroke-width="3"/><circle class="symbol-centre" cx="0" cy="0" r="3.8" fill="#ffffff" stroke="#9e2f27" stroke-width="2"/></g>
+<g id="well" transform="translate(282,512)"><circle r="12" fill="none" stroke="#375c70" stroke-width="4"/><line x1="-12" y1="-14" x2="12" y2="-14" stroke="#5a3521" stroke-width="3"/><circle class="symbol-centre" cx="0" cy="0" r="3.8" fill="#ffffff" stroke="#9e2f27" stroke-width="2"/></g>
 <g id="treasureSpot" transform="translate(458,326)"><line x1="-10" y1="-10" x2="10" y2="10" stroke="#9e2f27" stroke-width="4"/><line x1="10" y1="-10" x2="-10" y2="10" stroke="#9e2f27" stroke-width="4"/><circle class="symbol-centre" cx="0" cy="0" r="3.8" fill="#ffffff" stroke="#9e2f27" stroke-width="2"/></g>
-<!-- Assessment layers: interactive SVG, not raster. 80 SVG units = 1 map centimetre. -->
-<g id="bearingGuide" style="display:none;pointer-events:none"><line id="bearingGuideLine" x1="0" y1="0" x2="0" y2="0" stroke="#c32b20" stroke-width="3" stroke-linecap="round"/></g>
-<g id="distancePoints" style="display:none" font-family="Arial" font-weight="bold">
- <circle cx="260" cy="405" r="7" fill="#b22222" stroke="white" stroke-width="2"/><text x="246" y="396" font-size="18" fill="#671414">A</text>
- <circle cx="500" cy="405" r="7" fill="#b22222" stroke="white" stroke-width="2"/><text x="506" y="395" font-size="18" fill="#671414">B</text>
-</g>
-<g id="gradientPoints" style="display:none" font-family="Arial" font-weight="bold">
- <circle cx="230" cy="198" r="6" fill="#9e2f27" stroke="white" stroke-width="2"/><text x="238" y="183" font-size="15" fill="#4d201b">A (175 m)</text>
- <circle cx="148" cy="171" r="6" fill="#9e2f27" stroke="white" stroke-width="2"/><text x="105" y="156" font-size="15" fill="#4d201b">B (100 m)</text>
- <path d="M148 171 L230 198" stroke="#8b2525" stroke-width="2" stroke-dasharray="5 4"/>
-</g>
-<g id="virtualRuler" style="display:none;cursor:grab;touch-action:none" transform="translate(290 530) rotate(0)">
- <rect x="0" y="0" width="322" height="45" rx="3" fill="#f3d394" stroke="#67421e" stroke-width="2"/>
- <g id="rulerTicks" stroke="#5b4023" stroke-width="1.4"></g>
- <text x="310" y="38" font-size="11" text-anchor="end" fill="#5b4023">cm</text>
- <rect x="0" y="0" width="322" height="45" fill="transparent"/>
- <g id="rulerRotateHandle" aria-label="Drag to rotate ruler" style="cursor:crosshair">
-  <line x1="322" y1="22" x2="348" y2="22" stroke="#67421e" stroke-width="3"/>
-  <circle cx="355" cy="22" r="13" fill="#b74b31" stroke="#fff" stroke-width="3"/>
-  <path d="M349 19 Q355 12 361 19 M361 19 l-1 -5 M361 19 l-5 -1" fill="none" stroke="white" stroke-width="1.8"/>
- </g>
-</g>
-<g id="mapScaleBar" font-family="Arial" font-size="12" fill="#2d2013" transform="translate(100 660)">
- <text x="0" y="-9">Scale 1:50,000</text>
- <rect x="0" y="0" width="80" height="9" fill="#382a1a"/><rect x="80" y="0" width="80" height="9" fill="#fff8e0" stroke="#382a1a"/>
- <text x="0" y="25">0</text><text x="80" y="25" text-anchor="middle">0.5</text><text x="160" y="25" text-anchor="middle">1 km</text>
-</g>
 <!-- grid on top -->
 <g stroke="#352718" stroke-width="2.2" opacity=".95">
 <line x1="90" y1="70" x2="90" y2="610"/><line x1="170" y1="70" x2="170" y2="610"/><line x1="250" y1="70" x2="250" y2="610"/><line x1="330" y1="70" x2="330" y2="610"/><line x1="410" y1="70" x2="410" y2="610"/><line x1="490" y1="70" x2="490" y2="610"/><line x1="570" y1="70" x2="570" y2="610"/><line x1="650" y1="70" x2="650" y2="610"/><line x1="730" y1="70" x2="730" y2="610"/>
@@ -392,7 +342,7 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 </div>
 
 <div id="topoMapWrap" class="topo-map-wrap">
-  <div class="topo-label" id="topoLabel">Basseterre Topographic Map - Final Challenge</div>
+  <div class="topo-label">Basseterre Topographic Map - Final Challenge</div>
   <div class="topo-controls" aria-label="Map zoom controls">
     <button id="topoZoomOut" type="button" title="Zoom out">−</button>
     <button id="topoZoomIn" type="button" title="Zoom in">+</button>
@@ -405,12 +355,6 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 </div>
 
 
-<div id="rulerControls" style="display:none;background:#fff4d7;border:2px solid #87613a;border-radius:10px;padding:10px;margin-top:10px">
- <b>Virtual ruler</b><p style="font-size:13px;margin:5px 0">Drag the ruler to move it. Drag the red circular handle to rotate freely, or use the rotation slider.</p>
- <label for="rulerAngle">Rotation: <span id="rulerAngleValue">0°</span></label>
- <input id="rulerAngle" type="range" min="-180" max="180" step="1" value="0" style="width:100%"/>
- <button type="button" id="resetRuler">Reset ruler</button>
-</div>
 <div id="gridSelectBanner" class="grid-select-banner">Click the grid square containing the named symbol.</div>
 <svg id="gridClickOverlay" viewBox="0 0 840 700" style="position:absolute;inset:0;width:100%;height:100%;z-index:7;display:none;pointer-events:auto">
   <g id="gridHitGroup"></g>
@@ -423,7 +367,7 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 <circle cx="180" cy="180" r="12" fill="#c52821"/>
 <g id="tickGroup"></g>
 <g id="numberGroup" font-family="Arial" font-size="13" font-weight="700" fill="#5a201d" text-anchor="middle"></g>
-<line id="bearingNeedle" x1="180" y1="180" x2="180" y2="10" stroke="#c52821" stroke-width="3.5" stroke-linecap="round"/>
+<line id="bearingNeedle" x1="180" y1="180" x2="180" y2="-1020" stroke="#c52821" stroke-width="3.5" stroke-linecap="round"/>
 </svg>
 
 </div>
@@ -440,15 +384,16 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 </div>
 <aside class="side">
 <div class="captain-box"><div class="captain-mini">🏴‍☠️</div><div id="speech" class="speech"></div></div>
-<div class="test-nav" style="display:none">
-  <div class="test-nav-title">Prototype Testing Controls</div>
+<div class="test-nav">
+  <div class="test-nav-title">Question Navigation</div><p class="nav-help">Select a question number to jump ahead or return to a question. You can skip questions.</p>
   <div id="questionJump" class="test-nav-row"></div>
   <div class="test-nav-actions">
     <button id="previousQuestion" type="button">← Previous</button>
     <button id="nextQuestion" type="button">Skip / Next →</button>
+    <button id="homeQuestion" type="button" class="home-question">⌂ Home / Restart</button>
   </div>
 </div>
-<div id="protractorControls" class="protractor-controls"><b>Digital 360° protractor</b><p style="margin:6px 0">Place the protractor centre on the starting symbol. Use the straight connecting line to measure the bearing.</p><div class="bearing-drag-instruction">Drag the slider below to rotate the red bearing line. The red ray stays inside the protractor. Rotate it toward the destination and read the clockwise angle from north.</div><input id="angleSlider" type="range" min="0" max="359" value="0" aria-label="Drag to rotate the red bearing line"></div><div class="question-card"><span id="level" class="level"></span><h2 id="question"></h2><div id="answerArea"></div><div class="actions"><button id="submitBtn" class="primary" style="font-size:16px;padding:10px 16px">Submit Answer</button><button id="hintBtn" class="secondary">Hint</button></div><div id="feedback" class="feedback" aria-live="polite"></div></div></aside>
+<div id="protractorControls" class="protractor-controls"><b>Digital 360° protractor</b><p style="margin:6px 0">Drag the protractor so its centre point sits exactly on the red-and-white centre dot of the starting symbol.</p><div class="bearing-drag-instruction">Drag the slider below to rotate the red bearing line. The line extends across the map so you can align it through the centre dot of the destination symbol.</div><input id="angleSlider" type="range" min="0" max="359" value="0" aria-label="Drag to rotate the red bearing line"></div><div class="question-card"><span id="level" class="level"></span><h2 id="question"></h2><div id="answerArea"></div><div class="actions"><button id="submitBtn" class="primary" style="font-size:16px;padding:10px 16px">Submit Answer</button><button id="hintBtn" class="secondary">Hint</button></div><div id="feedback" class="feedback" aria-live="polite"></div></div></aside>
 </div></div></section>
 <section id="results" class="screen center"><div class="panel results">
 
@@ -469,329 +414,62 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
     </svg>
   </div>
 </div>
-<h1 id="outcomeTitle" class="logo" style="font-size:56px">Adventure Complete</h1>
-<p id="outcomeSubtitle" class="subtitle">Your expedition results</p>
+<h1 class="logo" style="font-size:56px">Treasure Found!</h1>
+<p class="subtitle">You completed Captain Redbeard’s expedition.</p>
 <div class="score-grid"><div class="score-card">Final Score<b id="finalScore"></b></div><div class="score-card">Accuracy<b id="accuracy"></b></div><div class="score-card">XP<b id="finalXp"></b></div><div class="score-card">Gold<b id="finalGold"></b></div></div>
+<p id="saveStatus" role="status" aria-live="polite" style="text-align:center;margin:12px 0"></p>
 <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-<button id="replayBtn" class="primary">Choose New Map</button>
-<button id="submitChallengeBtn" class="primary" type="button">Submit Challenge Results</button>
+<button id="replayBtn" class="primary">Play Again</button>
 <a id="feedbackLink" class="primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdQXLL5-lEWXA664J6JjT70D-Ym6l-YgKTiOwuQQiC4q8CfhQ/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-block">🏴‍☠️ Help Captain Redbeard Improve the Game</a>
 </div>
-<div id="challengeSummary" style="max-width:720px;margin:18px auto;padding:15px;border:2px solid #76502a;border-radius:12px;background:#fff4d8;text-align:left"></div>
-<p id="submissionHelp" style="font-size:14px"></p>
+
 </div></section>
 
-<script src="form-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
-// Map Hunt 7.4: participation challenge. Browser storage is not tamper-proof.
-const CHALLENGE_STORAGE_KEY='map-hunt-three-island-v1';
-let challenge={name:'',className:'',level:'third',runs:[]};
-let learningLevel='third';
-let answeredIndices=new Set();
-function loadChallenge(){try{const obj=JSON.parse(localStorage.getItem(CHALLENGE_STORAGE_KEY)||'null');if(obj&&Array.isArray(obj.runs))challenge=obj;}catch(e){} }
-function saveChallenge(){try{localStorage.setItem(CHALLENGE_STORAGE_KEY,JSON.stringify(challenge));}catch(e){} }
-function uniqueRuns(){const map=new Map();challenge.runs.forEach(r=>{if(!map.has(r.mapId))map.set(r.mapId,r)});return [...map.values()].slice(0,3)}
-function recordAdventure(){
- if(answeredIndices.size!==questions.length)return false;
- if(uniqueRuns().some(r=>r.mapId===activeAdventure))return true;
- if(uniqueRuns().length>=3)return true;
- challenge.runs.push({level:learningLevel,mapId:activeAdventure,mapName:MAP_NAMES[activeAdventure],correct,total:questions.length,accuracy:100*correct/questions.length,treasure:100*correct/questions.length>80,finishedAt:new Date().toISOString()});
- saveChallenge();return true;
+const SUPABASE_URL = "https://ngpptclhvqwomrsukqjf.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_41v03DCWH-ue_iP3v_ye0g_gLwJrcZ8";
+const mapHuntDatabase = window.supabase
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)
+  : null;
+let resultsSubmitted = false;
+
+async function saveGameResults() {
+  const status = document.getElementById("saveStatus");
+  if (!mapHuntDatabase) {
+    status.textContent = "Results could not be saved. Check your internet connection.";
+    return;
+  }
+  status.textContent = "Saving your results...";
+  try {
+    const { error } = await mapHuntDatabase.from("game_sessions").insert({
+      score: correct,
+      total_questions: questions.length,
+      accuracy: Math.round((correct / questions.length) * 100),
+      xp: xp,
+      gold: gold
+    });
+    if (error) throw error;
+    status.textContent = "Your results were saved.";
+  } catch (error) {
+    console.error("Map Hunt: could not save results", error);
+    status.textContent = "Results could not be saved. You can still play again.";
+  }
 }
-function nextChallengeMap(){
- const done=new Set(uniqueRuns().map(r=>r.mapId));
- const available=MAP_NAMES.map((_,i)=>i).filter(i=>!done.has(i));
- if(!available.length)return null;
- const withoutLast=available.filter(i=>i!==lastAdventure);
- const pool=withoutLast.length?withoutLast:available;
- return pool[Math.floor(Math.random()*pool.length)];
-}
-function showChallengeResults(){
- const runs=uniqueRuns(),count=runs.length,score=runs.reduce((n,r)=>n+r.correct,0),total=runs.reduce((n,r)=>n+r.total,0);
- const accuracy=total?Math.round(100*score/total):0;
- const current=100*correct/questions.length>80;
- document.getElementById('outcomeTitle').textContent=current?'Treasure Found!':'Adventure Complete';
- document.getElementById('outcomeSubtitle').textContent=current?'Excellent mapwork — you found the treasure!':'Treasure not found this time. Completing the map still counts towards participation.';
- document.querySelector('.victory-scene').style.display=current?'':'none';
- const summary=document.getElementById('challengeSummary');
- summary.replaceChildren();
- const title=document.createElement('h3');title.textContent=`Three-Island Challenge — ${count}/3 maps completed`;summary.appendChild(title);
- const who=document.createElement('p');who.textContent=`Student: ${challenge.name} | Class: ${challenge.className} | Level: ${learningLevel==='third'?'Third Form':'CSEC'} | Bonus marks: ${count}/3`;summary.appendChild(who);
- runs.forEach((r,i)=>{const line=document.createElement('p');line.textContent=`${i+1}. ${r.mapName}: ${r.correct}/${r.total} (${Math.round(r.accuracy)}%) — ${r.treasure?'Treasure Found':'Completed'}`;summary.appendChild(line)});
- const totalLine=document.createElement('p');totalLine.textContent=`Overall: ${score}/${total} (${accuracy}%) | Treasures found: ${runs.filter(r=>r.treasure).length}`;summary.appendChild(totalLine);
- document.getElementById('replayBtn').style.display=count>=3?'none':'';
- document.getElementById('submitChallengeBtn').textContent=count>=3?'Submit Three-Island Results':'Submit Current Progress';
- document.getElementById('submissionHelp').textContent=count>=3?'You have completed the three-island challenge. Submit your results to claim your participation marks.':'You may submit partial progress, or play another island for more participation marks.';
-}
-function submitChallengeResults(){
- const config=window.MAP_HUNT_FORM_CONFIG;
- if(!config||!config.formUrl||!config.entries){alert('Teacher setup needed: the Google Form has not been connected yet. Ask your teacher to configure form-config.js.');return;}
- const runs=uniqueRuns(),correctSum=runs.reduce((n,r)=>n+r.correct,0),totalSum=runs.reduce((n,r)=>n+r.total,0);
- const fields={studentName:challenge.name,studentClass:challenge.className,mapsCompleted:String(runs.length),mapNames:runs.map(r=>r.mapName).join(', '),totalQuestions:String(totalSum),totalCorrect:String(correctSum),overallAccuracy:totalSum?(100*correctSum/totalSum).toFixed(1)+'%':'0%',treasuresFound:String(runs.filter(r=>r.treasure).length),bonusMarks:String(runs.length),challengeId:(challenge.name+'-'+challenge.className).toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,60)};
- const url=new URL(config.formUrl);Object.entries(fields).forEach(([k,v])=>{if(config.entries[k])url.searchParams.set('entry.'+config.entries[k],v)});
- window.open(url.toString(),'_blank','noopener,noreferrer');
-}
-loadChallenge();
-// Revision 6.5: one calibrated measurement model for all SVG point-to-point exercises.
-// 80 SVG units = 1 map cm; scale 1:50,000 => 500 m ground per map cm.
-const MAP_MEASUREMENT={svgUnitsPerCm:80,groundMetresPerCm:500,toleranceMapCm:0.2};
-const MEASURED_POINT_PAIRS={
- distance:{a:{x:260,y:405},b:{x:500,y:405}},
- gradient:{a:{x:230,y:198},b:{x:148,y:171},elevationA:175,elevationB:100}
-};
-function mapDistanceCm(pair){return Math.hypot(pair.a.x-pair.b.x,pair.a.y-pair.b.y)/MAP_MEASUREMENT.svgUnitsPerCm}
-function groundDistanceMetres(pair){return mapDistanceCm(pair)*MAP_MEASUREMENT.groundMetresPerCm}
-function measurementBoundsMetres(pair){
- const distance=groundDistanceMetres(pair),tolerance=MAP_MEASUREMENT.toleranceMapCm*MAP_MEASUREMENT.groundMetresPerCm;
- return {min:Math.max(0,distance-tolerance),max:distance+tolerance};
-}
-function withinMeasuredDistanceKm(input,pair){
- const value=Number(input);if(!Number.isFinite(value)||value<0)return false;
- const bounds=measurementBoundsMetres(pair),metres=value*1000;
- return metres>=bounds.min-1e-7&&metres<=bounds.max+1e-7;
-}
-function withinMeasuredGradient(input,pair){
- if(!/^1:(?:\d+(?:\.\d+)?|\.\d+)$/.test(input))return false;
- const denominator=Number(input.slice(2));if(!Number.isFinite(denominator)||denominator<=0)return false;
- const verticalInterval=Math.abs(pair.elevationA-pair.elevationB);
- if(verticalInterval===0)return false;
- const bounds=measurementBoundsMetres(pair),impliedHorizontalMetres=denominator*verticalInterval;
- return impliedHorizontalMetres>=bounds.min-1e-7&&impliedHorizontalMetres<=bounds.max+1e-7;
-}
+
 const questions=[
-{level:"Level 1 — Explorer",type:"number",q:"Enter the four-figure grid reference for the Lighthouse.",answer:"3028",speech:"“Eastings first, then northings. Name the square containing the lighthouse.”",hint:"The lighthouse is between easting lines 30–31 and northing lines 28–29."},
+{level:"Level 1 — Explorer",type:"choice",q:"What is the exact name given in the key for the red triangular symbol?",choices:["Camp","Lighthouse","Treasure","Cave"],answer:"Camp",speech:"“Read the key carefully, Navigator. Choose the exact name written beside the red triangular symbol.”",hint:"Match the red triangular symbol to the exact label written in the key."},
+{level:"Level 1 — Explorer",type:"number",q:"Enter the four-figure grid reference for the Lighthouse.",answer:"3029",speech:"“Eastings first, then northings. Name the square containing the lighthouse.”",hint:"The lighthouse is between easting lines 30–31 and northing lines 29–30."},
 {level:"Level 1 — Explorer",type:"number",q:"Enter the four-figure grid reference for the Cave.",answer:"3327",speech:"“Find the cave symbol and name its grid square.”",hint:"It sits between easting 33–34 and northing 27–28."},
+{level:"Level 1 — Explorer",type:"choice",q:"Which symbol is located in grid square 3624?",choices:["Pirate Camp","Cave","Lighthouse","Skull"],answer:"Pirate Camp",speech:"“Which symbol is hiding inside square 3624?”",hint:"Look near easting 36 and northing 24."},
 {level:"Level 2 — Navigator",type:"choice",q:"From the Lighthouse, in which direction is the Skull symbol?",choices:["North-east","South-east","North-west","South-west"],answer:"South-east",speech:"“Use the compass rose. Which direction leads from the lighthouse to the skull?”",hint:"The skull is to the right and lower than the lighthouse."},
-{level:"Level 2 — Navigator",type:"six",q:"Enter the six-figure grid reference for the Lighthouse.",answer:"307282",square:{e:30,n:28,x:7,y:2,symbol:"lighthouse"},selectSquare:"3028",speech:"“Zoom in and estimate the tenths. Easting tenth before northing tenth.”",hint:"The lighthouse is about 7 tenths across and 2 tenths up inside square 3028."},
+{level:"Level 2 — Navigator",type:"six",q:"Enter the six-figure grid reference for the Lighthouse.",answer:"304297",square:{e:30,n:29,x:4,y:7,symbol:"lighthouse"},selectSquare:"3029",speech:"“Zoom in and estimate the tenths. Easting tenth before northing tenth.”",hint:"The symbol is 4 tenths across and 7 tenths up inside square 3029."},
 {level:"Level 2 — Navigator",type:"six",q:"Enter the six-figure grid reference for the Pirate Camp.",answer:"364244",square:{e:36,n:24,x:4,y:4,symbol:"camp"},selectSquare:"3624",speech:"“Now pinpoint the camp to six figures.”",hint:"It is about 6 tenths across and 4 tenths up inside square 3624."},
-{level:"Level 2 — Navigator",type:"distance",q:"Measure the straight-line map distance between A and B using the virtual ruler. At 1:50,000, calculate the ground distance in kilometres.",answer:groundDistanceMetres(MEASURED_POINT_PAIRS.distance)/1000,speech:"“Drag and rotate your ruler to measure A to B in centimetres. Then convert using the map scale.”",hint:"At 1:50,000, 1 cm on the map represents 0.5 km. Measure between the centres of the two points to the nearest millimetre; a ±1 mm allowance is accepted. Measure the straight line, not a winding route."},
-{level:"Level 3 — Cartographer",type:"gradient",q:"Use the ruler and the 1:50,000 scale to calculate the gradient from A (175 m) to B (100 m). Enter your answer in the form 1:n.",answer:groundDistanceMetres(MEASURED_POINT_PAIRS.gradient)/75,speech:"“Find the vertical interval and horizontal equivalent. Express the result as 1:n.”",hint:"The vertical interval is 75 m. Measure the straight line A–B with the ruler; 1 cm represents 500 m. Do not round your ruler reading to the nearest whole centimetre. Divide the horizontal equivalent (metres) by 75 and write 1:n; ±1 mm is allowed."},
 {level:"Level 3 — Cartographer",type:"bearing",q:"What is the bearing from the Cave to the Pirate Camp?",answer:131,speech:"“The full map is back. Place the centre of the circular protractor on the cave and measure clockwise from north toward the camp.”",hint:"The answer is approximately 131°. A response within 5° is accepted."},
-{level:"Level 3 — Cartographer",type:"bearing",q:"What is the bearing from the Treasure X to the Skull symbol?",answer:61,speech:"“Second bearing challenge! Place the protractor centre on the treasure X and measure clockwise from north toward the skull.”",hint:"The answer is approximately 061°. A response within 5° is accepted."},
+{level:"Level 3 — Cartographer",type:"bearing",q:"What is the bearing from the Treasure X to the Skull symbol?",answer:58,speech:"“Second bearing challenge! Place the protractor centre on the treasure X and measure clockwise from north toward the skull.”",hint:"The answer is approximately 058°. A response within 5° is accepted."},
 {level:"Level 3 — Cartographer",type:"topo-grid",q:"Study the Basseterre topographic map. Give the four-figure grid reference of any square showing clear indications of a river valley.",answers:["1914","1913","1912","2015","2014","2013","2012","2415"],speech:"“Study the contour shapes and drainage carefully. Identify any grid square showing clear evidence of a river valley.”",hint:"Look for a watercourse accompanied by contours forming V-shapes that point upstream. More than one answer is accepted.",topo:true},
 {level:"Level 3 — Cartographer",type:"open",q:"Using evidence from the map, explain three reasons why the main city of Basseterre developed at this location.",speech:"“Final challenge! Give three separate reasons and support each one with visible evidence from the map.”",hint:"Consider the coastal setting, relief, transport links, water supply, and surrounding estates.",topo:true}
 ];
-
-
-// Revision 7.0: six distinct SVG adventures and original, unaltered survey sheets.
-// Source PDF sheets are rendered to separate JPEG assets; the image content is not redrawn.
-const SURVEY_SHEETS=[
- {name:'Basseterre, St Kitts',src:null,kind:'basseterre'},
- {name:'Dominica — Marigot',src:'assets/Dominica_Marigot_1.jpg',kind:'marigot'},
- {name:'Jamaica — Savanna-la-Mar',src:'assets/Savanna_La_Mar_2.jpg',kind:'savanna'},
- {name:'Barbados — Speightstown',src:'assets/Speightstown.jpg',kind:'speightstown'}
-];
-const ORIGINAL_TOPO_SRC=document.getElementById('topoImage').getAttribute('src');
-const ORIGINAL_QUESTIONS=questions.map(q=>({...q}));
-const MAP_NAMES=['Isla del Tesoro','Volcanic Island','Twin Bay Island','Crescent Island','Highland Island','Mangrove Island'];
-let activeAdventure=0,activeSheet=0,lastAdventure=-1,lastSheet=-1;
-const originalSymbolIds=['lighthouse','camp','skull','cave','tree','well','treasureSpot'];
-const originalMapNodes=['mapBase','treasureTrail',...originalSymbolIds];
-const NS_SVG='http://www.w3.org/2000/svg';
-const islandLayer=document.getElementById('adventureIsland');
-const svgMap=document.querySelector('.map-svg');
-const gridRef4=p=>{
- const e=Math.max(30,Math.min(37,Math.floor((p.x-90)/80)+30));
- const n=Math.max(22,Math.min(29,Math.floor((610-p.y)/67.5)+22));
- return `${e}${n}`;
-};
-const gridRef6=p=>{
- const e=Math.max(30,Math.min(37,Math.floor((p.x-90)/80)+30));
- const n=Math.max(22,Math.min(29,Math.floor((610-p.y)/67.5)+22));
- const x=Math.max(0,Math.min(9,Math.floor(((p.x-90)/80-(e-30))*10)));
- const y=Math.max(0,Math.min(9,Math.floor(((610-p.y)/67.5-(n-22))*10)));
- return `${e}${x}${n}${y}`;
-};
-function bearingFrom(a,b){return (Math.atan2(b.x-a.x,a.y-b.y)*180/Math.PI+360)%360}
-function directionFrom(a,b){let angle=bearingFrom(a,b);return ['North','North-east','East','South-east','South','South-west','West','North-west'][Math.round(angle/45)%8]}
-// Shared artwork: the island and key always clone the ORIGINAL map symbols.
-function canonicalSymbol(name){
- const node=document.getElementById(name).cloneNode(true);
- node.querySelectorAll('.symbol-centre').forEach(el=>el.remove());
- return node.innerHTML;
-}
-function syncLegendSymbols(){
- const key=document.querySelector('svg.map-svg g[transform="translate(738 158)"]');
- if(!key)return;
- const names=['lighthouse','camp','skull','cave','tree','well','treasureSpot'];
- const labels=['Lighthouse','Camp','Skull','Cave','Tree','Well','Treasure'];
- key.innerHTML=`<rect x="0" y="0" width="98" height="292" rx="8" fill="#f8e8bb" stroke="#54351d" stroke-width="2"/><text x="49" y="20" text-anchor="middle" font-size="15" font-weight="bold">KEY</text>`;
- names.forEach((name,i)=>{
-   const y=44+i*38;
-   const row=document.createElementNS('http://www.w3.org/2000/svg','g');
-   row.setAttribute('transform',`translate(19 ${y}) scale(.7)`);
-   row.innerHTML=canonicalSymbol(name);
-   key.appendChild(row);
-   const label=document.createElementNS('http://www.w3.org/2000/svg','text');
-   label.setAttribute('x','38');label.setAttribute('y',String(y+4));
-   label.setAttribute('font-size','11.5');label.textContent=labels[i];key.appendChild(label);
- });
-}
-
-function drawNewIsland(id){
- islandLayer.innerHTML='';
- if(id===0){originalMapNodes.forEach(k=>{const el=document.getElementById(k);if(el)el.style.display=''});return null}
- originalMapNodes.forEach(k=>{const el=document.getElementById(k);if(el)el.style.display='none'});
- const cx=[0,406,414,405,405,400][id],cy=[0,332,334,340,336,336][id];
- const palettes=[null,['#e2d5a0','#a0c577'],['#e9d99f','#9ac38c'],['#dfcf9b','#b1c784'],['#eadca9','#86b97c'],['#d9d5a2','#8abf81']];
- const coast=[];
- for(let i=0;i<48;i++){
-  const a=2*Math.PI*i/48;
-  let wobble=1+.075*Math.sin(a*(id+3)+id)+.065*Math.cos(a*5-id);
-  if(id===2)wobble-=.19*Math.exp(-Math.pow((a-Math.PI)/.52,2));
-  if(id===3)wobble*=.91+.15*Math.cos(a-.5);
-  if(id===4)wobble*=.96+.11*Math.sin(a*3);
-  if(id===5)wobble*=.95+.08*Math.cos(a*2);
-  const rx=[0,258,277,268,251,280][id],ry=[0,203,190,204,220,188][id];
-  coast.push([cx+rx*wobble*Math.cos(a),cy+ry*wobble*Math.sin(a)]);
- }
- const outline='M'+coast.map(p=>p.map(n=>n.toFixed(1)).join(' ')).join(' L')+' Z';
- // Each island has its own hill position, contour extent, interval and relief profile.
- const hills=[null,{x:342,y:294,rx:154,ry:117,interval:25,base:50,count:8},
- {x:366,y:297,rx:163,ry:104,interval:20,base:40,count:8},
- {x:456,y:311,rx:148,ry:126,interval:25,base:25,count:8},
- {x:366,y:294,rx:165,ry:135,interval:30,base:60,count:9},
- {x:452,y:320,rx:149,ry:104,interval:20,base:20,count:8}];
- const h=hills[id],theta=[0,.25,-.55,.48,-.34,.6][id];
- const ellipsePoint=(fraction,angle)=>({x:h.x+h.rx*fraction*Math.cos(angle)*Math.cos(theta)-h.ry*fraction*Math.sin(angle)*Math.sin(theta),y:h.y+h.rx*fraction*Math.cos(angle)*Math.sin(theta)+h.ry*fraction*Math.sin(angle)*Math.cos(theta)});
- // Outer and inner labelled contours are exactly where gradient points lie.
- const outerF=1.02-.88/(h.count-1),innerF=1.02-(h.count-2)*.88/(h.count-1),gradientAngle=[0,.55,2.05,-.75,1.05,2.45][id];
- const gradA=ellipsePoint(innerF,gradientAngle),gradB=ellipsePoint(outerF,gradientAngle);
- const elevA=h.base+h.interval*(h.count-2),elevB=h.base+h.interval;
- const pts={
-  lighthouse:{x:cx-172,y:cy-103},cave:{x:cx-94,y:cy+54},camp:{x:cx+151,y:cy+81},
-  skull:{x:cx+138,y:cy-82},treasureSpot:{x:cx+62,y:cy+122},tree:{x:cx+58,y:cy-98},well:{x:cx-140,y:cy+105}
- };
- // Alternate map-specific distance pairs: different lengths and directions.
- const pairs={1:['lighthouse','cave'],2:['well','skull'],3:['cave','tree'],4:['lighthouse','camp'],5:['well','tree']};
- const [from,to]=pairs[id];
- const distance={a:{...pts[from]},b:{...pts[to]}};
- const symbol=(name,pos)=>`<g transform="translate(${pos.x} ${pos.y})">${canonicalSymbol(name)}<circle r="3.8" fill="white" stroke="#9e2f27" stroke-width="2"/></g>`;
- const contour=Array.from({length:h.count},(_,i)=>{
-  const f=1.02-i*(.88/(h.count-1));
-  const elevation=h.base+h.interval*i;
-  const text=ellipsePoint(f,Math.PI*.82);
-  return `<ellipse cx="${h.x}" cy="${h.y}" rx="${(h.rx*f).toFixed(2)}" ry="${(h.ry*f).toFixed(2)}" transform="rotate(${(theta*180/Math.PI).toFixed(2)} ${h.x} ${h.y})" fill="none" stroke="#946d36" stroke-width="${i%2?1.8:2.3}"/><text x="${text.x.toFixed(1)}" y="${text.y.toFixed(1)}" font-size="11.5" font-weight="bold" fill="#593e20" paint-order="stroke" stroke="#e5d6a8" stroke-width="3">${elevation}</text>`;
- }).join('');
- // Single continuous river and one trail ending at the treasure X.
- const trail=`M${pts.well.x} ${pts.well.y} Q${cx-47} ${cy+113} ${cx+8} ${cy+94} T${pts.treasureSpot.x} ${pts.treasureSpot.y}`;
- islandLayer.innerHTML=`<defs><clipPath id="adventureClip"><path d="${outline}"/></clipPath></defs>
- <path d="${outline}" fill="#a6dfc4" stroke="#c6e9cc" stroke-width="14" opacity=".55"/>
- <path d="${outline}" fill="${palettes[id][0]}" stroke="#72532e" stroke-width="4"/>
- <g clip-path="url(#adventureClip)"><path d="M${cx-260} ${cy+90} Q${cx} ${cy+210} ${cx+270} ${cy+30}L${cx+270} ${cy+240}H${cx-270}Z" fill="${palettes[id][1]}" opacity=".48"/>
- ${contour}</g>
- <path d="${trail}" fill="none" stroke="#76502d" stroke-width="4" stroke-dasharray="7 8" stroke-linecap="round"/>
- ${Object.entries(pts).map(([name,pos])=>symbol(name,pos)).join('')}`;
- return {pts,gradient:{a:gradA,b:gradB,elevationA:elevA,elevationB:elevB},distance,contourInterval:h.interval};
-}
-function setPointMarkers(layer,pair,gradient){
- const el=document.getElementById(layer);
- if(!el)return;
- const mark=(p,label,alt)=>`<circle cx="${p.x}" cy="${p.y}" r="7" fill="#a72822" stroke="white" stroke-width="2"/><text x="${p.x+10}" y="${p.y-10}" font-size="15" fill="#4d201b">${label}${alt?' ('+alt+' m)':''}</text>`;
- el.innerHTML=mark(pair.a,'A',gradient?pair.elevationA:null)+mark(pair.b,'B',gradient?pair.elevationB:null)+(gradient?`<path d="M${pair.a.x} ${pair.a.y}L${pair.b.x} ${pair.b.y}" fill="none" stroke="#9b3025" stroke-width="2" stroke-dasharray="5 4"/>`:'');
-}
-function displaySymbolName(name){return ({treasureSpot:'Treasure X',camp:'Pirate Camp',skull:'Skull',cave:'Cave',well:'Well',tree:'Tree',lighthouse:'Lighthouse'})[name]||name}
-function makeAdventureQuestions(id,model){
- if(id===0)return ORIGINAL_QUESTIONS.slice(0,9).map(q=>({...q}));
- const {pts,distance,gradient}=model;
- const point=(name)=>pts[name];
- const four=['lighthouse','cave','camp','skull'];
- const chosen=[four[(id-1)%4],four[(id+1)%4]];
- const fourQs=chosen.map(name=>({level:'Level 1 — Explorer',type:'number',q:`Enter the four-figure grid reference for the ${name==='camp'?'Pirate Camp':name==='skull'?'Skull':name==='cave'?'Cave':'Lighthouse'}.`,answer:gridRef4(point(name)),speech:'“Read eastings first, then northings.”',hint:'Identify the grid square containing the centre of the symbol.'}));
- const sixNames=id%2?['lighthouse','camp']:['cave','skull'];
- const sixQs=sixNames.map(name=>{
-   const p=point(name),ref=gridRef6(p),four=gridRef4(p);
-   return {level:'Level 2 — Navigator',type:'six',q:`Enter the six-figure grid reference for the ${name==='camp'?'Pirate Camp':name==='skull'?'Skull':name==='cave'?'Cave':'Lighthouse'}.`,answer:ref,square:{e:Number(four.slice(0,2)),n:Number(four.slice(2)),x:Number(ref[2]),y:Number(ref[5]),symbol:name},selectSquare:four,speech:'“Select the square, then estimate tenths east and north.”',hint:'Locate the symbol centre within the square; count tenths across and then up.'};
- });
- const directionPairs={1:['lighthouse','skull'],2:['camp','cave'],3:['skull','lighthouse'],4:['well','tree'],5:['tree','well']};
- const [dirFrom,dirTo]=directionPairs[id];
- const direction=directionFrom(point(dirFrom),point(dirTo));
- const directionQ={level:'Level 2 — Navigator',type:'choice',q:`From the ${displaySymbolName(dirFrom)}, in which direction is the ${displaySymbolName(dirTo)}?`,choices:['North-east','South-east','North-west','South-west','North','South','East','West'],answer:direction,speech:'“Use the compass rose and read from the first place to the second.”',hint:'Identify the relative position of the destination, using north at the top.'};
- const distanceQ={level:'Level 2 — Navigator',type:'distance',q:'Measure the straight-line distance between A and B using the ruler. At 1:50,000, give the ground distance in kilometres.',answer:groundDistanceMetres(distance)/1000,speech:'“Measure centre to centre. Convert using the map scale.”',hint:'1 cm represents 0.5 km. Measure to the nearest millimetre; ±1 mm is allowed.'};
- const gradientQ={level:'Level 3 — Cartographer',type:'gradient',q:`Calculate the gradient from A (${gradient.elevationA} m) to B (${gradient.elevationB} m). Enter your answer as 1:n, allowing decimals.`,answer:groundDistanceMetres(gradient)/Math.abs(gradient.elevationA-gradient.elevationB),speech:'“Convert the horizontal measurement to metres and divide by the vertical interval.”',hint:`Vertical interval = ${Math.abs(gradient.elevationA-gradient.elevationB)} m. Measure A to B to the nearest millimetre; a ±1 mm allowance is accepted.`};
- const bearingPairs=({1:[['cave','camp'],['treasureSpot','skull']],2:[['skull','well'],['camp','lighthouse']],3:[['well','cave'],['tree','skull']],4:[['camp','tree'],['lighthouse','well']],5:[['skull','cave'],['treasureSpot','lighthouse']]})[id];
- const bearingQs=bearingPairs.map(([from,to])=>({bearingPair:[from,to],level:'Level 3 — Cartographer',type:'bearing',q:`What is the three-figure bearing from the ${displaySymbolName(from)} to the ${displaySymbolName(to)}?`,answer:Math.round(bearingFrom(point(from),point(to))),speech:'“Centre the protractor on the first symbol and measure clockwise from north.”',hint:'Measure clockwise from north at the STARTING symbol. A ±5° tolerance is accepted.'}));
- // Keep the pedagogical progression, shuffle only within each level.
- const shuffle=arr=>arr.map(v=>({v,r:Math.random()})).sort((a,b)=>a.r-b.r).map(x=>x.v);
- return [...shuffle(fourQs),...shuffle([directionQ,...sixQs]),distanceQ,gradientQ,...shuffle(bearingQs)];
-}
-// Third Form: 4 grid references, 2 directions, 3 bearings and 3 measured distances.
-// Reuses the same island symbols, coordinate grid, ruler and protractor.
-function thirdFormQuestions(id,model){
- const pts=id===0?{lighthouse:{x:145,y:190},camp:{x:604,y:448},skull:{x:666,y:211},cave:{x:373,y:250},tree:{x:522,y:364},well:{x:282,y:465},treasureSpot:{x:458,y:326}}:model.pts;
- const names=['lighthouse','cave','camp','skull','tree','well','treasureSpot'];
- const rotate=(arr,n)=>arr.slice(n).concat(arr.slice(0,n));
- const ordered=rotate(names,id%names.length);
- const gridNames=ordered.slice(0,4);
- const grid=gridNames.map((name,i)=>{
-  const p=pts[name],four=gridRef4(p),six=gridRef6(p);
-  if(i<2)return {level:'Third Form — Grid References',type:'number',q:`Give the four-figure grid reference for the ${displaySymbolName(name)}.`,answer:four,speech:'“Read eastings first, then northings.”',hint:'Identify the square containing the centre of the symbol.'};
-  return {level:'Third Form — Grid References',type:'six',q:`Give the six-figure grid reference for the ${displaySymbolName(name)}.`,answer:six,square:{e:Number(four.slice(0,2)),n:Number(four.slice(2)),x:Number(six[2]),y:Number(six[5]),symbol:name},selectSquare:four,speech:'“Read eastings first, then northings; estimate tenths within the square.”',hint:'Select the correct four-figure square, then estimate tenths across and up.'};
- });
- const directions=[[ordered[0],ordered[4]],[ordered[1],ordered[5]]].map(([from,to])=>({level:'Third Form — Directions',type:'choice',q:`In which compass direction is the ${displaySymbolName(to)} from the ${displaySymbolName(from)}?`,choices:['North','North-east','East','South-east','South','South-west','West','North-west'],answer:directionFrom(pts[from],pts[to]),speech:'“Use the compass rose; begin at the first symbol.”',hint:'North is at the top of the map. Identify the direction from the starting symbol.'}));
- const bearings=[[ordered[0],ordered[3]],[ordered[1],ordered[4]],[ordered[2],ordered[5]]].map(([from,to])=>({level:'Third Form — Bearings',type:'bearing',bearingPair:[from,to],q:`What is the three-figure bearing from the ${displaySymbolName(from)} to the ${displaySymbolName(to)}?`,answer:Math.round(bearingFrom(pts[from],pts[to])),speech:'“Measure clockwise from north at the starting symbol.”',hint:'Measure clockwise from north at the starting point; ±5° is accepted.'}));
- const distancePairs=[[ordered[0],ordered[2]],[ordered[1],ordered[5]],[ordered[3],ordered[6]]];
- const distances=distancePairs.map(([from,to])=>{const pair={a:pts[from],b:pts[to]};return {level:'Third Form — Distances',type:'distance',measurePair:pair,q:`Measure the straight-line distance from the ${displaySymbolName(from)} to the ${displaySymbolName(to)}. Using the scale 1:50,000, give the ground distance in kilometres.`,answer:groundDistanceMetres(pair)/1000,speech:'“Measure centre to centre with the ruler, then convert using the scale.”',hint:'1 cm represents 0.5 km. A ±2 mm ruler tolerance is accepted.'}});
- return [...grid,...directions,...bearings,...distances];
-}
-function bearingEndpoints(q){
- const pts=activeAdventure===0?{
-  lighthouse:{x:145,y:190},camp:{x:604,y:448},skull:{x:666,y:211},cave:{x:373,y:250},
-  tree:{x:522,y:364},well:{x:282,y:465},treasureSpot:{x:458,y:326}
- }:activeIslandPoints;
- if(!pts)return null;
- let pair=q.bearingPair;
- if(!pair&&activeAdventure===0){
-   if(q.q.includes('Cave to the Pirate Camp'))pair=['cave','camp'];
-   else if(q.q.includes('Treasure X to the Skull'))pair=['treasureSpot','skull'];
- }
- return pair&&pts[pair[0]]&&pts[pair[1]]?[pts[pair[0]],pts[pair[1]]]:null;
-}
-function topoQuestions(sheet){
- if(sheet.kind==='basseterre')return ORIGINAL_QUESTIONS.slice(9).map(q=>({...q}));
- const contexts={
-  marigot:{choices:['Steep mountainous relief near the coast','Completely level terrain throughout','A broad desert plain','A city covering the entire map'],answer:'Steep mountainous relief near the coast',open:'Using map evidence, describe how relief and drainage are related in the Marigot area.',hint:'Use the closely spaced contours, valleys and mapped watercourses.'},
-  savanna:{choices:['Coastal lowlands and wetlands','A snow-covered plateau','A single volcanic summit','No coastal features'],answer:'Coastal lowlands and wetlands',open:'Using map evidence, explain three ways the coastal environment influences settlement and land use around Savanna-la-Mar.',hint:'Consider coastal plains, wetlands, transport routes and settlement.'},
-  speightstown:{choices:['A coastal settlement with roads extending inland','An isolated mountain summit with no roads','A desert without settlements','A deep inland lake'],answer:'A coastal settlement with roads extending inland',open:'Using map evidence, explain three factors influencing the location and pattern of settlement around Speightstown.',hint:'Consider the coast, roads, relief and the distribution of buildings.'}
- };
- const c=contexts[sheet.kind];
- return [
-  {level:'Level 3 — Cartographer',type:'choice',q:`Study the original ${sheet.name} topographic sheet. Which description is best supported by the map?`,choices:c.choices,answer:c.answer,speech:'“Read the map evidence rather than guessing from the place name.”',hint:'Use the coastline, contour pattern, roads and mapped land cover.',topo:true},
-  {level:'Level 3 — Cartographer',type:'open',q:c.open,speech:'“Give three distinct observations or explanations supported by visible map evidence.”',hint:c.hint,topo:true}
- ];
-}
-function selectDifferent(count,last){const choices=Array.from({length:count},(_,i)=>i).filter(i=>i!==last);return choices[Math.floor(Math.random()*choices.length)]}
-let activeIslandPoints=null;
-function startNewExpedition(forcedMap=null){
- activeAdventure=forcedMap===null?selectDifferent(6,lastAdventure):Number(forcedMap);
- if(!Number.isInteger(activeAdventure)||activeAdventure<0||activeAdventure>=MAP_NAMES.length)activeAdventure=selectDifferent(6,lastAdventure);
- lastAdventure=activeAdventure;
- activeSheet=selectDifferent(SURVEY_SHEETS.length,lastSheet);lastSheet=activeSheet;
- syncLegendSymbols();
- const model=drawNewIsland(activeAdventure);
- activeIslandPoints=model?.pts||null;
- if(model){
-  MEASURED_POINT_PAIRS.distance=model.distance;
-  MEASURED_POINT_PAIRS.gradient=model.gradient;
-  setPointMarkers('distancePoints',model.distance,false);
-  setPointMarkers('gradientPoints',model.gradient,true);
- }else{
-  MEASURED_POINT_PAIRS.distance={a:{x:260,y:405},b:{x:500,y:405}};
-  MEASURED_POINT_PAIRS.gradient={a:{x:230,y:198},b:{x:148,y:171},elevationA:175,elevationB:100};
-  setPointMarkers('distancePoints',MEASURED_POINT_PAIRS.distance,false);
-  setPointMarkers('gradientPoints',MEASURED_POINT_PAIRS.gradient,true);
- }
- const sheet=SURVEY_SHEETS[activeSheet];
- document.getElementById('topoImage').src=sheet.src||ORIGINAL_TOPO_SRC;
- document.getElementById('topoLabel').textContent=`${sheet.name} — Original Topographic Sheet`;
- document.getElementById('adventureName').textContent=`Adventure: ${MAP_NAMES[activeAdventure]}`;
- const diagnostics=document.getElementById('mapDiagnostics');
- if(diagnostics){diagnostics.style.display=forcedMap===null?'none':'block';diagnostics.textContent=model?`TEST ONLY — Distance: ${(groundDistanceMetres(model.distance)/1000).toFixed(3)} km | Gradient: 1:${(groundDistanceMetres(model.gradient)/Math.abs(model.gradient.elevationA-model.gradient.elevationB)).toFixed(2)} | Vertical interval: ${Math.abs(model.gradient.elevationA-model.gradient.elevationB)} m | Bearings: ${(({1:[['cave','camp'],['treasureSpot','skull']],2:[['skull','well'],['camp','lighthouse']],3:[['well','cave'],['tree','skull']],4:[['camp','tree'],['lighthouse','well']],5:[['skull','cave'],['treasureSpot','lighthouse']]})[activeAdventure]||[]).map(([a,b])=>`${displaySymbolName(a)}→${displaySymbolName(b)} ${Math.round(bearingFrom(model.pts[a],model.pts[b]))}°`).join('; ')}`:'TEST ONLY — Original map';}
- questions.splice(0,questions.length,...(learningLevel==='third'?thirdFormQuestions(activeAdventure,model):[...makeAdventureQuestions(activeAdventure,model),...topoQuestions(sheet)]));
- // Existing skill-popup triggers are tied to positions: retain the sequence of skill types.
- index=0;attempts=0;correct=0;xp=0;gold=0;answeredIndices.clear();shownSkills.clear();
- document.getElementById('xp').textContent=0;document.getElementById('gold').textContent=0;
-}
 
 const skillLessons={
   symbols:{
@@ -932,21 +610,50 @@ const skillLessons={
   topo:{
     icon:"⛰️",
     title:"Interpreting a Topographic Map",
-    subtitle:"Review relief, drainage, settlement and land use in the study guide.",
+    subtitle:"Use contours, drainage, transport and settlement evidence.",
     slides:[
-      `<p>This final challenge uses a real topographic map. Before answering, review the detailed study guide on <b>relief, drainage, settlement and land use</b>, including contour examples.</p><p><a href="https://docs.google.com/document/d/1TaXlkgU6axMZLjH_JKLcPuO_dPN5-tb4TdmFLxRAy6E/edit?usp=sharing" target="_blank" rel="noopener noreferrer" style="font-weight:bold;text-decoration:underline">📖 Open Topographic Map Study Notes (Google Docs)</a></p><p>The notes open in a new tab; return here to continue your adventure.</p>`,
-      `<p><b>For each answer:</b> identify the feature, cite map evidence and use the correct grid reference where relevant. For river valleys, look for streams and V-shaped contours pointing upstream.</p><p><a href="https://docs.google.com/document/d/1TaXlkgU6axMZLjH_JKLcPuO_dPN5-tb4TdmFLxRAy6E/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Reopen the detailed study guide</a></p>`
+      `<p>A topographic map shows real features using conventional symbols, contours, watercourses, roads and buildings.</p>
+       <ul class="skill-check">
+         <li>Read the grid and key before interpreting the landscape.</li>
+         <li>Use contours to judge slope and relief.</li>
+         <li>Use blue watercourses to identify drainage.</li>
+         <li>Use roads, buildings and named places to interpret settlement.</li>
+       </ul>`,
+      `<p><b>Recognising a river valley:</b></p>
+       <div class="walkthrough-grid">
+         <div class="walkthrough-step"><b>Step 1</b>Locate the river or stream.</div>
+         <div class="walkthrough-step"><b>Step 2</b>Look for contours bending into V-shapes.</div>
+         <div class="walkthrough-step"><b>Step 3</b>The V normally points upstream, toward higher land.</div>
+         <div class="walkthrough-step"><b>Step 4</b>Name any grid square containing that clear valley section.</div>
+       </div>`,
+      `<p><b>Explaining why a city developed:</b> Give a reason, point to map evidence, and explain the advantage.</p>
+       <div class="map-evidence-example">
+         <div><b>Weak:</b><br>“Basseterre is near the sea.”</div>
+         <div><b>Strong:</b><br>“Basseterre developed on the coast beside port and pier facilities, supporting trade and movement of goods.”</div>
+         <div><b>Weak:</b><br>“The land is flat.”</div>
+         <div><b>Strong:</b><br>“Widely spaced contours show relatively gentle lowland, making construction and expansion easier.”</div>
+       </div>`,
+      `<p><b>Possible evidence categories:</b></p>
+       <ul class="skill-check">
+         <li>Coastal location, harbour, port or pier access.</li>
+         <li>Flat or gently sloping land.</li>
+         <li>Road junctions and transport accessibility.</li>
+         <li>Nearby rivers or water supply.</li>
+         <li>Links to estates, agriculture, factories or other economic activity.</li>
+       </ul>
+       <div class="skill-example"><b>Final response rule:</b> Give three different reasons and support each one with evidence visible on the map.</div>`
     ]
-  }};
+  }
+};
 
-skillLessons.distance={icon:"📏",title:"Straight-line Distance and Scale",subtitle:"Measure in centimetres and convert to kilometres.",slides:[
-`<p>At a scale of <b>1:50,000</b>, 1 cm on the map represents 50,000 cm on the ground, which equals <b>0.5 km</b>.</p><p>Measure the <b>straight line</b> between A and B, not the road or river. Use the draggable ruler and rotation control. The ruler's markings are calibrated to the map's SVG scale, even when resized. Measure to the nearest millimetre. A tolerance of ±2 mm (±0.10 km) is accepted.</p>`,
-`<p><b>Method:</b> (1) Measure A to B in centimetres. (2) Multiply by <b>0.5 km per cm</b>. (3) Enter the answer in kilometres.</p><p>Example: 4 cm × 0.5 km/cm = <b>2 km</b>.</p>`]};
-skillLessons.gradient={icon:"⛰️",title:"Calculating Gradient",subtitle:"Express the result as a ratio beginning 1:.",slides:[
-`<p><b>Gradient = vertical interval ÷ horizontal equivalent.</b> The vertical interval is the difference between the two elevations. Convert horizontal distance into <b>metres</b> before calculating.</p><p>For a gradient expressed as <b>1:n</b>, divide the horizontal equivalent by the vertical interval. <b>Use the virtual ruler on the gradient question to measure A–B</b> and convert at 1:50,000. Measure to the nearest millimetre; the same ±2 mm tolerance applies to gradient calculations.</p>`,
-`<p><b>Worked example:</b> Two points are 50 m apart vertically and 500 m apart horizontally. 500 ÷ 50 = 10, so the gradient is <b>1:10</b>.</p><p><b>Answer format:</b> Always type <b>1:10</b>, not 10, 0.1, or 10%.</p>`]};
-
-const skillStarts={0:"fourFigure",2:"directions",3:"sixFigure",5:"distance",6:"gradient",7:"bearings",9:"topo"};
+const skillStarts={
+  0:"symbols",
+  1:"fourFigure",
+  4:"directions",
+  5:"sixFigure",
+  7:"bearings",
+  9:"topo"
+};
 let shownSkills=new Set();
 let currentSkillKey=null;
 let currentSkillSlide=0;
@@ -981,7 +688,7 @@ function showSkillPopup(skillKey){
 }
 
 function maybeShowSkillPopup(){
-  const skillKey=questions[index]?.topo?"topo":({number:"fourFigure",choice:"directions",six:"sixFigure",distance:"distance",gradient:"gradient",bearing:"bearings","topo-grid":"topo",open:"topo"})[questions[index]?.type];
+  const skillKey=skillStarts[index];
   if(skillKey&&!shownSkills.has(skillKey)){
     shownSkills.add(skillKey);
     showSkillPopup(skillKey);
@@ -989,32 +696,21 @@ function maybeShowSkillPopup(){
 }
 
 let index=0,attempts=0,correct=0,xp=0,gold=0;
+let answeredQuestions=new Set(), navigationVersion=0;
 const $=s=>document.querySelector(s),screens=["landing","tutorial","game","results"];
 function show(id){screens.forEach(s=>$("#"+s).classList.toggle("active",s===id))}
 function render(){
  const q=questions[index];attempts=0;
- if(q.type==='distance'&&q.measurePair){MEASURED_POINT_PAIRS.distance=q.measurePair;setPointMarkers('distancePoints',q.measurePair,false)}
  renderQuestionJump();
  $("#zoomOverlay").classList.remove("show");
  $("#level").textContent=q.level;$("#question").textContent=q.q;$("#speech").textContent=q.speech;
  $("#progressText").textContent=`Clue ${index+1} of ${questions.length}`;$("#progressFill").style.width=`${index/questions.length*100}%`;
  $("#feedback").className="feedback";$("#feedback").textContent="";
  const isTopo=Boolean(q.topo);
- const bearingGuide=document.getElementById('bearingGuide');
- const bearingEnds=q.type==='bearing'&&!isTopo?bearingEndpoints(q):null;
- bearingGuide.style.display=bearingEnds?'':'none';
- if(bearingEnds){const [a,b]=bearingEnds;const line=document.getElementById('bearingGuideLine');
-  line.setAttribute('x1',a.x);line.setAttribute('y1',a.y);
-  line.setAttribute('x2',b.x);line.setAttribute('y2',b.y);
- }
 $("#topoMapWrap").classList.toggle("show",isTopo);
 if(isTopo) resetTopoView();
 $("#protractor").classList.toggle("show",q.type==="bearing"&&!isTopo);
 $("#protractorControls").classList.toggle("show",q.type==="bearing"&&!isTopo);
- $("#distancePoints").style.display=q.type==="distance"?"":"none";
- $("#gradientPoints").style.display=q.type==="gradient"?"":"none";
- $("#virtualRuler").style.display=(q.type==="distance"||q.type==="gradient")?"":"none";
- $("#rulerControls").style.display=(q.type==="distance"||q.type==="gradient")?"block":"none";
  const area=$("#answerArea");area.innerHTML="";
  if(q.type==="choice"){
   const wrap=document.createElement("div");wrap.className="choices";
@@ -1029,13 +725,12 @@ $("#protractorControls").classList.toggle("show",q.type==="bearing"&&!isTopo);
   guide.innerHTML="<b>Response structure:</b> Reason 1 + map evidence; Reason 2 + map evidence; Reason 3 + map evidence.";
   area.appendChild(guide);
   const rubric=document.createElement("div");rubric.id="rubricResult";rubric.className="rubric-result";
-  rubric.innerHTML="<b>Map-evidence checklist</b>Give three distinct points, each supported by map evidence. Teacher review is recommended.";
+  rubric.innerHTML="<b>Map-evidence checklist</b>Your response will be checked for three distinct, supported reasons.";
   area.appendChild(rubric)
 }else{
   const input=document.createElement("input");input.id="answerInput";input.className="answer-input";input.inputMode="numeric";
-  input.placeholder=q.type==="bearing"?"Enter bearing in degrees":q.type==="distance"?"Enter distance in km":q.type==="gradient"?"Ratio (e.g. 1:10)":"Type numbers only";
-  input.inputMode=(q.type==="distance"||q.type==="gradient")?"decimal":"numeric";
-  input.addEventListener("input",()=>input.value=input.value.replace(q.type==="gradient"?/[^0-9:.]/g:q.type==="distance"?/[^0-9.]/g:/\D/g,""));
+  input.placeholder=q.type==="bearing"?"Enter bearing in degrees":"Type numbers only";
+  input.addEventListener("input",()=>input.value=input.value.replace(/\D/g,""));
   input.addEventListener("keydown",e=>{if(e.key==="Enter")check()});area.appendChild(input)
 }
 if(q.type==="six"){
@@ -1104,14 +799,14 @@ function drawZoom(q){
 function answer(){const q=questions[index];if(q.type==="choice")return document.querySelector(".choice.selected")?.textContent||"";return ($("#answerInput")?.value||"").trim()}
 function sixValid(ans,corr){if(ans.length!==6)return false;const a=ans.split("").map(Number),c=corr.split("").map(Number);return a[0]===c[0]&&a[1]===c[1]&&a[3]===c[3]&&a[4]===c[4]&&Math.abs(a[2]-c[2])<=1&&Math.abs(a[5]-c[5])<=1}
 function check(){
+ if(answeredQuestions.has(index))return feedback("This question is complete. Select another question.","good");
+ const currentVersion=navigationVersion;
  const q=questions[index],ans=answer();if(!ans)return feedback("Enter or select an answer first.","bad");attempts++;
  let ok=false;
 if(q.type==="choice"||q.type==="number")ok=ans===String(q.answer);
 else if(q.type==="topo-grid")ok=q.answers.includes(ans);
 else if(q.type==="six")ok=sixValid(ans,String(q.answer));
 else if(q.type==="bearing")ok=Math.abs(Number(ans)-q.answer)<=5;
-else if(q.type==="distance")ok=withinMeasuredDistanceKm(ans,MEASURED_POINT_PAIRS.distance);
-else if(q.type==="gradient")ok=withinMeasuredGradient(ans,MEASURED_POINT_PAIRS.gradient);
 else if(q.type==="open"){
   const text=ans.toLowerCase();
   const criteria=[
@@ -1126,36 +821,37 @@ else if(q.type==="open"){
   const separated=(ans.match(/[.;\n]/g)||[]).length>=2 || (ans.match(/\b(first|second|third|another|also|finally)\b/g)||[]).length>=2;
   const evidenceLanguage=(text.match(/\b(map|shows|shown|located|near|surrounded|connected|visible|evidence|because)\b/g)||[]).length>=1;
   window.lastRubric={criteria,hits,words,separated,evidenceLanguage};
-  ok=q.topo && activeSheet!==0 ? words>=28 && separated && evidenceLanguage && (text.match(/\b(coast|relief|contour|road|river|drainage|valley|settlement|wetland|slope|land|transport|build|plain|sea|bay|stream|agricultur|hill|water)\b/g)||[]).length>=3 : words>=28 && hits.length>=3 && separated && evidenceLanguage;
+  ok=words>=28 && hits.length>=3 && separated && evidenceLanguage;
 }
  if(ok){
-  answeredIndices.add(index);
+  answeredQuestions.add(index);renderQuestionJump();
   correct++;const r=[100,80,60][Math.min(attempts-1,2)];xp+=r;gold+=r;
   $("#xp").textContent=xp;$("#gold").textContent=gold;
   const msg=q.type==="open"
-    ?`Response recorded! You provided three map-based points and supporting evidence. Review your response with your teacher for geographical accuracy. +${r} XP and +${r} gold.`
+    ?`Strong response! You identified ${window.lastRubric?.hits.length||3} valid map-based factors and supported your explanation. +${r} XP and +${r} gold.`
     :`Correct! +${r} XP and +${r} gold.`;
-  if(q.type==="open" && activeSheet===0) showRubric();
-  feedback(msg,"good");setTimeout(next,q.type==="open"?1700:900)
+  if(q.type==="open") showRubric();
+  feedback(msg,"good");setTimeout(()=>{if(currentVersion===navigationVersion)next()},q.type==="open"?1700:900)
 }else if(attempts===1){
-  if(q.type==="open" && activeSheet===0)showRubric();
+  if(q.type==="open")showRubric();
   feedback(q.type==="open"?"Your answer needs three distinct reasons, map evidence, and a fuller explanation. Review the checklist below.":"Not quite. Check the map and try again.","bad")
 }else if(attempts===2){
-  if(q.type==="open" && activeSheet===0)showRubric();
+  if(q.type==="open")showRubric();
   feedback(q.hint,"bad")
 }else{
-  answeredIndices.add(index);
+  answeredQuestions.add(index);renderQuestionJump();
   xp+=40;gold+=40;$("#xp").textContent=xp;$("#gold").textContent=gold;
   const reveal=q.type==="open"
-    ?(activeSheet===0?"Example points: a sheltered coastal/port location for trade; relatively flat lowland suitable for building and expansion; and roads linking the city to surrounding areas.":"Review the contours, drainage, roads and settlements visible on this original sheet. Check your evidence with your teacher.")
+    ?"Example points: a sheltered coastal/port location for trade; relatively flat lowland suitable for building and expansion; and a concentration of roads linking the city to estates, settlements, the airport and surrounding productive land."
     :q.type==="topo-grid"
       ?`Accepted answers include ${q.answers.join(" or ")}.`
-      :q.type==="gradient"?`Reference gradient: approximately 1:${q.answer.toFixed(2)} (answers within ±2 mm map measurement accepted).`:q.type==="distance"?`Reference distance: ${q.answer.toFixed(2)} km (±0.10 km accepted).`:`Correct answer: ${q.answer}.`;
-  feedback(`${reveal} +40 XP and +40 gold for completing the clue.`,"bad");setTimeout(next,q.type==="open"?3500:1500)
+      :`Correct answer: ${q.answer}.`;
+  feedback(`${reveal} +40 XP and +40 gold for completing the clue.`,"bad");setTimeout(()=>{if(currentVersion===navigationVersion)next()},q.type==="open"?3500:1500)
 }
 }
 
 function goToQuestion(targetIndex){
+  navigationVersion++;
   index=Math.max(0,Math.min(targetIndex,questions.length-1));
   $("#zoomOverlay").classList.remove("show");
   $("#realMapTransition").classList.remove("show");
@@ -1170,6 +866,7 @@ function renderQuestionJump(){
     b.type="button";
     b.textContent=String(i+1);
     b.title=`Go to question ${i+1}`;
+    if(answeredQuestions.has(i))b.classList.add("answered");
     if(i===index)b.classList.add("active");
     b.addEventListener("click",()=>goToQuestion(i));
     wrap.appendChild(b);
@@ -1191,15 +888,15 @@ function showRealMapTransition(callback){
  setTimeout(()=>{overlay.classList.remove("show");callback()},2600);
 }
 function next(){
- if(index===questions.length-1){if(correct/questions.length>0.8){$("#treasurePop").classList.add("show")}setTimeout(finish,1300)}
+ if(index===questions.length-1){$("#treasurePop").classList.add("show");setTimeout(()=>{if(document.querySelector("#game").classList.contains("active"))finish()},1300)}
  else{
    const current=questions[index],upcoming=questions[index+1];
-   index++;
+   index++;navigationVersion++;
    if(!current.topo&&upcoming.topo)showRealMapTransition(render);
    else render()
  }
 }
-function finish(){recordAdventure();show("results");$("#finalScore").textContent=`${correct}/${questions.length}`;$("#accuracy").textContent=`${Math.round(correct/questions.length*100)}%`;$("#finalXp").textContent=xp;$("#finalGold").textContent=gold;showChallengeResults()}
+function finish(){navigationVersion++;show("results");$("#finalScore").textContent=`${correct}/${questions.length}`;$("#accuracy").textContent=`${Math.round(correct/questions.length*100)}%`;$("#finalXp").textContent=xp;$("#finalGold").textContent=gold;if(!resultsSubmitted){resultsSubmitted=true;saveGameResults()}}
 $("#previousSkillSlide").addEventListener("click",()=>{
   if(currentSkillSlide>0){
     currentSkillSlide--;
@@ -1223,48 +920,26 @@ $("#nextQuestion").addEventListener("click",()=>{
   if(index<questions.length-1)goToQuestion(index+1);
   else finish();
 });
-$("#startBtn").addEventListener("click",()=>{
- const name=document.getElementById('studentName').value.trim(),cls=document.getElementById('studentClass').value.trim();
- if(!name||!cls){document.getElementById('identityError').textContent='Enter your name and class before starting.';return}
- learningLevel=document.querySelector('input[name=learningLevel]:checked').value;
- if(challenge.name!==name||challenge.className!==cls||challenge.level!==learningLevel){challenge={name,className:cls,level:learningLevel,runs:[]};saveChallenge()}
- const mapId=nextChallengeMap();if(mapId===null){show('results');showChallengeResults();return}
- startNewExpedition(mapId);show("tutorial")});
-$("#beginBtn").addEventListener("click",()=>{show("game");render()});$("#submitBtn").addEventListener("click",check);$("#hintBtn").addEventListener("click",()=>feedback(questions[index].hint,"bad"));$("#closeZoom").addEventListener("click",()=>$("#zoomOverlay").classList.remove("show"));$("#replayBtn").addEventListener("click",()=>{$("#treasurePop").classList.remove("show");const id=nextChallengeMap();if(id===null){showChallengeResults();return}startNewExpedition(id);show("tutorial")});
-$("#submitChallengeBtn").addEventListener("click",submitChallengeResults);
-document.getElementById('studentName').value=challenge.name||'';
-document.getElementById('studentClass').value=challenge.className||'';
-learningLevel=challenge.level||'third';
-document.querySelector(`input[name=learningLevel][value="${learningLevel}"]`).checked=true;
-
-// Map-based ruler: 80 SVG units = 1 cm; independent of CSS screen scaling.
-(function(){
- const svg=document.querySelector(".map-svg"), ruler=document.getElementById("virtualRuler"),ticks=document.getElementById("rulerTicks"),angle=document.getElementById("rulerAngle");
- for(let i=0;i<=40;i++){
-  const x=i*8;
-  const line=document.createElementNS("http://www.w3.org/2000/svg","line");
-  line.setAttribute("x1",x);line.setAttribute("x2",x);line.setAttribute("y1",0);line.setAttribute("y2",i%10===0?21:i%5===0?15:8);ticks.appendChild(line);
-  if(i%10===0){const t=document.createElementNS("http://www.w3.org/2000/svg","text");t.setAttribute("x",x);t.setAttribute("y",35);t.setAttribute("font-size",12);t.setAttribute("text-anchor","middle");t.textContent=i/10;ticks.appendChild(t)}
- }
- let x=290,y=530,rotation=0,dragging=false,rotating=false,last=null;
- function redraw(){ruler.setAttribute("transform",`translate(${x} ${y}) rotate(${rotation})`);document.getElementById("rulerAngleValue").textContent=rotation+"°"}
- function point(e){const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const matrix=svg.getScreenCTM();return matrix?pt.matrixTransform(matrix.inverse()):null}
- ruler.addEventListener("pointerdown",e=>{
-  if(!["distance","gradient"].includes(questions[index]?.type))return;
-  rotating=Boolean(e.target.closest("#rulerRotateHandle"));dragging=!rotating;
-  last=point(e);ruler.setPointerCapture(e.pointerId);e.preventDefault();
- });
- ruler.addEventListener("pointermove",e=>{
-  if(!dragging&&!rotating)return;const next=point(e);if(!next)return;
-  if(rotating){rotation=Math.round(Math.atan2(next.y-y-22,next.x-x)*180/Math.PI);angle.value=rotation;}
-  else if(last){x+=next.x-last.x;y+=next.y-last.y;}
-  last=next;redraw();e.preventDefault();
- });
- function stop(){dragging=false;rotating=false;last=null}
- ruler.addEventListener("pointerup",stop);ruler.addEventListener("pointercancel",stop);
- angle.addEventListener("input",()=>{rotation=Number(angle.value);redraw()});
- document.getElementById("resetRuler").addEventListener("click",()=>{x=290;y=530;rotation=0;angle.value="0";redraw()});redraw();
-})();
+function restartGame(){
+ navigationVersion++;
+ index=0;attempts=0;correct=0;xp=0;gold=0;resultsSubmitted=false;
+ answeredQuestions.clear();shownSkills.clear();
+ $("#xp").textContent=0;$("#gold").textContent=0;
+ $("#saveStatus").textContent="";
+ $("#treasurePop").classList.remove("show");
+ $("#zoomOverlay").classList.remove("show");
+ $("#realMapTransition").classList.remove("show");
+ show("landing");
+}
+$("#homeQuestion").addEventListener("click",()=>{
+ if(window.confirm("Return to the home page? Your current game progress will be lost."))restartGame();
+});
+$("#startBtn").addEventListener("click",()=>show("tutorial"));
+$("#beginBtn").addEventListener("click",()=>{show("game");render()});
+$("#submitBtn").addEventListener("click",check);
+$("#hintBtn").addEventListener("click",()=>feedback(questions[index].hint,"bad"));
+$("#closeZoom").addEventListener("click",()=>$("#zoomOverlay").classList.remove("show"));
+$("#replayBtn").addEventListener("click",restartGame);
 
 // Interactive Basseterre topographic map
 const topoStage=$("#topoStage"),topoImage=$("#topoImage");
@@ -1318,7 +993,7 @@ for(let d=0;d<360;d+=5){
 const slider=$("#angleSlider"),needle=$("#bearingNeedle");
 function setAngle(v){
  const n=Number(v),rad=(n-90)*Math.PI/180;
- const forward=170,backward=0;
+ const forward=1200,backward=1200;
  needle.setAttribute("x1",180-backward*Math.cos(rad));
  needle.setAttribute("y1",180-backward*Math.sin(rad));
  needle.setAttribute("x2",180+forward*Math.cos(rad));
