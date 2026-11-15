@@ -14,7 +14,20 @@ async function dismissSkillPopup(page) {
 }
 
 async function startPlaythrough(page, { level, mapId, sheetId }) {
-  await page.route('https://**', (route) => route.abort());
+  await page.route('https://**', (route) => {
+    if (route.request().url().includes('/rest/v1/game_sessions')) {
+      return route.fulfill({
+        status: route.request().method() === 'OPTIONS' ? 204 : 201,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'apikey, authorization, content-type, prefer',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+        },
+        body: ''
+      });
+    }
+    return route.abort();
+  });
   await page.goto(gameUrl, { waitUntil: 'domcontentloaded' });
   await page.evaluate(
     ({ selectedMap, selectedSheet }) => {
@@ -36,6 +49,103 @@ async function startPlaythrough(page, { level, mapId, sheetId }) {
   await expect(page.locator('#adventureName')).toHaveText(`Adventure: ${MAP_NAMES[mapId]}`);
   await dismissSkillPopup(page);
 }
+
+async function showFakeStudentResult(page, saveStatus) {
+  const externalRequests = [];
+  page.on('request', (request) => externalRequests.push(request.url()));
+  await page.addInitScript((status) => {
+    window.__databaseSaveRequests = [];
+    const realFetch = window.fetch.bind(window);
+    window.fetch = (url, options) => {
+      if (String(url).includes('/rest/v1/game_sessions')) {
+        window.__databaseSaveRequests.push({ url: String(url), options });
+        return Promise.resolve(new Response('', { status }));
+      }
+      return realFetch(url, options);
+    };
+  }, saveStatus);
+  await page.route('https://**', (route) => {
+    if (route.request().url().includes('/rest/v1/game_sessions')) {
+      return route.fulfill({
+        status: route.request().method() === 'OPTIONS' ? 204 : saveStatus,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'apikey, authorization, content-type, prefer',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+        },
+        body: saveStatus >= 400 ? '{"message":"simulated failure"}' : ''
+      });
+    }
+    return route.abort();
+  });
+  await page.goto(gameUrl, { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => {
+    localStorage.clear();
+    challenge = {
+      name: 'Fake Student',
+      className: 'Test Class',
+      level: 'third',
+      runs: [{
+        level: 'third', mapId: 0, mapName: 'Treasure Island', correct: 10,
+        total: 12, accuracy: 83.333, treasure: true, finishedAt: '2026-11-14T12:00:00.000Z'
+      }]
+    };
+    learningLevel = 'third';
+    activeAdventure = 0;
+    correct = 10;
+    xp = 800;
+    gold = 800;
+    document.querySelector('#finalScore').textContent = '10/12';
+    document.querySelector('#accuracy').textContent = '83%';
+    document.querySelector('#finalXp').textContent = '800';
+    document.querySelector('#finalGold').textContent = '800';
+    show('results');
+    showChallengeResults();
+    saveMapHuntSession();
+  });
+  return externalRequests;
+}
+
+test('database confirmation appears only after a successful save', async ({ page }) => {
+  const externalRequests = await showFakeStudentResult(page, 201);
+
+  await expect(page.locator('#results')).toHaveClass(/active/);
+  await expect(page.locator('#finalScore')).toHaveText('10/12');
+  await expect(page.locator('#saveStatus')).toHaveText('Island results saved.');
+  await expect(page.locator('#retrySaveBtn')).toBeHidden();
+  await expect.poll(() => page.evaluate(() => window.__databaseSaveRequests.length)).toBe(1);
+  expect(externalRequests.some((url) => url.includes('google.com/forms'))).toBe(false);
+});
+
+test('failed database save keeps desktop results and offers the problem-report email', async ({ page }) => {
+  const externalRequests = await showFakeStudentResult(page, 503);
+
+  await expect(page.locator('#results')).toHaveClass(/active/);
+  await expect(page.locator('#finalScore')).toHaveText('10/12');
+  await expect(page.locator('#challengeSummary')).toContainText('Fake Student');
+  await expect(page.locator('#saveStatus')).toHaveText('Your results are still shown, but they could not be saved.');
+  await expect(page.locator('#retrySaveBtn')).toBeVisible();
+  await expect(page.locator('#saveProblemLink')).toBeVisible();
+
+  const reportHref = await page.locator('#problemReportLink').getAttribute('href');
+  expect(reportHref).toContain('mailto:awaterman@queenscollege.edu.bb');
+  expect(decodeURIComponent(reportHref)).toContain('subject=Map Hunt – Problem report');
+  expect(decodeURIComponent(reportHref)).toContain('Please describe what happened:');
+  expect(decodeURIComponent(reportHref)).toContain('Which map or level were you using?');
+  await expect(page.getByText('awaterman@queenscollege.edu.bb', { exact: true })).toBeVisible();
+  expect(externalRequests.some((url) => url.includes('google.com/forms'))).toBe(false);
+});
+
+test('failed-save message and problem report remain usable at phone width', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await showFakeStudentResult(page, 503);
+
+  await expect(page.locator('#results')).toHaveClass(/active/);
+  await expect(page.locator('#saveStatus')).toBeVisible();
+  await expect(page.locator('#saveProblemLink')).toBeVisible();
+  await expect(page.locator('#problemReportLink')).toBeVisible();
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
 
 async function chooseAnswer(page, answer) {
   const choices = page.locator('.choice');

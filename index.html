@@ -474,26 +474,27 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 <div class="score-grid"><div class="score-card">Final Score<b id="finalScore"></b></div><div class="score-card">Accuracy<b id="accuracy"></b></div><div class="score-card">XP<b id="finalXp"></b></div><div class="score-card">Gold<b id="finalGold"></b></div></div>
 <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
 <button id="replayBtn" class="primary">Choose New Map</button><button id="homeFromResults" type="button" class="secondary">⌂ Return Home</button>
-<button id="submitChallengeBtn" class="primary" type="button">Submit Challenge Results</button>
-<a id="feedbackLink" class="primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdQXLL5-lEWXA664J6JjT70D-Ym6l-YgKTiOwuQQiC4q8CfhQ/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-block">🏴‍☠️ Help Captain Redbeard Improve the Game</a>
 </div>
 <div id="challengeSummary" style="max-width:720px;margin:18px auto;padding:15px;border:2px solid #76502a;border-radius:12px;background:#fff4d8;text-align:left"></div>
-<p id="submissionHelp" style="font-size:14px"></p><p id="saveStatus" role="status" style="font-size:14px;font-weight:bold"></p><button id="retrySaveBtn" type="button">Retry Save</button>
+<p id="submissionHelp" style="font-size:14px"></p>
+<div style="display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap">
+<p id="saveStatus" role="status" aria-live="polite" style="font-size:14px;font-weight:bold;margin:4px 0"></p>
+<a id="saveProblemLink" href="mailto:awaterman@queenscollege.edu.bb?subject=Map%20Hunt%20%E2%80%93%20Problem%20report&amp;body=Please%20describe%20what%20happened%3A%0D%0A%0D%0AWhich%20map%20or%20level%20were%20you%20using%3F%0D%0A" style="display:none">Report a problem</a>
+<button id="retrySaveBtn" type="button" style="display:none">Retry Save</button>
+</div>
+<p style="font-size:14px;margin-top:10px">Need help? <a id="problemReportLink" href="mailto:awaterman@queenscollege.edu.bb?subject=Map%20Hunt%20%E2%80%93%20Problem%20report&amp;body=Please%20describe%20what%20happened%3A%0D%0A%0D%0AWhich%20map%20or%20level%20were%20you%20using%3F%0D%0A">Report a problem</a> or email <a href="mailto:awaterman@queenscollege.edu.bb">awaterman@queenscollege.edu.bb</a>.</p>
 </div></section>
 
-<script src="form-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 const SUPABASE_URL = "https://ngpptclhvqwomrsukqjf.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_41v03DCWH-ue_iP3v_ye0g_gLwJrcZ8";
-const mapHuntDatabase = window.supabase
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)
-  : null;
 const savedSessionIds = new Set();
 const savingSessionIds = new Set();
 
 async function saveMapHuntSession() {
   const status = document.getElementById("saveStatus");
+  const retry = document.getElementById("retrySaveBtn");
+  const report = document.getElementById("saveProblemLink");
   const run = uniqueRuns().find(r => r.mapId === activeAdventure);
   if (!run) {
     status.textContent = "Finish all questions to save this island.";
@@ -501,30 +502,39 @@ async function saveMapHuntSession() {
   }
   const sessionId = [challenge.name, challenge.className, challenge.level, run.mapId, run.finishedAt].join("|");
   if (savedSessionIds.has(sessionId) || savingSessionIds.has(sessionId)) return;
-  if (!mapHuntDatabase) {
-    status.textContent = "Could not connect to Supabase. Check your internet connection.";
-    return;
-  }
   savingSessionIds.add(sessionId);
+  retry.style.display = "none";
+  report.style.display = "none";
   status.textContent = "Saving your island results...";
   try {
-    const { error } = await mapHuntDatabase.from("game_sessions").insert({
-      score: run.correct,
-      total_questions: run.total,
-      accuracy: Math.round(run.accuracy),
-      xp: xp,
-      gold: gold,
-      student_name: challenge.name,
-      student_class: challenge.className,
-      learning_level: challenge.level,
-      map_name: run.mapName
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/game_sessions`, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_PUBLISHABLE_KEY,
+        "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify({
+        score: run.correct,
+        total_questions: run.total,
+        accuracy: Math.round(run.accuracy),
+        xp: xp,
+        gold: gold,
+        student_name: challenge.name,
+        student_class: challenge.className,
+        learning_level: challenge.level,
+        map_name: run.mapName
+      })
     });
-    if (error) throw error;
+    if (!response.ok) throw new Error(`Database returned ${response.status}`);
     savedSessionIds.add(sessionId);
-    status.textContent = "Island results saved to Supabase.";
+    status.textContent = "Island results saved.";
   } catch (error) {
-    console.error("Map Hunt: Supabase save failed", error);
-    status.textContent = "Could not save results. Select Retry Save to try again.";
+    console.error("Map Hunt: database save failed", error);
+    status.textContent = "Your results are still shown, but they could not be saved.";
+    retry.style.display = "inline-block";
+    report.style.display = "inline";
   } finally {
     savingSessionIds.delete(sessionId);
   }
@@ -570,16 +580,7 @@ function showChallengeResults(){
  runs.forEach((r,i)=>{const line=document.createElement('p');line.textContent=`${i+1}. ${r.mapName}: ${r.correct}/${r.total} (${Math.round(r.accuracy)}%) — ${r.treasure?'Treasure Found':'Completed'}`;summary.appendChild(line)});
  const totalLine=document.createElement('p');totalLine.textContent=`Overall: ${score}/${total} (${accuracy}%) | Treasures found: ${runs.filter(r=>r.treasure).length}`;summary.appendChild(totalLine);
  document.getElementById('replayBtn').style.display=count>=3?'none':'';
- document.getElementById('submitChallengeBtn').textContent=count>=3?'Submit Three-Island Results':'Submit Current Progress';
- document.getElementById('submissionHelp').textContent=count>=3?'You have completed the three-island challenge. Submit your results to claim your participation marks.':'You may submit partial progress, or play another island for more participation marks.';
-}
-function submitChallengeResults(){
- const config=window.MAP_HUNT_FORM_CONFIG;
- if(!config||!config.formUrl||!config.entries){alert('Teacher setup needed: the Google Form has not been connected yet. Ask your teacher to configure form-config.js.');return;}
- const runs=uniqueRuns(),correctSum=runs.reduce((n,r)=>n+r.correct,0),totalSum=runs.reduce((n,r)=>n+r.total,0);
- const fields={studentName:challenge.name,studentClass:challenge.className,mapsCompleted:String(runs.length),mapNames:runs.map(r=>r.mapName).join(', '),totalQuestions:String(totalSum),totalCorrect:String(correctSum),overallAccuracy:totalSum?(100*correctSum/totalSum).toFixed(1)+'%':'0%',treasuresFound:String(runs.filter(r=>r.treasure).length),bonusMarks:String(runs.length),challengeId:(challenge.name+'-'+challenge.className).toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,60)};
- const url=new URL(config.formUrl);Object.entries(fields).forEach(([k,v])=>{if(config.entries[k])url.searchParams.set('entry.'+config.entries[k],v)});
- window.open(url.toString(),'_blank','noopener,noreferrer');
+ document.getElementById('submissionHelp').textContent=count>=3?'You have completed the three-island challenge. Each island result is saved separately.':'Play another island for more participation marks. Each completed island is saved separately.';
 }
 loadChallenge();
 // Revision 6.5: one calibrated measurement model for all SVG point-to-point exercises.
@@ -1287,7 +1288,6 @@ $("#startBtn").addEventListener("click",()=>{
  const mapId=nextChallengeMap();if(mapId===null){show('results');showChallengeResults();return}
  startNewExpedition(mapId);show("tutorial")});
 $("#beginBtn").addEventListener("click",()=>{show("game");render()});$("#submitBtn").addEventListener("click",check);$("#hintBtn").addEventListener("click",()=>feedback(questions[index].hint,"bad"));$("#closeZoom").addEventListener("click",()=>$("#zoomOverlay").classList.remove("show"));$("#replayBtn").addEventListener("click",()=>{$("#treasurePop").classList.remove("show");const id=nextChallengeMap();if(id===null){showChallengeResults();return}startNewExpedition(id);show("tutorial")});
-$("#submitChallengeBtn").addEventListener("click",submitChallengeResults);
 $("#retrySaveBtn").addEventListener("click",saveMapHuntSession);
 function returnToHome(){
   $("#treasurePop").classList.remove("show");
