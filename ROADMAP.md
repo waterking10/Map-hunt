@@ -24,6 +24,7 @@ This roadmap reflects features verified on the repository's main branch. Work on
 - Four-figure and six-figure grid-reference questions.
 - Compass-direction, bearing, scaled-distance, gradient, and topographic-evidence questions.
 - Progressive three-attempt feedback: retry guidance, a question-specific hint, and later answer guidance.
+- Four-stage, data-derived hints for grid references, directions, bearings, distance, gradient, and topographic-map questions.
 - A three-island challenge with score, accuracy, XP, gold, and participation progress.
 
 ### Tools and tutorials
@@ -59,7 +60,8 @@ No development item is marked In Progress on the committed main branch. Update t
 
 ### Hints and learning
 
-- Review existing progressive hints for clarity and educational value, making later hints more specific where evidence shows students need more support.
+- Gather classroom feedback on which fourth-level clues best support independent work.
+- Consider teacher-configurable hint wording and optional analytics without changing student scores.
 - Simplify lengthy geography notes without removing essential concepts.
 - Improve student-facing feedback and error messages where usability testing identifies confusion.
 - Evaluate whether the existing six-figure grid-selection banner and lesson need additional persistent instructions.

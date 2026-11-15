@@ -77,6 +77,12 @@ Map Hunt currently includes:
 8. Use the numbered question navigation to revisit unfinished questions.
 9. Complete every question to view the island result and, when available, choose another map for the three-island challenge.
 
+## Using Progressive Hints
+
+Each question offers up to four progressive hints. Select **Show hint 1** for a reminder of the method, then request further hints only when needed. Each new hint is more specific, and earlier hints stay visible while the student works. Hint progress resets when a new island expedition begins.
+
+Requesting hints does not cost XP or gold. Rewards still depend on submitted attempts: a correct first, second, or later attempt earns 100, 80, or 60 points respectively. After three unsuccessful submissions, the clue is completed for 40 points and the reference answer is shown.
+
 ## Geography Tools and Controls
 
 ### Grid references

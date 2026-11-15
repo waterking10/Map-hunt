@@ -20,10 +20,14 @@ This file records verified repository changes. The project currently has no Git 
 
 - Repository-wide development, testing, documentation, security, accessibility, and pull-request rules.
 - A current project guide and development roadmap.
+- Four-stage, question-specific hints for every supported geography question type.
+- Accessible hint status text and touch-friendly controls for phone and desktop layouts.
 
 ### Changed
 
 - Expanded project documentation to reflect the verified game, controls, browser tests, and local setup.
+- Kept earlier hints visible while students work and reset hint progress for each new island expedition.
+- Documented that requesting hints does not change scoring.
 
 ### Fixed
 

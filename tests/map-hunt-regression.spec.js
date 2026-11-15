@@ -5,6 +5,33 @@ const { MAP_NAMES, SHEETS, expectedAnswer } = require('./fixtures/map-hunt-cases
 
 const gameUrl = pathToFileURL(path.join(__dirname, '..', 'index.html')).href;
 
+async function installSupabaseMock(page, { signedIn = true, insertError = null } = {}) {
+  await page.addInitScript(({ hasSession, errorMessage }) => {
+    const user = hasSession ? {
+      id: '11111111-1111-4111-8111-111111111111',
+      email: 'fake.student@queenscollege.edu.bb',
+      user_metadata: { full_name: 'Fake Student' }
+    } : null;
+    window.__supabaseInserts = [];
+    window.supabase = {
+      createClient: () => ({
+        auth: {
+          getSession: async () => ({ data: { session: user ? { user } : null }, error: null }),
+          onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }),
+          signInWithOAuth: async () => ({ data: {}, error: null }),
+          signOut: async () => ({ error: null })
+        },
+        from: () => ({
+          insert: async (payload) => {
+            window.__supabaseInserts.push(payload);
+            return { error: errorMessage ? { message: errorMessage } : null };
+          }
+        })
+      })
+    };
+  }, { hasSession: signedIn, errorMessage: insertError });
+}
+
 async function dismissSkillPopup(page) {
   await page.waitForTimeout(100);
   const popup = page.locator('#skillPopup');
@@ -14,6 +41,7 @@ async function dismissSkillPopup(page) {
 }
 
 async function startPlaythrough(page, { level, mapId, sheetId }) {
+  await installSupabaseMock(page);
   await page.route('https://**', (route) => {
     if (route.request().url().includes('/rest/v1/game_sessions')) {
       return route.fulfill({
@@ -29,6 +57,7 @@ async function startPlaythrough(page, { level, mapId, sheetId }) {
     return route.abort();
   });
   await page.goto(gameUrl, { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#authStatus')).toHaveText('Signed in as fake.student@queenscollege.edu.bb');
   await page.evaluate(
     ({ selectedMap, selectedSheet }) => {
       localStorage.clear();
@@ -39,7 +68,6 @@ async function startPlaythrough(page, { level, mapId, sheetId }) {
     { selectedMap: mapId, selectedSheet: sheetId }
   );
 
-  await page.getByLabel('Student name').fill('Regression Student');
   await page.getByLabel('Class').fill('Test Class');
   if (level === 'csec') {
     await page.getByLabel(/CSEC/).check();
@@ -50,34 +78,10 @@ async function startPlaythrough(page, { level, mapId, sheetId }) {
   await dismissSkillPopup(page);
 }
 
-async function showFakeStudentResult(page, saveStatus) {
+async function showFakeStudentResult(page) {
   const externalRequests = [];
+  await installSupabaseMock(page);
   page.on('request', (request) => externalRequests.push(request.url()));
-  await page.addInitScript((status) => {
-    window.__databaseSaveRequests = [];
-    const realFetch = window.fetch.bind(window);
-    window.fetch = (url, options) => {
-      if (String(url).includes('/rest/v1/game_sessions')) {
-        window.__databaseSaveRequests.push({ url: String(url), options });
-        return Promise.resolve(new Response('', { status }));
-      }
-      return realFetch(url, options);
-    };
-  }, saveStatus);
-  await page.route('https://**', (route) => {
-    if (route.request().url().includes('/rest/v1/game_sessions')) {
-      return route.fulfill({
-        status: route.request().method() === 'OPTIONS' ? 204 : saveStatus,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'apikey, authorization, content-type, prefer',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS'
-        },
-        body: saveStatus >= 400 ? '{"message":"simulated failure"}' : ''
-      });
-    }
-    return route.abort();
-  });
   await page.goto(gameUrl, { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => {
     localStorage.clear();
@@ -86,6 +90,7 @@ async function showFakeStudentResult(page, saveStatus) {
       className: 'Test Class',
       level: 'third',
       runs: [{
+        attemptId: '22222222-2222-4222-8222-222222222222',
         level: 'third', mapId: 0, mapName: 'Treasure Island', correct: 10,
         total: 12, accuracy: 83.333, treasure: true, finishedAt: '2026-11-14T12:00:00.000Z'
       }]
@@ -106,46 +111,111 @@ async function showFakeStudentResult(page, saveStatus) {
   return externalRequests;
 }
 
-test('database confirmation appears only after a successful save', async ({ page }) => {
-  const externalRequests = await showFakeStudentResult(page, 201);
+test('signed-in result is linked to the account and marked unverified', async ({ page }) => {
+  const externalRequests = await showFakeStudentResult(page);
 
   await expect(page.locator('#results')).toHaveClass(/active/);
   await expect(page.locator('#finalScore')).toHaveText('10/12');
-  await expect(page.locator('#saveStatus')).toHaveText('Island results saved.');
-  await expect(page.locator('#retrySaveBtn')).toBeHidden();
-  await expect.poll(() => page.evaluate(() => window.__databaseSaveRequests.length)).toBe(1);
+  await expect(page.locator('#saveStatus')).toContainText('not yet verified for formal grading');
+  const inserts = await page.evaluate(() => window.__supabaseInserts);
+  expect(inserts).toHaveLength(1);
+  expect(inserts[0]).toMatchObject({
+    user_id: '11111111-1111-4111-8111-111111111111',
+    student_email: 'fake.student@queenscollege.edu.bb',
+    score: 10,
+    total_questions: 12,
+    score_verification: 'unverified_client'
+  });
+  expect(externalRequests.some((url) => url.includes('/rest/v1/game_sessions'))).toBe(false);
   expect(externalRequests.some((url) => url.includes('google.com/forms'))).toBe(false);
 });
 
-test('failed database save keeps desktop results and offers the problem-report email', async ({ page }) => {
-  const externalRequests = await showFakeStudentResult(page, 503);
-
-  await expect(page.locator('#results')).toHaveClass(/active/);
-  await expect(page.locator('#finalScore')).toHaveText('10/12');
-  await expect(page.locator('#challengeSummary')).toContainText('Fake Student');
-  await expect(page.locator('#saveStatus')).toHaveText('Your results are still shown, but they could not be saved.');
-  await expect(page.locator('#retrySaveBtn')).toBeVisible();
-  await expect(page.locator('#saveProblemLink')).toBeVisible();
-
-  const reportHref = await page.locator('#problemReportLink').getAttribute('href');
-  expect(reportHref).toContain('mailto:awaterman@queenscollege.edu.bb');
-  expect(decodeURIComponent(reportHref)).toContain('subject=Map Hunt – Problem report');
-  expect(decodeURIComponent(reportHref)).toContain('Please describe what happened:');
-  expect(decodeURIComponent(reportHref)).toContain('Which map or level were you using?');
-  await expect(page.getByText('awaterman@queenscollege.edu.bb', { exact: true })).toBeVisible();
-  expect(externalRequests.some((url) => url.includes('google.com/forms'))).toBe(false);
-});
-
-test('failed-save message and problem report remain usable at phone width', async ({ page }) => {
+test('recorded-results notice remains usable at phone width', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await showFakeStudentResult(page, 503);
+  const externalRequests = await showFakeStudentResult(page);
 
   await expect(page.locator('#results')).toHaveClass(/active/);
   await expect(page.locator('#saveStatus')).toBeVisible();
-  await expect(page.locator('#saveProblemLink')).toBeVisible();
+  await expect(page.locator('#saveStatus')).toContainText('not yet verified for formal grading');
   await expect(page.locator('#problemReportLink')).toBeVisible();
+  expect(externalRequests.some((url) => url.includes('/rest/v1/game_sessions'))).toBe(false);
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test('signed-out visitor cannot start a scored attempt', async ({ page }) => {
+  await installSupabaseMock(page, { signedIn: false });
+  await page.route('https://**', route => route.abort());
+  await page.goto(gameUrl, { waitUntil: 'domcontentloaded' });
+  await page.getByLabel('Class').fill('Test Class');
+  await page.getByRole('button', { name: 'Start Adventure' }).click();
+  await expect(page.locator('#identityError')).toHaveText('Sign in with your school Google account before starting.');
+  await expect(page.locator('#landing')).toHaveClass(/active/);
+  expect(await page.evaluate(() => window.__supabaseInserts)).toEqual([]);
+});
+
+test('progressive hints cover every question type, persist per question, and reset for a new expedition', async ({ page }) => {
+  test.setTimeout(120_000);
+  await startPlaythrough(page, { level: 'csec', mapId: 0, sheetId: 0 });
+  const seenTypes = new Set();
+
+  for (let questionIndex = 0; questionIndex < 11; questionIndex += 1) {
+    await dismissSkillPopup(page);
+    const type = await page.evaluate(() => questions[index].type);
+    seenTypes.add(type);
+    const correctAnswers = await page.evaluate(() => {
+      const question = questions[index];
+      return [question.answer, ...(question.answers || [])].filter(Boolean).map(String);
+    });
+
+    for (let hintNumber = 1; hintNumber <= 4; hintNumber += 1) {
+      await page.locator('#hintBtn').click();
+      await expect(page.locator('#hintItems li')).toHaveCount(hintNumber);
+      await expect(page.locator('#hintItems li').nth(hintNumber - 1)).toContainText(`Hint ${hintNumber}:`);
+    }
+    await expect(page.locator('#hintBtn')).toBeDisabled();
+    const hintText = await page.locator('#hintItems').innerText();
+    for (const correctAnswer of correctAnswers) {
+      expect(hintText).not.toContain(`Correct answer: ${correctAnswer}`);
+    }
+
+    if (questionIndex === 0) {
+      await page.locator('#nextQuestion').click();
+      await dismissSkillPopup(page);
+      await page.locator('#previousQuestion').click();
+      await expect(page.locator('#hintItems li')).toHaveCount(4);
+    }
+    if (questionIndex < 10) await page.locator('#nextQuestion').click();
+  }
+
+  expect([...seenTypes].sort()).toEqual(
+    ['bearing', 'choice', 'distance', 'gradient', 'number', 'open', 'six', 'topo-grid'].sort()
+  );
+  await expect(page.locator('#xp')).toHaveText('0');
+  await expect(page.locator('#gold')).toHaveText('0');
+
+  await page.evaluate(() => {
+    startNewExpedition(1);
+    render();
+  });
+  await dismissSkillPopup(page);
+  await expect(page.locator('#hintItems li')).toHaveCount(0);
+  await expect(page.locator('#hintBtn')).toHaveText('Show hint 1');
+});
+
+for (const viewport of [
+  { name: 'phone', width: 390, height: 844 },
+  { name: 'desktop', width: 1280, height: 900 }
+]) {
+  test(`progressive hint controls remain usable at ${viewport.name} width`, async ({ page }) => {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await startPlaythrough(page, { level: 'third', mapId: 0, sheetId: 0 });
+    await page.locator('#hintBtn').click();
+    await expect(page.locator('#hintList')).toBeVisible();
+    await expect(page.locator('#hintItems li')).toHaveCount(1);
+    await expect(page.locator('#hintBtn')).toBeVisible();
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  });
+}
 
 async function chooseAnswer(page, answer) {
   const choices = page.locator('.choice');

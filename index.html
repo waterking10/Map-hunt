@@ -34,6 +34,7 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 .topo-help{position:absolute;right:14px;bottom:12px;z-index:2;background:rgba(255,248,224,.94);border:2px solid #50351f;border-radius:9px;padding:6px 10px;font-size:13px}
 .open-answer{width:100%;min-height:155px;resize:vertical;border:3px solid #6a4727;border-radius:12px;padding:12px 14px;background:#fff9e8;font-size:17px;line-height:1.45}
 .answer-guide{margin-top:9px;font-size:14px;line-height:1.4;background:rgba(255,255,255,.35);border-radius:10px;padding:9px}
+.hint-list{display:none;margin-top:12px;padding:10px 12px;background:#fff4ce;border:2px solid #8a642c;border-radius:12px}.hint-list.show{display:block}.hint-list h3{margin:0 0 7px;font-size:16px}.hint-list ol{margin:0;padding-left:24px}.hint-list li{margin:6px 0;line-height:1.35}.hint-status{font-size:13px;margin-top:7px;color:#573b1e}
 
 
 /* Real-map transition and interactive topographic viewer */
@@ -279,7 +280,8 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 <body>
 <section id="landing" class="screen center active">
 <div class="panel landing"><div class="ship"><svg viewBox="0 0 220 150" width="100%"><path d="M35 105 Q110 140 185 105 L170 135 H55Z" fill="#5b3219" stroke="#2d170c" stroke-width="5"/><path d="M110 22V112" stroke="#3b2415" stroke-width="7"/><path d="M114 30 Q170 48 116 80Z" fill="#eee0b6" stroke="#3b2415" stroke-width="4"/><path d="M105 42 Q58 55 105 88Z" fill="#b43c2c" stroke="#3b2415" stroke-width="4"/></svg></div><h1 class="logo">MAP HUNT</h1><div class="subtitle">The Lost Treasure</div><div style="margin-top:6px;font-size:15px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.78">By Ajani Waterman</div><p class="tag">Join Captain Redbeard’s crew as the ship’s newest navigator. Read the island map, crack grid references, calculate bearings, and reach the treasure before the rival pirates.</p><div id="challengeIdentity" style="max-width:430px;margin:16px auto;padding:15px;border:2px solid #8d622e;border-radius:14px;background:#fff4d6;text-align:left">
-<label for="studentName" style="display:block;font-weight:bold">Student name</label><input id="studentName" maxlength="90" autocomplete="name" placeholder="First and last name" style="width:100%;padding:10px;margin:5px 0 10px;border:2px solid #725333;border-radius:7px">
+<div id="authPanel" style="margin-bottom:12px;padding:10px;border:2px solid #725333;border-radius:9px;background:#fff"><p id="authStatus" role="status" aria-live="polite" style="margin:0 0 8px;font-weight:bold">Sign in with your school Google account to record results.</p><button id="googleSignInBtn" type="button" class="secondary">Sign in with Google</button><button id="signOutBtn" type="button" class="secondary" style="display:none">Sign out</button></div>
+<label for="studentName" style="display:block;font-weight:bold">Student name</label><input id="studentName" maxlength="90" autocomplete="name" placeholder="Filled from Google sign-in" readonly style="width:100%;padding:10px;margin:5px 0 10px;border:2px solid #725333;border-radius:7px;background:#f3ead7">
 <label for="studentClass" style="display:block;font-weight:bold">Class</label><input id="studentClass" maxlength="40" placeholder="e.g. 3 Beta" style="width:100%;padding:10px;margin:5px 0;border:2px solid #725333;border-radius:7px">
 <fieldset style="margin:10px 0;padding:12px;border:2px solid #725333;border-radius:9px"><legend style="font-weight:bold">Choose your learning level</legend><label style="display:block;margin:5px 0"><input type="radio" name="learningLevel" value="third" checked> Third Form — 12 questions: grid references, distances, directions and bearings</label><label style="display:block;margin:5px 0"><input type="radio" name="learningLevel" value="csec"> CSEC (Fourth & Fifth Form) — full game and topographic maps</label></fieldset><p style="font-size:13px;margin:9px 0 0">Three different islands earn up to 3 participation bonus marks. Treasure is found only above 80% accuracy. Your progress is saved on this device.</p>
 <p id="identityError" style="color:#a52d25;font-weight:bold" role="alert"></p>
@@ -493,7 +495,7 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
     <button id="nextQuestion" type="button">Skip / Next →</button>
   </div>
 </div>
-<div id="protractorControls" class="protractor-controls"><b>Digital 360° protractor</b><p style="margin:6px 0">Place the protractor centre on the starting symbol. Use the straight connecting line to measure the bearing.</p><div class="bearing-drag-instruction">Drag the slider below to rotate the red bearing line. The red ray stays inside the protractor. Rotate it toward the destination and read the clockwise angle from north.</div><input id="angleSlider" type="range" min="0" max="359" value="0" aria-label="Drag to rotate the red bearing line"></div><div class="question-card"><span id="level" class="level"></span><h2 id="question"></h2><div id="answerArea"></div><div class="actions"><button id="submitBtn" class="primary" style="font-size:16px;padding:10px 16px">Submit Answer</button><button id="hintBtn" class="secondary">Hint</button></div><div id="feedback" class="feedback" aria-live="polite"></div></div></aside>
+<div id="protractorControls" class="protractor-controls"><b>Digital 360° protractor</b><p style="margin:6px 0">Place the protractor centre on the starting symbol. Use the straight connecting line to measure the bearing.</p><div class="bearing-drag-instruction">Drag the slider below to rotate the red bearing line. The red ray stays inside the protractor. Rotate it toward the destination and read the clockwise angle from north.</div><input id="angleSlider" type="range" min="0" max="359" value="0" aria-label="Drag to rotate the red bearing line"></div><div class="question-card"><span id="level" class="level"></span><h2 id="question"></h2><div id="answerArea"></div><div class="actions"><button id="submitBtn" class="primary" style="font-size:16px;padding:10px 16px">Submit Answer</button><button id="hintBtn" class="secondary">Show hint 1</button></div><section id="hintList" class="hint-list" aria-live="polite"><h3>Hints shown</h3><ol id="hintItems"></ol><div id="hintStatus" class="hint-status"></div></section><div id="feedback" class="feedback" aria-live="polite"></div></div></aside>
 </div></div></section>
 <section id="results" class="screen center"><div class="panel results">
 
@@ -522,68 +524,26 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 </div>
 <div id="challengeSummary" style="max-width:720px;margin:18px auto;padding:15px;border:2px solid #76502a;border-radius:12px;background:#fff4d8;text-align:left"></div>
 <p id="submissionHelp" style="font-size:14px"></p>
-<div style="display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap">
-<p id="saveStatus" role="status" aria-live="polite" style="font-size:14px;font-weight:bold;margin:4px 0"></p>
-<a id="saveProblemLink" href="mailto:awaterman@queenscollege.edu.bb?subject=Map%20Hunt%20%E2%80%93%20Problem%20report&amp;body=Please%20describe%20what%20happened%3A%0D%0A%0D%0AWhich%20map%20or%20level%20were%20you%20using%3F%0D%0A" style="display:none">Report a problem</a>
-<button id="retrySaveBtn" type="button" style="display:none">Retry Save</button>
-</div>
+<p id="saveStatus" role="status" aria-live="polite" style="font-size:14px;font-weight:bold;margin:4px 0"></p><button id="retrySaveBtn" type="button" style="display:none">Retry save</button>
 <p style="font-size:14px;margin-top:10px">Need help? <a id="problemReportLink" href="mailto:awaterman@queenscollege.edu.bb?subject=Map%20Hunt%20%E2%80%93%20Problem%20report&amp;body=Please%20describe%20what%20happened%3A%0D%0A%0D%0AWhich%20map%20or%20level%20were%20you%20using%3F%0D%0A">Report a problem</a> or email <a href="mailto:awaterman@queenscollege.edu.bb">awaterman@queenscollege.edu.bb</a>.</p>
 </div></section>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.min.js" integrity="sha384-gnyZit14c5lnGcarmA166QQjjJXpucw25ogZXuwH3HxxY904zHkBqmxVpelsPorb" crossorigin="anonymous"></script>
 <script>
-const SUPABASE_URL = "https://ngpptclhvqwomrsukqjf.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_41v03DCWH-ue_iP3v_ye0g_gLwJrcZ8";
-const savedSessionIds = new Set();
-const savingSessionIds = new Set();
-
-async function saveMapHuntSession() {
-  const status = document.getElementById("saveStatus");
-  const retry = document.getElementById("retrySaveBtn");
-  const report = document.getElementById("saveProblemLink");
-  const run = uniqueRuns().find(r => r.mapId === activeAdventure);
-  if (!run) {
-    status.textContent = "Finish all questions to save this island.";
-    return;
-  }
-  const sessionId = [challenge.name, challenge.className, challenge.level, run.mapId, run.finishedAt].join("|");
-  if (savedSessionIds.has(sessionId) || savingSessionIds.has(sessionId)) return;
-  savingSessionIds.add(sessionId);
-  retry.style.display = "none";
-  report.style.display = "none";
-  status.textContent = "Saving your island results...";
-  try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/game_sessions`, {
-      method: "POST",
-      headers: {
-        "apikey": SUPABASE_PUBLISHABLE_KEY,
-        "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-        "Content-Type": "application/json",
-        "Prefer": "return=minimal"
-      },
-      body: JSON.stringify({
-        score: run.correct,
-        total_questions: run.total,
-        accuracy: Math.round(run.accuracy),
-        xp: xp,
-        gold: gold,
-        student_name: challenge.name,
-        student_class: challenge.className,
-        learning_level: challenge.level,
-        map_name: run.mapName
-      })
-    });
-    if (!response.ok) throw new Error(`Database returned ${response.status}`);
-    savedSessionIds.add(sessionId);
-    status.textContent = "Island results saved.";
-  } catch (error) {
-    console.error("Map Hunt: database save failed", error);
-    status.textContent = "Your results are still shown, but they could not be saved.";
-    retry.style.display = "inline-block";
-    report.style.display = "inline";
-  } finally {
-    savingSessionIds.delete(sessionId);
-  }
-}
+const SUPABASE_URL="https://ngpptclhvqwomrsukqjf.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_41v03DCWH-ue_iP3v_ye0g_gLwJrcZ8";
+const SCHOOL_EMAIL_DOMAIN='queenscollege.edu.bb';
+const mapHuntSupabase=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let mapHuntSession=null;
+const savedAttemptIds=new Set(),savingAttemptIds=new Set();
+function displayNameFor(user){return user?.user_metadata?.full_name||user?.user_metadata?.name||user?.email?.split('@')[0]||''}
+function updateAuthUi(session){const user=session?.user,schoolAccount=user?.email?.toLowerCase().endsWith(`@${SCHOOL_EMAIL_DOMAIN}`);mapHuntSession=schoolAccount?session:null;document.getElementById('googleSignInBtn').style.display=schoolAccount?'none':'';document.getElementById('signOutBtn').style.display=user?'':'none';document.getElementById('authStatus').textContent=schoolAccount?`Signed in as ${user.email}`:user?'This is not a school account. Sign out, then use your school Google account.':'Sign in with your school Google account to record results.';document.getElementById('studentName').value=schoolAccount?displayNameFor(user):''}
+async function initializeAuth(){if(!mapHuntSupabase){document.getElementById('authStatus').textContent='Sign-in service could not load. Refresh and try again.';return}const {data,error}=await mapHuntSupabase.auth.getSession();if(error){document.getElementById('authStatus').textContent='Could not check sign-in. Refresh and try again.';return}updateAuthUi(data.session);mapHuntSupabase.auth.onAuthStateChange((_event,session)=>updateAuthUi(session))}
+async function saveMapHuntSession(){const status=document.getElementById('saveStatus'),retry=document.getElementById('retrySaveBtn');const run=uniqueRuns().find(r=>r.mapId===activeAdventure);if(!run){status.textContent='Finish all questions to save this island.';return}if(!mapHuntSession?.user){status.textContent='Result kept on this device only. Sign in before starting to record it.';return}if(!run.attemptId){run.attemptId=crypto.randomUUID();saveChallenge()}if(savedAttemptIds.has(run.attemptId)||savingAttemptIds.has(run.attemptId))return;savingAttemptIds.add(run.attemptId);retry.style.display='none';status.textContent='Saving your island result...';const payload={attempt_id:run.attemptId,user_id:mapHuntSession.user.id,student_email:mapHuntSession.user.email,student_name:displayNameFor(mapHuntSession.user),student_class:challenge.className,learning_level:challenge.level,map_name:run.mapName,score:run.correct,total_questions:run.total,accuracy:Math.round(run.accuracy),xp,gold,score_verification:'unverified_client'};try{const {error}=await mapHuntSupabase.from('game_sessions').insert(payload);if(error)throw error;savedAttemptIds.add(run.attemptId);status.textContent='Island result recorded for your signed-in account. This score is not yet verified for formal grading.'}catch(error){console.error('Map Hunt: database save failed',error);status.textContent='Your result is shown, but it could not be recorded.';retry.style.display='inline-block'}finally{savingAttemptIds.delete(run.attemptId)}}
+document.getElementById('googleSignInBtn').addEventListener('click',async()=>{if(!mapHuntSupabase)return;const redirectTo=location.protocol==='file:'?undefined:`${location.origin}${location.pathname}`;const {error}=await mapHuntSupabase.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{hd:SCHOOL_EMAIL_DOMAIN}}});if(error)document.getElementById('authStatus').textContent=`Sign-in failed: ${error.message}`});
+document.getElementById('signOutBtn').addEventListener('click',async()=>{if(mapHuntSupabase)await mapHuntSupabase.auth.signOut()});
+document.getElementById('retrySaveBtn').addEventListener('click',saveMapHuntSession);
+initializeAuth();
 </script>
 
 <script>
@@ -593,6 +553,7 @@ let challenge={name:'',className:'',level:'third',runs:[]};
 let learningLevel='third';
 let answeredIndices=new Set();
 let completedQuestionAttempts=new Map();
+let shownHintCounts=new Map();
 function loadChallenge(){try{const obj=JSON.parse(localStorage.getItem(CHALLENGE_STORAGE_KEY)||'null');if(obj&&Array.isArray(obj.runs))challenge=obj;}catch(e){} }
 function saveChallenge(){try{localStorage.setItem(CHALLENGE_STORAGE_KEY,JSON.stringify(challenge));}catch(e){} }
 function uniqueRuns(){const map=new Map();challenge.runs.forEach(r=>{if(!map.has(r.mapId))map.set(r.mapId,r)});return [...map.values()].slice(0,3)}
@@ -600,7 +561,7 @@ function recordAdventure(){
  if(answeredIndices.size!==questions.length)return false;
  if(uniqueRuns().some(r=>r.mapId===activeAdventure))return true;
  if(uniqueRuns().length>=3)return true;
- challenge.runs.push({level:learningLevel,mapId:activeAdventure,mapName:MAP_NAMES[activeAdventure],correct,total:questions.length,accuracy:100*correct/questions.length,treasure:100*correct/questions.length>80,finishedAt:new Date().toISOString()});
+ challenge.runs.push({attemptId:crypto.randomUUID(),level:learningLevel,mapId:activeAdventure,mapName:MAP_NAMES[activeAdventure],correct,total:questions.length,accuracy:100*correct/questions.length,treasure:100*correct/questions.length>80,finishedAt:new Date().toISOString()});
  saveChallenge();return true;
 }
 function nextChallengeMap(){
@@ -787,6 +748,37 @@ function setPointMarkers(layer,pair,gradient){
  el.innerHTML=mark(pair.a,'A',gradient?pair.elevationA:null)+mark(pair.b,'B',gradient?pair.elevationB:null)+(gradient?`<path d="M${pair.a.x} ${pair.a.y}L${pair.b.x} ${pair.b.y}" fill="none" stroke="#9b3025" stroke-width="2" stroke-dasharray="5 4"/>`:'');
 }
 function displaySymbolName(name){return ({treasureSpot:'Treasure X',camp:'Pirate Camp',skull:'Skull',cave:'Cave',well:'Well',tree:'Tree',lighthouse:'Lighthouse'})[name]||name}
+function positionBand(value){return value<=3?'the first third':value<=6?'the middle third':'the final third'}
+function progressiveHints(q){
+ const legacy=q.hint||'Study the map evidence named in the question.';
+ if(q.type==='number'){
+  const ref=String(q.answer),e=Number(ref.slice(0,2)),n=Number(ref.slice(2,4));
+  return ['A four-figure reference names the grid square: read the left easting, then the lower northing.','Find the centre of the named symbol and trace left and down to the numbered grid lines.',`The symbol is between eastings ${e}–${e+1} and northings ${n}–${n+1}.`,`Use the grid line immediately left of the symbol for the first pair and the line immediately below it for the second pair; enter four digits without spaces.`];
+ }
+ if(q.type==='six'){
+  const ref=String(q.answer),e=ref.slice(0,2),n=ref.slice(3,5),x=Number(ref[2]),y=Number(ref[5]);
+  return ['A six-figure reference gives easting, then northing, with one estimated tenth added to each.','Select the symbol’s four-figure square, divide it mentally into tenths, then estimate across before up.',`Work inside square ${e}${n}; read the symbol’s centre, not its edge.`,`The centre lies in ${positionBand(x)} across the square and ${positionBand(y)} up it. Combine each grid-line pair with your estimated tenth.`];
+ }
+ if(q.type==='choice'&&!q.topo){
+  return ['Direction describes where the destination lies when you start at the first named place.','Use the compass rose with north at the top; locate the start before looking toward the destination.','Compare the destination with the start both left/right and above/below.',`From the start, the destination is ${q.answer.includes('East')?'to the right':q.answer.includes('West')?'to the left':'almost vertically aligned'} and ${q.answer.includes('North')?'higher':q.answer.includes('South')?'lower':'at about the same height'} on the map.`];
+ }
+ if(q.type==='bearing'){
+  const bearing=Number(q.answer),lower=Math.floor(bearing/90)*90,upper=Math.min(360,lower+90);
+  return ['A bearing is measured clockwise from grid north and written with three figures.','Centre the protractor on the starting symbol, align 0° with north, and aim the ray at the destination.','Make sure you are measuring from the first named place to the second; reversing them changes the bearing.',`The ray falls in the ${lower}°–${upper}° quadrant. Read the scale clockwise and enter three digits.`];
+ }
+ if(q.type==='distance'){
+  const pair=q.measurePair||MEASURED_POINT_PAIRS.distance,cm=mapDistanceCm(pair),low=Math.floor(cm*2)/2,high=Math.ceil(cm*2)/2;
+  return ['Use the map scale to convert a straight-line map measurement into ground distance.','Place the ruler centre to centre. At 1:50,000, every 1 cm represents 0.5 km.','Read the ruler to the nearest millimetre, then multiply the centimetres by 0.5 to get kilometres.',`Your ruler reading should be between ${low.toFixed(1)} and ${high.toFixed(1)} cm. Recheck the ruler placement before converting.`];
+ }
+ if(q.type==='gradient'){
+  const pair=MEASURED_POINT_PAIRS.gradient,interval=Math.abs(pair.elevationA-pair.elevationB),cm=mapDistanceCm(pair),low=Math.floor(cm*2)/2,high=Math.ceil(cm*2)/2;
+  return ['Gradient compares vertical interval with horizontal ground distance and is written as 1:n.','Subtract the two elevations for the vertical interval; measure A–B and convert it to metres using the scale.','Divide horizontal distance in metres by the vertical interval, then write the result after “1:”.',`The vertical interval is ${interval} m, and A–B should measure between ${low.toFixed(1)} and ${high.toFixed(1)} cm. Keep the unrounded measurement for the calculation.`];
+ }
+ if(q.type==='topo-grid')return ['River valleys are shown by drainage lines and V-shaped contour bends that point upstream.','Use the watercourses and contour pattern together; do not choose a square from a contour line alone.','Scan along a mapped stream and check which numbered square contains a clear V-shaped valley pattern.','Concentrate first on the central-western drainage corridors, especially the band of northings 12–15, and verify the evidence before entering one square.'];
+ if(q.type==='choice'&&q.topo)return ['Choose the description supported by visible map evidence, not by the place name.','Compare coastline, contour spacing, roads, water features and building patterns with every option.',`On the ${SURVEY_SHEETS[activeSheet].name} sheet, give most weight to the features named in this clue: ${legacy.toLowerCase()}`,`Eliminate options contradicted by the sheet, then choose the one whose landform and settlement evidence can both be pointed out on the map.`];
+ if(q.type==='open')return ['Build three separate geography points. Each point should state an idea and support it with visible map evidence.','Use the specific features named in the question and inspect contours, drainage, roads, coast and buildings as relevant.',legacy,`Write three linked sentences using “The map shows …, which means …”. Use a different visible feature in each sentence and explain its effect.`];
+ return ['Identify the geographical method needed.','Use the map tool and information named in the question.','Apply the method carefully to the marked feature.',legacy];
+}
 function makeAdventureQuestions(id,model){
  if(id===0)return ORIGINAL_QUESTIONS.slice(0,9).map(q=>({...q}));
  const {pts,distance,gradient}=model;
@@ -885,7 +877,7 @@ function startNewExpedition(forcedMap=null){
  if(diagnostics){diagnostics.style.display=forcedMap===null?'none':'block';diagnostics.textContent=model?`TEST ONLY — Distance: ${(groundDistanceMetres(model.distance)/1000).toFixed(3)} km | Gradient: 1:${(groundDistanceMetres(model.gradient)/Math.abs(model.gradient.elevationA-model.gradient.elevationB)).toFixed(2)} | Vertical interval: ${Math.abs(model.gradient.elevationA-model.gradient.elevationB)} m | Bearings: ${(({1:[['cave','camp'],['treasureSpot','skull']],2:[['skull','well'],['camp','lighthouse']],3:[['well','cave'],['tree','skull']],4:[['camp','tree'],['lighthouse','well']],5:[['skull','cave'],['treasureSpot','lighthouse']]})[activeAdventure]||[]).map(([a,b])=>`${displaySymbolName(a)}→${displaySymbolName(b)} ${Math.round(bearingFrom(model.pts[a],model.pts[b]))}°`).join('; ')}`:'TEST ONLY — Original map';}
  questions.splice(0,questions.length,...(learningLevel==='third'?thirdFormQuestions(activeAdventure,model):[...makeAdventureQuestions(activeAdventure,model),...topoQuestions(sheet)]));
  // Existing skill-popup triggers are tied to positions: retain the sequence of skill types.
- index=0;attempts=0;correct=0;xp=0;gold=0;answeredIndices.clear();completedQuestionAttempts.clear();shownSkills.clear();
+ index=0;attempts=0;correct=0;xp=0;gold=0;answeredIndices.clear();completedQuestionAttempts.clear();shownHintCounts.clear();shownSkills.clear();
  document.getElementById('xp').textContent=0;document.getElementById('gold').textContent=0;
 }
 
@@ -1121,6 +1113,7 @@ function render(){
  $("#level").textContent=q.level;$("#question").textContent=q.q;$("#speech").textContent=q.speech;
  $("#progressText").textContent=`Clue ${index+1} of ${questions.length}`;$("#progressFill").style.width=`${index/questions.length*100}%`;
  $("#feedback").className="feedback";$("#feedback").textContent="";
+ renderHints();
  const isTopo=Boolean(q.topo);
  const bearingGuide=document.getElementById('bearingGuide');
  const bearingEnds=q.type==='bearing'&&!isTopo?bearingEndpoints(q):null;
@@ -1139,7 +1132,7 @@ $("#protractorControls").classList.toggle("show",q.type==="bearing"&&!isTopo);
  $("#rulerControls").style.display=(q.type==="distance"||q.type==="gradient")?"block":"none";
  const area=$("#answerArea");area.innerHTML="";
  $("#submitBtn").disabled=answeredIndices.has(index);
- $("#hintBtn").disabled=answeredIndices.has(index);
+ $("#hintBtn").disabled=answeredIndices.has(index)||(shownHintCounts.get(index)||0)>=progressiveHints(q).length;
  if(q.type==="choice"){
   const wrap=document.createElement("div");wrap.className="choices";
   q.choices.forEach(c=>{const b=document.createElement("button");b.className="choice";b.type="button";b.textContent=c;b.addEventListener("click",()=>{document.querySelectorAll(".choice").forEach(x=>{x.classList.remove("selected");delete x.dataset.selected});b.classList.add("selected");b.dataset.selected="1"});wrap.appendChild(b)});
@@ -1226,6 +1219,16 @@ function drawZoom(q){
  $("#zoomTitle").textContent=`Zoomed grid square ${s.e}${s.n}`;
 }
 function answer(){const q=questions[index];if(q.type==="choice")return document.querySelector(".choice.selected")?.textContent||"";return ($("#answerInput")?.value||"").trim()}
+function renderHints(){
+ const count=shownHintCounts.get(index)||0,hints=progressiveHints(questions[index]);
+ const panel=$("#hintList"),items=$("#hintItems"),button=$("#hintBtn");items.innerHTML="";
+ hints.slice(0,count).forEach((hint,i)=>{const li=document.createElement('li');li.textContent=`Hint ${i+1}: ${hint}`;items.appendChild(li)});
+ panel.classList.toggle('show',count>0);
+ $("#hintStatus").textContent=count?hints.length===count?'All available hints are shown. Try the question when you are ready.':`${count} of ${hints.length} hints shown. Earlier hints will stay here.`:'';
+ button.textContent=count<hints.length?`Show hint ${count+1}`:'All hints shown';
+ button.disabled=answeredIndices.has(index)||count>=hints.length;
+}
+function showNextHint(){const total=progressiveHints(questions[index]).length,current=shownHintCounts.get(index)||0;if(current>=total)return;shownHintCounts.set(index,current+1);renderHints()}
 function sixValid(ans,corr){if(ans.length!==6)return false;const a=ans.split("").map(Number),c=corr.split("").map(Number);return a[0]===c[0]&&a[1]===c[1]&&a[3]===c[3]&&a[4]===c[4]&&Math.abs(a[2]-c[2])<=1&&Math.abs(a[5]-c[5])<=1}
 function check(){
  if(answeredIndices.has(index))return feedback("This question is complete. Choose another question.","good");
@@ -1353,19 +1356,19 @@ $("#nextQuestion").addEventListener("click",()=>{
 });
 $("#startBtn").addEventListener("click",()=>{
  const name=document.getElementById('studentName').value.trim(),cls=document.getElementById('studentClass').value.trim();
- if(!name||!cls){document.getElementById('identityError').textContent='Enter your name and class before starting.';return}
+ if(!mapHuntSession?.user){document.getElementById('identityError').textContent='Sign in with your school Google account before starting.';return}
+ if(!name||!cls){document.getElementById('identityError').textContent='Enter your class before starting.';return}
  learningLevel=document.querySelector('input[name=learningLevel]:checked').value;
  if(challenge.name!==name||challenge.className!==cls||challenge.level!==learningLevel){challenge={name,className:cls,level:learningLevel,runs:[]};saveChallenge()}
  const mapId=nextChallengeMap();if(mapId===null){show('results');showChallengeResults();return}
  startNewExpedition(mapId);show("tutorial")});
-$("#beginBtn").addEventListener("click",()=>{show("game");render()});$("#submitBtn").addEventListener("click",check);$("#hintBtn").addEventListener("click",()=>feedback(questions[index].hint,"bad"));$("#closeZoom").addEventListener("click",()=>$("#zoomOverlay").classList.remove("show"));$("#replayBtn").addEventListener("click",()=>{$("#treasurePop").classList.remove("show");const id=nextChallengeMap();if(id===null){showChallengeResults();return}startNewExpedition(id);show("tutorial")});
-$("#retrySaveBtn").addEventListener("click",saveMapHuntSession);
+$("#beginBtn").addEventListener("click",()=>{show("game");render()});$("#submitBtn").addEventListener("click",check);$("#hintBtn").addEventListener("click",showNextHint);$("#closeZoom").addEventListener("click",()=>$("#zoomOverlay").classList.remove("show"));$("#replayBtn").addEventListener("click",()=>{$("#treasurePop").classList.remove("show");const id=nextChallengeMap();if(id===null){showChallengeResults();return}startNewExpedition(id);show("tutorial")});
 function returnToHome(){
   $("#treasurePop").classList.remove("show");
   $("#zoomOverlay").classList.remove("show");
   $("#realMapTransition").classList.remove("show");
   $("#skillPopup").classList.remove("show");
-  document.getElementById("studentName").value="";
+  document.getElementById("studentName").value=mapHuntSession?.user?displayNameFor(mapHuntSession.user):"";
   document.getElementById("studentClass").value="";
   document.querySelector('input[name="learningLevel"][value="third"]').checked=true;
   document.getElementById("identityError").textContent="";
@@ -1377,7 +1380,7 @@ $("#homeFromGame").addEventListener("click",()=>{
   returnToHome();
 });
 $("#homeFromResults").addEventListener("click",returnToHome);
-document.getElementById('studentName').value=challenge.name||'';
+if(!mapHuntSession)document.getElementById('studentName').value=challenge.name||'';
 document.getElementById('studentClass').value=challenge.className||'';
 learningLevel=challenge.level||'third';
 document.querySelector(`input[name=learningLevel][value="${learningLevel}"]`).checked=true;
