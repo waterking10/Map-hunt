@@ -5,6 +5,33 @@ const { MAP_NAMES, SHEETS, expectedAnswer } = require('./fixtures/map-hunt-cases
 
 const gameUrl = pathToFileURL(path.join(__dirname, '..', 'index.html')).href;
 
+async function installSupabaseMock(page, { signedIn = true, insertError = null } = {}) {
+  await page.addInitScript(({ hasSession, errorMessage }) => {
+    const user = hasSession ? {
+      id: '11111111-1111-4111-8111-111111111111',
+      email: 'fake.student@queenscollege.edu.bb',
+      user_metadata: { full_name: 'Fake Student' }
+    } : null;
+    window.__supabaseInserts = [];
+    window.supabase = {
+      createClient: () => ({
+        auth: {
+          getSession: async () => ({ data: { session: user ? { user } : null }, error: null }),
+          onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }),
+          signInWithOAuth: async () => ({ data: {}, error: null }),
+          signOut: async () => ({ error: null })
+        },
+        from: () => ({
+          insert: async (payload) => {
+            window.__supabaseInserts.push(payload);
+            return { error: errorMessage ? { message: errorMessage } : null };
+          }
+        })
+      })
+    };
+  }, { hasSession: signedIn, errorMessage: insertError });
+}
+
 async function dismissSkillPopup(page) {
   await page.waitForTimeout(100);
   const popup = page.locator('#skillPopup');
@@ -14,6 +41,7 @@ async function dismissSkillPopup(page) {
 }
 
 async function startPlaythrough(page, { level, mapId, sheetId }) {
+  await installSupabaseMock(page);
   await page.route('https://**', (route) => {
     if (route.request().url().includes('/rest/v1/game_sessions')) {
       return route.fulfill({
@@ -29,6 +57,7 @@ async function startPlaythrough(page, { level, mapId, sheetId }) {
     return route.abort();
   });
   await page.goto(gameUrl, { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#authStatus')).toHaveText('Signed in as fake.student@queenscollege.edu.bb');
   await page.evaluate(
     ({ selectedMap, selectedSheet }) => {
       localStorage.clear();
@@ -39,7 +68,6 @@ async function startPlaythrough(page, { level, mapId, sheetId }) {
     { selectedMap: mapId, selectedSheet: sheetId }
   );
 
-  await page.getByLabel('Student name').fill('Regression Student');
   await page.getByLabel('Class').fill('Test Class');
   if (level === 'csec') {
     await page.getByLabel(/CSEC/).check();
@@ -52,6 +80,7 @@ async function startPlaythrough(page, { level, mapId, sheetId }) {
 
 async function showFakeStudentResult(page) {
   const externalRequests = [];
+  await installSupabaseMock(page);
   page.on('request', (request) => externalRequests.push(request.url()));
   await page.goto(gameUrl, { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => {
@@ -61,6 +90,7 @@ async function showFakeStudentResult(page) {
       className: 'Test Class',
       level: 'third',
       runs: [{
+        attemptId: '22222222-2222-4222-8222-222222222222',
         level: 'third', mapId: 0, mapName: 'Treasure Island', correct: 10,
         total: 12, accuracy: 83.333, treasure: true, finishedAt: '2026-11-14T12:00:00.000Z'
       }]
@@ -76,31 +106,51 @@ async function showFakeStudentResult(page) {
     document.querySelector('#finalGold').textContent = '800';
     show('results');
     showChallengeResults();
-    showLocalResultsNotice();
+    saveMapHuntSession();
   });
   return externalRequests;
 }
 
-test('results remain local and are not submitted from the browser', async ({ page }) => {
+test('signed-in result is linked to the account and marked unverified', async ({ page }) => {
   const externalRequests = await showFakeStudentResult(page);
 
   await expect(page.locator('#results')).toHaveClass(/active/);
   await expect(page.locator('#finalScore')).toHaveText('10/12');
-  await expect(page.locator('#saveStatus')).toHaveText('Results stay on this device and are not submitted as grades.');
+  await expect(page.locator('#saveStatus')).toContainText('not yet verified for formal grading');
+  const inserts = await page.evaluate(() => window.__supabaseInserts);
+  expect(inserts).toHaveLength(1);
+  expect(inserts[0]).toMatchObject({
+    user_id: '11111111-1111-4111-8111-111111111111',
+    student_email: 'fake.student@queenscollege.edu.bb',
+    score: 10,
+    total_questions: 12,
+    score_verification: 'unverified_client'
+  });
   expect(externalRequests.some((url) => url.includes('/rest/v1/game_sessions'))).toBe(false);
   expect(externalRequests.some((url) => url.includes('google.com/forms'))).toBe(false);
 });
 
-test('local-results notice remains usable at phone width', async ({ page }) => {
+test('recorded-results notice remains usable at phone width', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const externalRequests = await showFakeStudentResult(page);
 
   await expect(page.locator('#results')).toHaveClass(/active/);
   await expect(page.locator('#saveStatus')).toBeVisible();
-  await expect(page.locator('#saveStatus')).toHaveText('Results stay on this device and are not submitted as grades.');
+  await expect(page.locator('#saveStatus')).toContainText('not yet verified for formal grading');
   await expect(page.locator('#problemReportLink')).toBeVisible();
   expect(externalRequests.some((url) => url.includes('/rest/v1/game_sessions'))).toBe(false);
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test('signed-out visitor cannot start a scored attempt', async ({ page }) => {
+  await installSupabaseMock(page, { signedIn: false });
+  await page.route('https://**', route => route.abort());
+  await page.goto(gameUrl, { waitUntil: 'domcontentloaded' });
+  await page.getByLabel('Class').fill('Test Class');
+  await page.getByRole('button', { name: 'Start Adventure' }).click();
+  await expect(page.locator('#identityError')).toHaveText('Sign in with your school Google account before starting.');
+  await expect(page.locator('#landing')).toHaveClass(/active/);
+  expect(await page.evaluate(() => window.__supabaseInserts)).toEqual([]);
 });
 
 async function chooseAnswer(page, answer) {

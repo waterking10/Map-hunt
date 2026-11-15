@@ -234,7 +234,8 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 <body>
 <section id="landing" class="screen center active">
 <div class="panel landing"><div class="ship"><svg viewBox="0 0 220 150" width="100%"><path d="M35 105 Q110 140 185 105 L170 135 H55Z" fill="#5b3219" stroke="#2d170c" stroke-width="5"/><path d="M110 22V112" stroke="#3b2415" stroke-width="7"/><path d="M114 30 Q170 48 116 80Z" fill="#eee0b6" stroke="#3b2415" stroke-width="4"/><path d="M105 42 Q58 55 105 88Z" fill="#b43c2c" stroke="#3b2415" stroke-width="4"/></svg></div><h1 class="logo">MAP HUNT</h1><div class="subtitle">The Lost Treasure</div><div style="margin-top:6px;font-size:15px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.78">By Ajani Waterman</div><p class="tag">Join Captain Redbeard’s crew as the ship’s newest navigator. Read the island map, crack grid references, calculate bearings, and reach the treasure before the rival pirates.</p><div id="challengeIdentity" style="max-width:430px;margin:16px auto;padding:15px;border:2px solid #8d622e;border-radius:14px;background:#fff4d6;text-align:left">
-<label for="studentName" style="display:block;font-weight:bold">Student name</label><input id="studentName" maxlength="90" autocomplete="name" placeholder="First and last name" style="width:100%;padding:10px;margin:5px 0 10px;border:2px solid #725333;border-radius:7px">
+<div id="authPanel" style="margin-bottom:12px;padding:10px;border:2px solid #725333;border-radius:9px;background:#fff"><p id="authStatus" role="status" aria-live="polite" style="margin:0 0 8px;font-weight:bold">Sign in with your school Google account to record results.</p><button id="googleSignInBtn" type="button" class="secondary">Sign in with Google</button><button id="signOutBtn" type="button" class="secondary" style="display:none">Sign out</button></div>
+<label for="studentName" style="display:block;font-weight:bold">Student name</label><input id="studentName" maxlength="90" autocomplete="name" placeholder="Filled from Google sign-in" readonly style="width:100%;padding:10px;margin:5px 0 10px;border:2px solid #725333;border-radius:7px;background:#f3ead7">
 <label for="studentClass" style="display:block;font-weight:bold">Class</label><input id="studentClass" maxlength="40" placeholder="e.g. 3 Beta" style="width:100%;padding:10px;margin:5px 0;border:2px solid #725333;border-radius:7px">
 <fieldset style="margin:10px 0;padding:12px;border:2px solid #725333;border-radius:9px"><legend style="font-weight:bold">Choose your learning level</legend><label style="display:block;margin:5px 0"><input type="radio" name="learningLevel" value="third" checked> Third Form — 12 questions: grid references, distances, directions and bearings</label><label style="display:block;margin:5px 0"><input type="radio" name="learningLevel" value="csec"> CSEC (Fourth & Fifth Form) — full game and topographic maps</label></fieldset><p style="font-size:13px;margin:9px 0 0">Three different islands earn up to 3 participation bonus marks. Treasure is found only above 80% accuracy. Your progress is saved on this device.</p>
 <p id="identityError" style="color:#a52d25;font-weight:bold" role="alert"></p>
@@ -477,15 +478,26 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 </div>
 <div id="challengeSummary" style="max-width:720px;margin:18px auto;padding:15px;border:2px solid #76502a;border-radius:12px;background:#fff4d8;text-align:left"></div>
 <p id="submissionHelp" style="font-size:14px"></p>
-<p id="saveStatus" role="status" aria-live="polite" style="font-size:14px;font-weight:bold;margin:4px 0"></p>
+<p id="saveStatus" role="status" aria-live="polite" style="font-size:14px;font-weight:bold;margin:4px 0"></p><button id="retrySaveBtn" type="button" style="display:none">Retry save</button>
 <p style="font-size:14px;margin-top:10px">Need help? <a id="problemReportLink" href="mailto:awaterman@queenscollege.edu.bb?subject=Map%20Hunt%20%E2%80%93%20Problem%20report&amp;body=Please%20describe%20what%20happened%3A%0D%0A%0D%0AWhich%20map%20or%20level%20were%20you%20using%3F%0D%0A">Report a problem</a> or email <a href="mailto:awaterman@queenscollege.edu.bb">awaterman@queenscollege.edu.bb</a>.</p>
 </div></section>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.min.js" integrity="sha384-gnyZit14c5lnGcarmA166QQjjJXpucw25ogZXuwH3HxxY904zHkBqmxVpelsPorb" crossorigin="anonymous"></script>
 <script>
-function showLocalResultsNotice() {
-  const status = document.getElementById("saveStatus");
-  status.textContent = "Results stay on this device and are not submitted as grades.";
-}
+const SUPABASE_URL="https://ngpptclhvqwomrsukqjf.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_41v03DCWH-ue_iP3v_ye0g_gLwJrcZ8";
+const SCHOOL_EMAIL_DOMAIN='queenscollege.edu.bb';
+const mapHuntSupabase=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let mapHuntSession=null;
+const savedAttemptIds=new Set(),savingAttemptIds=new Set();
+function displayNameFor(user){return user?.user_metadata?.full_name||user?.user_metadata?.name||user?.email?.split('@')[0]||''}
+function updateAuthUi(session){const user=session?.user,schoolAccount=user?.email?.toLowerCase().endsWith(`@${SCHOOL_EMAIL_DOMAIN}`);mapHuntSession=schoolAccount?session:null;document.getElementById('googleSignInBtn').style.display=schoolAccount?'none':'';document.getElementById('signOutBtn').style.display=user?'':'none';document.getElementById('authStatus').textContent=schoolAccount?`Signed in as ${user.email}`:user?'This is not a school account. Sign out, then use your school Google account.':'Sign in with your school Google account to record results.';document.getElementById('studentName').value=schoolAccount?displayNameFor(user):''}
+async function initializeAuth(){if(!mapHuntSupabase){document.getElementById('authStatus').textContent='Sign-in service could not load. Refresh and try again.';return}const {data,error}=await mapHuntSupabase.auth.getSession();if(error){document.getElementById('authStatus').textContent='Could not check sign-in. Refresh and try again.';return}updateAuthUi(data.session);mapHuntSupabase.auth.onAuthStateChange((_event,session)=>updateAuthUi(session))}
+async function saveMapHuntSession(){const status=document.getElementById('saveStatus'),retry=document.getElementById('retrySaveBtn');const run=uniqueRuns().find(r=>r.mapId===activeAdventure);if(!run){status.textContent='Finish all questions to save this island.';return}if(!mapHuntSession?.user){status.textContent='Result kept on this device only. Sign in before starting to record it.';return}if(!run.attemptId){run.attemptId=crypto.randomUUID();saveChallenge()}if(savedAttemptIds.has(run.attemptId)||savingAttemptIds.has(run.attemptId))return;savingAttemptIds.add(run.attemptId);retry.style.display='none';status.textContent='Saving your island result...';const payload={attempt_id:run.attemptId,user_id:mapHuntSession.user.id,student_email:mapHuntSession.user.email,student_name:displayNameFor(mapHuntSession.user),student_class:challenge.className,learning_level:challenge.level,map_name:run.mapName,score:run.correct,total_questions:run.total,accuracy:Math.round(run.accuracy),xp,gold,score_verification:'unverified_client'};try{const {error}=await mapHuntSupabase.from('game_sessions').insert(payload);if(error)throw error;savedAttemptIds.add(run.attemptId);status.textContent='Island result recorded for your signed-in account. This score is not yet verified for formal grading.'}catch(error){console.error('Map Hunt: database save failed',error);status.textContent='Your result is shown, but it could not be recorded.';retry.style.display='inline-block'}finally{savingAttemptIds.delete(run.attemptId)}}
+document.getElementById('googleSignInBtn').addEventListener('click',async()=>{if(!mapHuntSupabase)return;const redirectTo=location.protocol==='file:'?undefined:`${location.origin}${location.pathname}`;const {error}=await mapHuntSupabase.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{hd:SCHOOL_EMAIL_DOMAIN}}});if(error)document.getElementById('authStatus').textContent=`Sign-in failed: ${error.message}`});
+document.getElementById('signOutBtn').addEventListener('click',async()=>{if(mapHuntSupabase)await mapHuntSupabase.auth.signOut()});
+document.getElementById('retrySaveBtn').addEventListener('click',saveMapHuntSession);
+initializeAuth();
 </script>
 
 <script>
@@ -502,7 +514,7 @@ function recordAdventure(){
  if(answeredIndices.size!==questions.length)return false;
  if(uniqueRuns().some(r=>r.mapId===activeAdventure))return true;
  if(uniqueRuns().length>=3)return true;
- challenge.runs.push({level:learningLevel,mapId:activeAdventure,mapName:MAP_NAMES[activeAdventure],correct,total:questions.length,accuracy:100*correct/questions.length,treasure:100*correct/questions.length>80,finishedAt:new Date().toISOString()});
+ challenge.runs.push({attemptId:crypto.randomUUID(),level:learningLevel,mapId:activeAdventure,mapName:MAP_NAMES[activeAdventure],correct,total:questions.length,accuracy:100*correct/questions.length,treasure:100*correct/questions.length>80,finishedAt:new Date().toISOString()});
  saveChallenge();return true;
 }
 function nextChallengeMap(){
@@ -1203,7 +1215,7 @@ function next(){
    else render()
  }
 }
-function finish(){if(answeredIndices.size!==questions.length){show("game");feedback(`Complete all ${questions.length} questions before viewing results. ${questions.length-answeredIndices.size} remaining. Use the question numbers to choose an unfinished question.`,"bad");renderQuestionJump();return;}recordAdventure();show("results");$("#finalScore").textContent=`${correct}/${questions.length}`;$("#accuracy").textContent=`${Math.round(correct/questions.length*100)}%`;$("#finalXp").textContent=xp;$("#finalGold").textContent=gold;showChallengeResults();showLocalResultsNotice()}
+function finish(){if(answeredIndices.size!==questions.length){show("game");feedback(`Complete all ${questions.length} questions before viewing results. ${questions.length-answeredIndices.size} remaining. Use the question numbers to choose an unfinished question.`,"bad");renderQuestionJump();return;}const completed=recordAdventure();show("results");$("#finalScore").textContent=`${correct}/${questions.length}`;$("#accuracy").textContent=`${Math.round(correct/questions.length*100)}%`;$("#finalXp").textContent=xp;$("#finalGold").textContent=gold;showChallengeResults();if(completed)saveMapHuntSession()}
 $("#previousSkillSlide").addEventListener("click",()=>{
   if(currentSkillSlide>0){
     currentSkillSlide--;
@@ -1229,7 +1241,8 @@ $("#nextQuestion").addEventListener("click",()=>{
 });
 $("#startBtn").addEventListener("click",()=>{
  const name=document.getElementById('studentName').value.trim(),cls=document.getElementById('studentClass').value.trim();
- if(!name||!cls){document.getElementById('identityError').textContent='Enter your name and class before starting.';return}
+ if(!mapHuntSession?.user){document.getElementById('identityError').textContent='Sign in with your school Google account before starting.';return}
+ if(!name||!cls){document.getElementById('identityError').textContent='Enter your class before starting.';return}
  learningLevel=document.querySelector('input[name=learningLevel]:checked').value;
  if(challenge.name!==name||challenge.className!==cls||challenge.level!==learningLevel){challenge={name,className:cls,level:learningLevel,runs:[]};saveChallenge()}
  const mapId=nextChallengeMap();if(mapId===null){show('results');showChallengeResults();return}
@@ -1240,7 +1253,7 @@ function returnToHome(){
   $("#zoomOverlay").classList.remove("show");
   $("#realMapTransition").classList.remove("show");
   $("#skillPopup").classList.remove("show");
-  document.getElementById("studentName").value="";
+  document.getElementById("studentName").value=mapHuntSession?.user?displayNameFor(mapHuntSession.user):"";
   document.getElementById("studentClass").value="";
   document.querySelector('input[name="learningLevel"][value="third"]').checked=true;
   document.getElementById("identityError").textContent="";
@@ -1252,7 +1265,7 @@ $("#homeFromGame").addEventListener("click",()=>{
   returnToHome();
 });
 $("#homeFromResults").addEventListener("click",returnToHome);
-document.getElementById('studentName').value=challenge.name||'';
+if(!mapHuntSession)document.getElementById('studentName').value=challenge.name||'';
 document.getElementById('studentClass').value=challenge.className||'';
 learningLevel=challenge.level||'third';
 document.querySelector(`input[name=learningLevel][value="${learningLevel}"]`).checked=true;

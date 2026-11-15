@@ -5,8 +5,25 @@ const { test, expect } = require('@playwright/test');
 test('submits a guess and shows the expected result', async ({ page }) => {
   const gameUrl = pathToFileURL(path.join(__dirname, '..', 'index.html')).href;
 
+  await page.addInitScript(() => {
+    const user = {
+      id: '33333333-3333-4333-8333-333333333333',
+      email: 'fake.student@queenscollege.edu.bb',
+      user_metadata: { full_name: 'Test Student' }
+    };
+    window.supabase = { createClient: () => ({
+      auth: {
+        getSession: async () => ({ data: { session: { user } }, error: null }),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }),
+        signInWithOAuth: async () => ({ data: {}, error: null }),
+        signOut: async () => ({ error: null })
+      },
+      from: () => ({ insert: async () => ({ error: null }) })
+    }) };
+  });
+  await page.route('https://**', route => route.abort());
   await page.goto(gameUrl);
-  await page.getByLabel('Student name').fill('Test Student');
+  await expect(page.locator('#authStatus')).toContainText('Signed in as');
   await page.getByLabel('Class').fill('Test Class');
   await page.getByRole('button', { name: 'Start Adventure' }).click();
   await page.getByRole('button', { name: 'Begin Expedition' }).click();
