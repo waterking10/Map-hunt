@@ -153,6 +153,70 @@ test('signed-out visitor cannot start a scored attempt', async ({ page }) => {
   expect(await page.evaluate(() => window.__supabaseInserts)).toEqual([]);
 });
 
+test('progressive hints cover every question type, persist per question, and reset for a new expedition', async ({ page }) => {
+  test.setTimeout(120_000);
+  await startPlaythrough(page, { level: 'csec', mapId: 0, sheetId: 0 });
+  const seenTypes = new Set();
+
+  for (let questionIndex = 0; questionIndex < 11; questionIndex += 1) {
+    await dismissSkillPopup(page);
+    const type = await page.evaluate(() => questions[index].type);
+    seenTypes.add(type);
+    const correctAnswers = await page.evaluate(() => {
+      const question = questions[index];
+      return [question.answer, ...(question.answers || [])].filter(Boolean).map(String);
+    });
+
+    for (let hintNumber = 1; hintNumber <= 4; hintNumber += 1) {
+      await page.locator('#hintBtn').click();
+      await expect(page.locator('#hintItems li')).toHaveCount(hintNumber);
+      await expect(page.locator('#hintItems li').nth(hintNumber - 1)).toContainText(`Hint ${hintNumber}:`);
+    }
+    await expect(page.locator('#hintBtn')).toBeDisabled();
+    const hintText = await page.locator('#hintItems').innerText();
+    for (const correctAnswer of correctAnswers) {
+      expect(hintText).not.toContain(`Correct answer: ${correctAnswer}`);
+    }
+
+    if (questionIndex === 0) {
+      await page.locator('#nextQuestion').click();
+      await dismissSkillPopup(page);
+      await page.locator('#previousQuestion').click();
+      await expect(page.locator('#hintItems li')).toHaveCount(4);
+    }
+    if (questionIndex < 10) await page.locator('#nextQuestion').click();
+  }
+
+  expect([...seenTypes].sort()).toEqual(
+    ['bearing', 'choice', 'distance', 'gradient', 'number', 'open', 'six', 'topo-grid'].sort()
+  );
+  await expect(page.locator('#xp')).toHaveText('0');
+  await expect(page.locator('#gold')).toHaveText('0');
+
+  await page.evaluate(() => {
+    startNewExpedition(1);
+    render();
+  });
+  await dismissSkillPopup(page);
+  await expect(page.locator('#hintItems li')).toHaveCount(0);
+  await expect(page.locator('#hintBtn')).toHaveText('Show hint 1');
+});
+
+for (const viewport of [
+  { name: 'phone', width: 390, height: 844 },
+  { name: 'desktop', width: 1280, height: 900 }
+]) {
+  test(`progressive hint controls remain usable at ${viewport.name} width`, async ({ page }) => {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await startPlaythrough(page, { level: 'third', mapId: 0, sheetId: 0 });
+    await page.locator('#hintBtn').click();
+    await expect(page.locator('#hintList')).toBeVisible();
+    await expect(page.locator('#hintItems li')).toHaveCount(1);
+    await expect(page.locator('#hintBtn')).toBeVisible();
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  });
+}
+
 async function chooseAnswer(page, answer) {
   const choices = page.locator('.choice');
   if ((await choices.count()) > 0) {
