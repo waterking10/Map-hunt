@@ -50,34 +50,9 @@ async function startPlaythrough(page, { level, mapId, sheetId }) {
   await dismissSkillPopup(page);
 }
 
-async function showFakeStudentResult(page, saveStatus) {
+async function showFakeStudentResult(page) {
   const externalRequests = [];
   page.on('request', (request) => externalRequests.push(request.url()));
-  await page.addInitScript((status) => {
-    window.__databaseSaveRequests = [];
-    const realFetch = window.fetch.bind(window);
-    window.fetch = (url, options) => {
-      if (String(url).includes('/rest/v1/game_sessions')) {
-        window.__databaseSaveRequests.push({ url: String(url), options });
-        return Promise.resolve(new Response('', { status }));
-      }
-      return realFetch(url, options);
-    };
-  }, saveStatus);
-  await page.route('https://**', (route) => {
-    if (route.request().url().includes('/rest/v1/game_sessions')) {
-      return route.fulfill({
-        status: route.request().method() === 'OPTIONS' ? 204 : saveStatus,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'apikey, authorization, content-type, prefer',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS'
-        },
-        body: saveStatus >= 400 ? '{"message":"simulated failure"}' : ''
-      });
-    }
-    return route.abort();
-  });
   await page.goto(gameUrl, { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => {
     localStorage.clear();
@@ -101,49 +76,30 @@ async function showFakeStudentResult(page, saveStatus) {
     document.querySelector('#finalGold').textContent = '800';
     show('results');
     showChallengeResults();
-    saveMapHuntSession();
+    showLocalResultsNotice();
   });
   return externalRequests;
 }
 
-test('database confirmation appears only after a successful save', async ({ page }) => {
-  const externalRequests = await showFakeStudentResult(page, 201);
+test('results remain local and are not submitted from the browser', async ({ page }) => {
+  const externalRequests = await showFakeStudentResult(page);
 
   await expect(page.locator('#results')).toHaveClass(/active/);
   await expect(page.locator('#finalScore')).toHaveText('10/12');
-  await expect(page.locator('#saveStatus')).toHaveText('Island results saved.');
-  await expect(page.locator('#retrySaveBtn')).toBeHidden();
-  await expect.poll(() => page.evaluate(() => window.__databaseSaveRequests.length)).toBe(1);
+  await expect(page.locator('#saveStatus')).toHaveText('Results stay on this device and are not submitted as grades.');
+  expect(externalRequests.some((url) => url.includes('/rest/v1/game_sessions'))).toBe(false);
   expect(externalRequests.some((url) => url.includes('google.com/forms'))).toBe(false);
 });
 
-test('failed database save keeps desktop results and offers the problem-report email', async ({ page }) => {
-  const externalRequests = await showFakeStudentResult(page, 503);
-
-  await expect(page.locator('#results')).toHaveClass(/active/);
-  await expect(page.locator('#finalScore')).toHaveText('10/12');
-  await expect(page.locator('#challengeSummary')).toContainText('Fake Student');
-  await expect(page.locator('#saveStatus')).toHaveText('Your results are still shown, but they could not be saved.');
-  await expect(page.locator('#retrySaveBtn')).toBeVisible();
-  await expect(page.locator('#saveProblemLink')).toBeVisible();
-
-  const reportHref = await page.locator('#problemReportLink').getAttribute('href');
-  expect(reportHref).toContain('mailto:awaterman@queenscollege.edu.bb');
-  expect(decodeURIComponent(reportHref)).toContain('subject=Map Hunt – Problem report');
-  expect(decodeURIComponent(reportHref)).toContain('Please describe what happened:');
-  expect(decodeURIComponent(reportHref)).toContain('Which map or level were you using?');
-  await expect(page.getByText('awaterman@queenscollege.edu.bb', { exact: true })).toBeVisible();
-  expect(externalRequests.some((url) => url.includes('google.com/forms'))).toBe(false);
-});
-
-test('failed-save message and problem report remain usable at phone width', async ({ page }) => {
+test('local-results notice remains usable at phone width', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await showFakeStudentResult(page, 503);
+  const externalRequests = await showFakeStudentResult(page);
 
   await expect(page.locator('#results')).toHaveClass(/active/);
   await expect(page.locator('#saveStatus')).toBeVisible();
-  await expect(page.locator('#saveProblemLink')).toBeVisible();
+  await expect(page.locator('#saveStatus')).toHaveText('Results stay on this device and are not submitted as grades.');
   await expect(page.locator('#problemReportLink')).toBeVisible();
+  expect(externalRequests.some((url) => url.includes('/rest/v1/game_sessions'))).toBe(false);
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 

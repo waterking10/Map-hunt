@@ -477,67 +477,14 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 </div>
 <div id="challengeSummary" style="max-width:720px;margin:18px auto;padding:15px;border:2px solid #76502a;border-radius:12px;background:#fff4d8;text-align:left"></div>
 <p id="submissionHelp" style="font-size:14px"></p>
-<div style="display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap">
 <p id="saveStatus" role="status" aria-live="polite" style="font-size:14px;font-weight:bold;margin:4px 0"></p>
-<a id="saveProblemLink" href="mailto:awaterman@queenscollege.edu.bb?subject=Map%20Hunt%20%E2%80%93%20Problem%20report&amp;body=Please%20describe%20what%20happened%3A%0D%0A%0D%0AWhich%20map%20or%20level%20were%20you%20using%3F%0D%0A" style="display:none">Report a problem</a>
-<button id="retrySaveBtn" type="button" style="display:none">Retry Save</button>
-</div>
 <p style="font-size:14px;margin-top:10px">Need help? <a id="problemReportLink" href="mailto:awaterman@queenscollege.edu.bb?subject=Map%20Hunt%20%E2%80%93%20Problem%20report&amp;body=Please%20describe%20what%20happened%3A%0D%0A%0D%0AWhich%20map%20or%20level%20were%20you%20using%3F%0D%0A">Report a problem</a> or email <a href="mailto:awaterman@queenscollege.edu.bb">awaterman@queenscollege.edu.bb</a>.</p>
 </div></section>
 
 <script>
-const SUPABASE_URL = "https://ngpptclhvqwomrsukqjf.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_41v03DCWH-ue_iP3v_ye0g_gLwJrcZ8";
-const savedSessionIds = new Set();
-const savingSessionIds = new Set();
-
-async function saveMapHuntSession() {
+function showLocalResultsNotice() {
   const status = document.getElementById("saveStatus");
-  const retry = document.getElementById("retrySaveBtn");
-  const report = document.getElementById("saveProblemLink");
-  const run = uniqueRuns().find(r => r.mapId === activeAdventure);
-  if (!run) {
-    status.textContent = "Finish all questions to save this island.";
-    return;
-  }
-  const sessionId = [challenge.name, challenge.className, challenge.level, run.mapId, run.finishedAt].join("|");
-  if (savedSessionIds.has(sessionId) || savingSessionIds.has(sessionId)) return;
-  savingSessionIds.add(sessionId);
-  retry.style.display = "none";
-  report.style.display = "none";
-  status.textContent = "Saving your island results...";
-  try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/game_sessions`, {
-      method: "POST",
-      headers: {
-        "apikey": SUPABASE_PUBLISHABLE_KEY,
-        "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-        "Content-Type": "application/json",
-        "Prefer": "return=minimal"
-      },
-      body: JSON.stringify({
-        score: run.correct,
-        total_questions: run.total,
-        accuracy: Math.round(run.accuracy),
-        xp: xp,
-        gold: gold,
-        student_name: challenge.name,
-        student_class: challenge.className,
-        learning_level: challenge.level,
-        map_name: run.mapName
-      })
-    });
-    if (!response.ok) throw new Error(`Database returned ${response.status}`);
-    savedSessionIds.add(sessionId);
-    status.textContent = "Island results saved.";
-  } catch (error) {
-    console.error("Map Hunt: database save failed", error);
-    status.textContent = "Your results are still shown, but they could not be saved.";
-    retry.style.display = "inline-block";
-    report.style.display = "inline";
-  } finally {
-    savingSessionIds.delete(sessionId);
-  }
+  status.textContent = "Results stay on this device and are not submitted as grades.";
 }
 </script>
 
@@ -1256,7 +1203,7 @@ function next(){
    else render()
  }
 }
-function finish(){if(answeredIndices.size!==questions.length){show("game");feedback(`Complete all ${questions.length} questions before viewing results. ${questions.length-answeredIndices.size} remaining. Use the question numbers to choose an unfinished question.`,"bad");renderQuestionJump();return;}const completed=recordAdventure();show("results");$("#finalScore").textContent=`${correct}/${questions.length}`;$("#accuracy").textContent=`${Math.round(correct/questions.length*100)}%`;$("#finalXp").textContent=xp;$("#finalGold").textContent=gold;showChallengeResults();if(completed)saveMapHuntSession()}
+function finish(){if(answeredIndices.size!==questions.length){show("game");feedback(`Complete all ${questions.length} questions before viewing results. ${questions.length-answeredIndices.size} remaining. Use the question numbers to choose an unfinished question.`,"bad");renderQuestionJump();return;}recordAdventure();show("results");$("#finalScore").textContent=`${correct}/${questions.length}`;$("#accuracy").textContent=`${Math.round(correct/questions.length*100)}%`;$("#finalXp").textContent=xp;$("#finalGold").textContent=gold;showChallengeResults();showLocalResultsNotice()}
 $("#previousSkillSlide").addEventListener("click",()=>{
   if(currentSkillSlide>0){
     currentSkillSlide--;
@@ -1288,7 +1235,6 @@ $("#startBtn").addEventListener("click",()=>{
  const mapId=nextChallengeMap();if(mapId===null){show('results');showChallengeResults();return}
  startNewExpedition(mapId);show("tutorial")});
 $("#beginBtn").addEventListener("click",()=>{show("game");render()});$("#submitBtn").addEventListener("click",check);$("#hintBtn").addEventListener("click",()=>feedback(questions[index].hint,"bad"));$("#closeZoom").addEventListener("click",()=>$("#zoomOverlay").classList.remove("show"));$("#replayBtn").addEventListener("click",()=>{$("#treasurePop").classList.remove("show");const id=nextChallengeMap();if(id===null){showChallengeResults();return}startNewExpedition(id);show("tutorial")});
-$("#retrySaveBtn").addEventListener("click",saveMapHuntSession);
 function returnToHome(){
   $("#treasurePop").classList.remove("show");
   $("#zoomOverlay").classList.remove("show");
