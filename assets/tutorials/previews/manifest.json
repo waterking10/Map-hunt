@@ -1,0 +1,37 @@
+[
+  {
+    "file": "four-figure-grid.webm",
+    "duration": 26.8,
+    "width": 1280,
+    "height": 720,
+    "preview": "assets\\tutorials\\previews\\four-figure-grid.png"
+  },
+  {
+    "file": "six-figure-grid.webm",
+    "duration": 25.72,
+    "width": 1280,
+    "height": 720,
+    "preview": "assets\\tutorials\\previews\\six-figure-grid.png"
+  },
+  {
+    "file": "distance.webm",
+    "duration": 22.92,
+    "width": 1280,
+    "height": 720,
+    "preview": "assets\\tutorials\\previews\\distance.png"
+  },
+  {
+    "file": "bearings.webm",
+    "duration": 24.04,
+    "width": 1280,
+    "height": 720,
+    "preview": "assets\\tutorials\\previews\\bearings.png"
+  },
+  {
+    "file": "gradient.webm",
+    "duration": 26.84,
+    "width": 1280,
+    "height": 720,
+    "preview": "assets\\tutorials\\previews\\gradient.png"
+  }
+]
