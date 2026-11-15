@@ -131,6 +131,14 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 }
 .skill-notes p{margin:0 0 10px;line-height:1.5}
 .skill-notes p:last-child{margin-bottom:0}
+.gameplay-tutorial{margin-top:18px;padding:14px;border:3px solid #76502b;border-radius:14px;background:#fff8df}
+.gameplay-tutorial h3{margin:0 0 8px;color:#4a2d16;font-size:1.08rem}
+.gameplay-tutorial-load{width:100%;min-height:48px;border:2px solid #4b280f;border-radius:10px;background:#f4c64f;color:#3a210d;font-weight:800}
+.gameplay-tutorial-player{display:none;margin-top:12px}
+.gameplay-tutorial-player.show{display:block}
+.gameplay-tutorial video{display:block;width:100%;max-height:56vh;border:3px solid #4a2d16;border-radius:10px;background:#082f40}
+.gameplay-tutorial-replay{margin-top:8px;border:2px solid #76502b;border-radius:8px;padding:8px 12px;background:#fff4d7;font-weight:700}
+.gameplay-tutorial-alt{margin:10px 0 0;font-size:.92rem}
 .skill-example{
   background:#fff7d9;border-left:6px solid #9e2f27;border-radius:10px;
   padding:11px 13px;margin-top:12px;line-height:1.45
@@ -997,6 +1005,14 @@ skillLessons.gradient={icon:"⛰️",title:"Calculating Gradient",subtitle:"Expr
 `<p><b>Gradient = vertical interval ÷ horizontal equivalent.</b> The vertical interval is the difference between the two elevations. Convert horizontal distance into <b>metres</b> before calculating.</p><p>For a gradient expressed as <b>1:n</b>, divide the horizontal equivalent by the vertical interval. <b>Use the virtual ruler on the gradient question to measure A–B</b> and convert at 1:50,000. Measure to the nearest millimetre; the same ±2 mm tolerance applies to gradient calculations.</p>`,
 `<p><b>Worked example:</b> Two points are 50 m apart vertically and 500 m apart horizontally. 500 ÷ 50 = 10, so the gradient is <b>1:10</b>.</p><p><b>Answer format:</b> Always type <b>1:10</b>, not 10, 0.1, or 10%.</p>`]};
 
+const gameplayTutorials={
+  fourFigure:{src:"assets/tutorials/four-figure-grid.webm",label:"Four-Figure Grid References",alt:"The video identifies the named feature, highlights the grid line immediately to its left and the line immediately below it, combines the easting before the northing, enters the four digits, and submits the answer."},
+  sixFigure:{src:"assets/tutorials/six-figure-grid.webm",label:"Six-Figure Grid References",alt:"The video identifies the feature's four-figure square, selects that square to open Map Hunt's expanded tenth-grid, reads three easting digits followed by three northing digits, enters all six digits, and submits the answer."},
+  distance:{src:"assets/tutorials/distance.webm",label:"Distance",alt:"The video identifies points A and B, positions and rotates Map Hunt's virtual ruler, reads the map measurement, applies the 1:50,000 scale where 1 cm equals 0.5 km, enters kilometres, and submits the answer."},
+  bearings:{src:"assets/tutorials/bearings.webm",label:"Bearings",alt:"The video identifies the start and destination, centres Map Hunt's protractor on the starting feature, keeps 000 degrees aligned with north, turns the red line clockwise to the destination, enters a three-figure bearing, and submits it."},
+  gradient:{src:"assets/tutorials/gradient.webm",label:"Gradient",alt:"The video reads the two marked elevations, subtracts them for vertical interval, measures A to B with Map Hunt's virtual ruler, converts the horizontal distance to metres, divides horizontal distance by vertical interval, enters the result as 1:n, and submits it."}
+};
+
 const skillStarts={0:"fourFigure",2:"directions",3:"sixFigure",5:"distance",6:"gradient",7:"bearings",9:"topo"};
 let shownSkills=new Set();
 let currentSkillKey=null;
@@ -1009,6 +1025,18 @@ function renderSkillSlide(){
   $("#skillPopupTitle").textContent=lesson.title;
   $("#skillPopupSubtitle").textContent=`${lesson.subtitle} · Slide ${currentSkillSlide+1} of ${lesson.slides.length}`;
   $("#skillPopupNotes").innerHTML=lesson.slides[currentSkillSlide];
+  const tutorial=gameplayTutorials[currentSkillKey];
+  if(tutorial&&currentSkillSlide===0){
+    const section=document.createElement("section");
+    section.className="gameplay-tutorial";
+    section.setAttribute("aria-label",`${tutorial.label} gameplay tutorial`);
+    section.innerHTML=`<h3>▶ Watch Gameplay Tutorial</h3><button type="button" class="gameplay-tutorial-load">Load ${tutorial.label} tutorial</button><div class="gameplay-tutorial-player"><video controls playsinline preload="none" aria-label="${tutorial.label} gameplay tutorial"></video><button type="button" class="gameplay-tutorial-replay">↺ Replay tutorial</button></div><p class="gameplay-tutorial-alt"><b>Text alternative:</b> ${tutorial.alt}</p>`;
+    const load=section.querySelector(".gameplay-tutorial-load"),player=section.querySelector(".gameplay-tutorial-player"),video=section.querySelector("video");
+    load.addEventListener("click",()=>{if(!video.src){video.src=tutorial.src;video.load()}player.classList.add("show");load.hidden=true;video.focus()});
+    section.querySelector(".gameplay-tutorial-replay").addEventListener("click",()=>{video.currentTime=0;video.play()});
+    const introduction=$("#skillPopupNotes").querySelector("p");
+    if(introduction)introduction.after(section);else $("#skillPopupNotes").appendChild(section);
+  }
 
   const dots=$("#skillSlideIndicator");
   dots.innerHTML="";

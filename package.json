@@ -2,7 +2,9 @@
   "name": "map-hunt",
   "private": true,
   "scripts": {
-    "test": "playwright test"
+    "test": "playwright test",
+    "tutorials:generate": "node scripts/generate-gameplay-tutorials.js",
+    "tutorials:verify": "node scripts/verify-tutorial-videos.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1"
