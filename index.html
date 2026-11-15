@@ -229,6 +229,43 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 
 .adventure-name{position:absolute;top:5px;left:12px;z-index:6;background:rgba(255,248,223,.92);border:2px solid #73512a;border-radius:8px;padding:3px 9px;font-size:12px;font-weight:bold;pointer-events:none}
 #topoMapWrap .topo-stage img{object-fit:contain}
+/* Keep the complete round usable in a phone-sized viewport. */
+@media(max-width:620px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  .screen.game{min-height:100dvh;padding:8px;align-items:flex-start}
+  .game-shell{width:100%;margin:0}
+  .hud{grid-template-columns:minmax(0,1fr) auto auto;gap:6px;margin-bottom:8px;padding:8px;border-radius:12px;font-size:13px}
+  .hud>button{grid-column:1;padding:8px!important;min-height:44px}
+  .hud>div:nth-child(2){grid-column:1/-1;grid-row:2;min-width:0}
+  .hud .stat{padding:8px;min-height:44px;display:flex;align-items:center;white-space:nowrap}
+  .game-grid{grid-template-columns:minmax(0,1fr);gap:8px}
+  .map-card,.map-svg{min-height:0;height:clamp(285px,38dvh,340px)}
+  .map-card{border-width:4px;border-radius:14px;overflow:hidden}
+  .side{gap:8px;min-width:0}
+  .captain-box{display:none}
+  .test-nav{padding:7px 8px;border-width:3px;border-radius:14px;min-width:0}
+  .test-nav-title,.test-nav>div[style]{display:none}
+  .test-nav-row{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;padding:1px 1px 5px;scrollbar-width:thin}
+  .test-nav button{flex:0 0 44px;min-width:44px;min-height:44px;padding:7px}
+  .test-nav-actions{display:none}
+  .question-card{padding:10px 12px 12px;border-width:3px;border-radius:14px;scroll-margin-block:10px 45dvh}
+  .question-card h2{font-size:18px;line-height:1.16;margin:7px 0}
+  .level{padding:4px 8px;font-size:12px}
+  .answer-input,.open-answer{font-size:16px;min-height:48px;padding:10px 12px}
+  .open-answer{min-height:86px}
+  .answer-guide{margin-top:6px;padding:7px;font-size:12px}
+  .actions{position:relative;z-index:2;gap:8px;margin-top:8px}
+  .actions .primary,.actions .secondary{min-height:48px;padding:9px 12px!important}
+  .actions .primary{flex:1}
+  .topo-label{left:8px;top:8px;right:112px;padding:5px 7px;font-size:12px;line-height:1.15}
+  .topo-controls{right:7px;top:7px;gap:4px;padding:4px}
+  .topo-controls button{min-width:44px;min-height:44px;padding:5px 7px}
+  .topo-controls button:last-child{min-width:58px}
+  .topo-help{left:7px;right:7px;bottom:7px;padding:5px 7px;font-size:11px;pointer-events:none}
+  .skill-popup{position:fixed;padding:10px}
+  .skill-popup-card{max-height:calc(100dvh - 20px);padding:14px;border-width:4px}
+}
+
 </style>
 </head>
 <body>
@@ -1040,6 +1077,12 @@ function maybeShowSkillPopup(){
 
 let index=0,attempts=0,correct=0,xp=0,gold=0;
 const $=s=>document.querySelector(s),screens=["landing","tutorial","game","results"];
+function keepPhoneAnswerVisible(){
+ if(innerWidth>620||document.activeElement?.id!=="answerInput")return;
+ requestAnimationFrame(()=>document.querySelector(".question-card")?.scrollIntoView({block:"end",behavior:"smooth"}));
+}
+document.addEventListener("focusin",event=>{if(event.target.id==="answerInput")setTimeout(keepPhoneAnswerVisible,120)});
+window.visualViewport?.addEventListener("resize",keepPhoneAnswerVisible);
 function show(id){screens.forEach(s=>$("#"+s).classList.toggle("active",s===id))}
 function render(){
  const q=questions[index];attempts=completedQuestionAttempts.get(index)||0;
