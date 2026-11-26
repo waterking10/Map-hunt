@@ -13,15 +13,37 @@ async function dismissSkillPopup(page) {
 }
 
 async function startCsecRound(page) {
+  await page.addInitScript(() => {
+    const user = {
+      id: '44444444-4444-4444-8444-444444444444',
+      email: 'mobile.student@queenscollege.edu.bb',
+      user_metadata: { full_name: 'Mobile Layout Student' }
+    };
+    const mockSupabase = { createClient: () => ({
+      auth: {
+        getSession: async () => ({ data: { session: { user } }, error: null }),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }),
+        signInWithOAuth: async () => ({ data: {}, error: null }),
+        signOut: async () => ({ error: null })
+      },
+      from: () => ({ insert: async () => ({ error: null }) })
+    }) };
+    Object.defineProperty(window, 'supabase', {
+      configurable: true,
+      get: () => mockSupabase,
+      set() {}
+    });
+  });
   await page.route('https://**', (route) => route.abort());
   await page.goto(gameUrl);
+  await expect(page.locator('#authStatus')).toHaveText('Signed in as mobile.student@queenscollege.edu.bb');
   await page.evaluate(() => {
     localStorage.clear();
     const randomValues = [0.001, 0.001];
     let randomIndex = 0;
     Math.random = () => randomValues[randomIndex++] ?? 0.5;
   });
-  await page.getByLabel('Student name').fill('Mobile Layout Student');
+  await expect(page.getByLabel('Student name')).toHaveValue('Mobile Layout Student');
   await page.getByLabel('Class').fill('Test Class');
   await page.getByLabel(/CSEC/).check();
   await page.getByRole('button', { name: 'Start Adventure' }).click();

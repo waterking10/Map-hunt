@@ -32,7 +32,8 @@ This roadmap reflects features verified on the repository's main branch. Work on
 - Clickable grid-square selection and a magnified tenths grid for six-figure references.
 - In-game skill lessons for map keys, grid references, bearings, distance, gradient, and topographic interpretation.
 - A draggable and rotatable virtual ruler.
-- A movable 360° protractor with an angle slider for its red sighting line.
+- A movable 360° protractor with a directly draggable red line and endpoint, one-degree mouse/touch adjustments, keyboard access, and no separate angle slider.
+- A refreshed bearings tutorial demonstrating direct dragging and fully reachable controls in the compact phone map.
 - Zoom, pan, and reset controls for original topographic sheets.
 - Numbered question navigation for revisiting unfinished work.
 
@@ -48,7 +49,7 @@ This roadmap reflects features verified on the repository's main branch. Work on
 
 ## In Progress
 
-No development item is marked In Progress on the committed main branch. Update this section only when active work is supported by repository evidence, and do not describe unmerged branch work as completed.
+No implementation item is currently marked In Progress.
 
 ## Planned
 
@@ -68,7 +69,6 @@ No development item is marked In Progress on the committed main branch. Update t
 
 ### Geography tools
 
-- Make the protractor's red degree line directly draggable instead of relying on the separate angle slider.
 - Improve ruler, protractor, and map-tool integration and positioning on small screens.
 - Preserve calibrated measurements, bearing conventions, and accepted tolerances during tool changes.
 

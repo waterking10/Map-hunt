@@ -258,8 +258,24 @@ async function recordBearing(page) {
   if(after===before)throw new Error('Protractor did not move through its drag control');
   await freeze(page, 'Step 2: Centre the protractor on START. Keep 000° pointing north.', { target:'#protractor', position:'bottom-right', duration:3200 });
   await resume(page);
-  await page.locator('#angleSlider').fill(String(Math.round(Number(data.answer))));
-  await freeze(page, 'Step 3: Measure clockwise from north until the red line reaches the destination.', { target:'#protractor', position:'bottom-right', duration:3400 });
+  if(await page.locator('#angleSlider').count())throw new Error('The bearing tutorial must use the red line without a slider');
+  const targetAngle=Math.round(Number(data.answer))%360;
+  const rayPath=await page.locator('#protractor svg').evaluate((svg,angle)=>{
+    const matrix=svg.getScreenCTM(),steps=Math.max(1,Math.ceil(angle/4));
+    return Array.from({length:steps+1},(_,i)=>{
+      const radians=(angle*i/steps-90)*Math.PI/180;
+      const point=new DOMPoint(180+145*Math.cos(radians),180+145*Math.sin(radians)).matrixTransform(matrix);
+      return {x:point.x,y:point.y};
+    });
+  },targetAngle);
+  await page.mouse.move(rayPath[0].x,rayPath[0].y);
+  await page.mouse.down();
+  for(const point of rayPath.slice(1))await page.mouse.move(point.x,point.y,{steps:2});
+  await page.mouse.up();
+  if(await page.locator('#bearingRay').getAttribute('aria-valuenow')!==String(targetAngle))throw new Error('The red-line drag did not reach the intended bearing');
+  const rotatedPosition=await page.locator('#protractor').evaluate(node=>`${node.style.left}|${node.style.top}`);
+  if(rotatedPosition!==after)throw new Error('Rotating the red line moved the protractor body');
+  await freeze(page, 'Step 3: Drag the red line clockwise until it points toward the destination.', { target:'#protractor', position:'bottom-right', duration:3400 });
   const answer = String(Math.round(Number(data.answer))).padStart(3, '0');
   await freeze(page, `Step 4: The angle is ${answer}°. Write every bearing with three figures.`, { target:'#protractor', position:'bottom-right', duration:3200 });
   await submitAnswer(page, answer);

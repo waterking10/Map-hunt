@@ -10,6 +10,8 @@ Hints do not cost XP or gold. Rewards still depend on submitted attempts: a corr
 
 ## Gameplay tutorials
 
+For bearing questions, drag the protractor's clear body to centre it on the starting symbol. Drag the red line or its round endpoint handle to aim at the destination, then read the bearing clockwise from north. Move slowly for precise, one-degree adjustments with a mouse, touch or pen. For keyboard use, focus the red line with Tab and use the arrow keys to rotate it by one degree; Home points north and End selects 359°.
+
 The educational notes for four-figure grids, six-figure grids, distance, bearings, and gradient include short recordings made in the real Map Hunt interface. Open the matching notes lesson and select **Load … tutorial**. Videos are loaded only on request, include browser playback/fullscreen controls and a replay button, and are accompanied by a text alternative.
 
 The recordings use dedicated, unscored training examples so they teach the complete method without revealing an answer from the scored question set. Important steps use close map framing, large high-contrast captions, focused highlights, and 2–4 second reading pauses. The four-figure lesson explicitly marks the square's bottom-left corner before reading the easting and northing.
@@ -95,7 +97,7 @@ Distance and gradient questions display a calibrated ruler. Drag the ruler to mo
 
 ### Digital protractor
 
-Bearing questions display a 360° protractor. Drag the protractor over the starting symbol and use the angle slider to rotate the red sighting line clockwise from north toward the destination.
+Bearing questions display a 360° protractor. Drag its clear body or centre onto the starting symbol, then drag the red sighting line or its round endpoint toward the destination. Move slowly for one-degree adjustments and read the bearing clockwise from north. There is no separate angle slider. For keyboard use, press Tab to focus the red line, use the arrow keys for one-degree adjustments, Home for north, or End for 359°.
 
 ### Topographic sheets
 
@@ -103,7 +105,7 @@ Topographic questions provide zoom-in, zoom-out, and reset controls. The sheet c
 
 ## Mobile and Desktop Compatibility
 
-The interface includes responsive layouts for narrower screens and uses pointer-based dragging for map tools. Touch, mouse, and keyboard support should be checked whenever an affected interface changes. The current automated suite verifies gameplay logic in a desktop browser; responsive visual checks still require browser testing at phone and desktop widths.
+The interface includes responsive layouts for narrower screens and uses pointer-based dragging for map tools. The protractor tests cover phone and desktop widths, one-degree mouse and emulated-touch adjustments, keyboard control, and independent movement of the tool's body. Responsive visual checks and physical-device checks remain part of interface verification.
 
 ## Run Locally
 

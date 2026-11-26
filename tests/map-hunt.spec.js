@@ -11,7 +11,7 @@ test('submits a guess and shows the expected result', async ({ page }) => {
       email: 'fake.student@queenscollege.edu.bb',
       user_metadata: { full_name: 'Test Student' }
     };
-    window.supabase = { createClient: () => ({
+    const mockSupabase = { createClient: () => ({
       auth: {
         getSession: async () => ({ data: { session: { user } }, error: null }),
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }),
@@ -20,6 +20,11 @@ test('submits a guess and shows the expected result', async ({ page }) => {
       },
       from: () => ({ insert: async () => ({ error: null }) })
     }) };
+    Object.defineProperty(window, 'supabase', {
+      configurable: true,
+      get: () => mockSupabase,
+      set() {}
+    });
   });
   await page.route('https://**', route => route.abort());
   await page.goto(gameUrl);

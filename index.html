@@ -22,10 +22,11 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 .question-card{background:#f4dfad;border:4px solid #4a2d16;border-radius:18px;padding:16px}.level{display:inline-block;background:#7f2f27;color:#fff;border-radius:999px;padding:5px 10px;font-size:13px}.question-card h2{font-size:21px;margin:10px 0}.answer-input{width:100%;border:3px solid #6a4727;border-radius:12px;padding:13px 14px;background:#fff9e8;font-size:20px}.choices{display:grid;gap:9px}.choice{text-align:left;border:2px solid #6a4727;border-radius:11px;padding:11px;background:#fff7df}.choice.selected{outline:4px solid rgba(247,201,72,.6);background:#ffe7a8}.actions{display:flex;gap:9px;margin-top:12px}.secondary{border:2px solid #4a2d16;border-radius:11px;padding:11px 14px;background:#f4cf80;font-weight:700}.feedback{display:none;margin-top:12px;border-radius:12px;padding:11px}.feedback.show{display:block}.good{background:#d9f0d5;border:2px solid #3d7a47}.bad{background:#f7d9d1;border:2px solid #a34739}
 .zoom-overlay{position:absolute;inset:0;background:rgba(7,35,48,.78);display:none;align-items:center;justify-content:center;z-index:9;padding:18px}.zoom-overlay.show{display:flex}.zoom-panel{width:min(620px,96%);background:#f4dfad;border:5px solid #4a2d16;border-radius:18px;padding:16px}.zoom-panel h3{margin:0 0 8px}.zoom-svg{width:100%;display:block;background:#fff7dc;border:3px solid #54351d;border-radius:10px}.zoom-note{font-size:15px;line-height:1.4;margin-top:8px}
 .protractor{position:absolute;width:360px;height:360px;left:170px;top:170px;z-index:15;display:none;touch-action:none;user-select:none;cursor:grab}.protractor.show{display:block}.protractor.dragging{cursor:grabbing}.protractor svg{width:100%;height:100%;filter:drop-shadow(0 8px 8px rgba(0,0,0,.3))}.degree-readout{display:none}
-.protractor-controls{display:none;background:#f4dfad;border:4px solid #4a2d16;border-radius:18px;padding:12px}.protractor-controls.show{display:block}.protractor-controls input[type=range]{width:100%}
+.protractor-controls{display:none;background:#f4dfad;border:4px solid #4a2d16;border-radius:18px;padding:12px}.protractor-controls.show{display:block}
+#bearingRay{cursor:grab;outline:none}.protractor.dragging #bearingRay{cursor:grabbing}#bearingRay:focus-visible #bearingHandle{stroke:#183f62;stroke-width:4}
 .results{padding:40px;text-align:center}.score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0}.score-card{border:3px solid #4a2d16;border-radius:15px;background:rgba(255,255,255,.35);padding:16px}.score-card b{display:block;font-size:34px}.treasure-pop{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(5,29,39,.67);z-index:20}.treasure-pop.show{display:flex}.treasure{font-size:130px;animation:bob 1s infinite}
 @media(max-width:900px){.game-grid{grid-template-columns:1fr}.tutorial-grid{grid-template-columns:1fr}.bubble:before,.bubble:after{display:none}.map-card,.map-svg{min-height:580px}.score-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.screen{padding:10px}.landing,.tutorial,.results{padding:26px 16px}.steps,.score-grid{grid-template-columns:1fr}.map-card,.map-svg{min-height:480px}.hud{grid-template-columns:1fr 1fr}.hud>div:first-child{grid-column:1/-1}.protractor{width:280px;height:280px}}
+@media(max-width:520px){.screen{padding:10px}.landing,.tutorial,.results{padding:26px 16px}.steps,.score-grid{grid-template-columns:1fr}.map-card,.map-svg{min-height:480px}.hud{grid-template-columns:1fr 1fr}.hud>div:first-child{grid-column:1/-1}.protractor{width:280px;height:280px;left:calc(50% - 140px)}}
 
 .topo-map-wrap{position:absolute;inset:0;z-index:6;background:#f4f1e8;display:none;align-items:center;justify-content:center;overflow:auto;padding:8px}
 .topo-map-wrap.show{display:flex}
@@ -250,6 +251,7 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
   .game-grid{grid-template-columns:minmax(0,1fr);gap:8px}
   .map-card,.map-svg{min-height:0;height:clamp(285px,38dvh,340px)}
   .map-card{border-width:4px;border-radius:14px;overflow:hidden}
+  .protractor{width:270px;height:270px;left:calc(50% - 135px);top:calc(50% - 135px)}
   .side{gap:8px;min-width:0}
   .captain-box{display:none}
   .test-nav{padding:7px 8px;border-width:3px;border-radius:14px;min-width:0}
@@ -470,7 +472,11 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 <circle cx="180" cy="180" r="12" fill="#c52821"/>
 <g id="tickGroup"></g>
 <g id="numberGroup" font-family="Arial" font-size="13" font-weight="700" fill="#5a201d" text-anchor="middle"></g>
-<line id="bearingNeedle" x1="180" y1="180" x2="180" y2="10" stroke="#c52821" stroke-width="3.5" stroke-linecap="round"/>
+<g id="bearingRay" tabindex="0" role="slider" aria-label="Bearing angle" aria-valuemin="0" aria-valuemax="359" aria-valuenow="0" aria-valuetext="000 degrees" aria-describedby="bearingDragHelp">
+<line id="bearingNeedle" x1="180" y1="180" x2="180" y2="10" stroke="#c52821" stroke-width="3.5" stroke-linecap="round" pointer-events="none"/>
+<line id="bearingNeedleHit" x1="180" y1="156" x2="180" y2="10" stroke="transparent" stroke-width="32" pointer-events="stroke"/>
+<circle id="bearingHandle" cx="180" cy="10" r="10" fill="#c52821" stroke="#fff4d2" stroke-width="2"/>
+</g>
 </svg>
 
 </div>
@@ -495,7 +501,7 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
     <button id="nextQuestion" type="button">Skip / Next →</button>
   </div>
 </div>
-<div id="protractorControls" class="protractor-controls"><b>Digital 360° protractor</b><p style="margin:6px 0">Place the protractor centre on the starting symbol. Use the straight connecting line to measure the bearing.</p><div class="bearing-drag-instruction">Drag the slider below to rotate the red bearing line. The red ray stays inside the protractor. Rotate it toward the destination and read the clockwise angle from north.</div><input id="angleSlider" type="range" min="0" max="359" value="0" aria-label="Drag to rotate the red bearing line"></div><div class="question-card"><span id="level" class="level"></span><h2 id="question"></h2><div id="answerArea"></div><div class="actions"><button id="submitBtn" class="primary" style="font-size:16px;padding:10px 16px">Submit Answer</button><button id="hintBtn" class="secondary">Show hint 1</button></div><section id="hintList" class="hint-list" aria-live="polite"><h3>Hints shown</h3><ol id="hintItems"></ol><div id="hintStatus" class="hint-status"></div></section><div id="feedback" class="feedback" aria-live="polite"></div></div></aside>
+<div id="protractorControls" class="protractor-controls"><b>Digital 360° protractor</b><p style="margin:6px 0">Place the protractor centre on the starting symbol. Use the straight connecting line to measure the bearing.</p><div id="bearingDragHelp" class="bearing-drag-instruction">Drag the red line or its round handle toward the destination, then read the clockwise angle from north. Drag slowly for fine adjustments. Drag the clear body to move the protractor.</div></div><div class="question-card"><span id="level" class="level"></span><h2 id="question"></h2><div id="answerArea"></div><div class="actions"><button id="submitBtn" class="primary" style="font-size:16px;padding:10px 16px">Submit Answer</button><button id="hintBtn" class="secondary">Show hint 1</button></div><section id="hintList" class="hint-list" aria-live="polite"><h3>Hints shown</h3><ol id="hintItems"></ol><div id="hintStatus" class="hint-status"></div></section><div id="feedback" class="feedback" aria-live="polite"></div></div></aside>
 </div></div></section>
 <section id="results" class="screen center"><div class="panel results">
 
@@ -991,7 +997,7 @@ const skillLessons={
        <ul class="skill-check">
          <li>Place the centre of the protractor exactly on the starting symbol.</li>
          <li>Keep 000° pointing north.</li>
-         <li>Move the red sighting line toward the destination.</li>
+         <li>Drag the red sighting line or its round handle toward the destination. Drag the clear body to move the protractor.</li>
          <li>Read the angle directly where the red line crosses the protractor scale.</li>
        </ul>`,
       `<p><b>Why the starting point matters:</b> The angle is measured at the first place named. Changing the starting point changes the bearing.</p>
@@ -1463,27 +1469,60 @@ for(let d=0;d<360;d+=5){
    numberGroup.appendChild(t);
  }
 }
-const slider=$("#angleSlider"),needle=$("#bearingNeedle");
+const bearingRay=$("#bearingRay"),needle=$("#bearingNeedle"),needleHit=$("#bearingNeedleHit"),bearingHandle=$("#bearingHandle");
+let bearingAngle=0;
 function setAngle(v){
- const n=Number(v),rad=(n-90)*Math.PI/180;
- const forward=170,backward=0;
- needle.setAttribute("x1",180-backward*Math.cos(rad));
- needle.setAttribute("y1",180-backward*Math.sin(rad));
- needle.setAttribute("x2",180+forward*Math.cos(rad));
- needle.setAttribute("y2",180+forward*Math.sin(rad));
+ const n=((Math.round(Number(v))%360)+360)%360,rad=(n-90)*Math.PI/180;
+ const x=180+170*Math.cos(rad),y=180+170*Math.sin(rad);
+ bearingAngle=n;
+ bearingRay.setAttribute("aria-valuenow",n);
+ bearingRay.setAttribute("aria-valuetext",`${String(n).padStart(3,"0")} degrees`);
+ needle.setAttribute("x2",x);needle.setAttribute("y2",y);
+ needleHit.setAttribute("x1",180+24*Math.cos(rad));needleHit.setAttribute("y1",180+24*Math.sin(rad));
+ needleHit.setAttribute("x2",x);needleHit.setAttribute("y2",y);
+ bearingHandle.setAttribute("cx",x);bearingHandle.setAttribute("cy",y);
 }
-slider.addEventListener("input",e=>setAngle(e.target.value));setAngle(0);
-const pro=$("#protractor"),map=$("#mapCard");let drag=false,ox=0,oy=0;
-pro.addEventListener("pointerdown",e=>{drag=true;pro.classList.add("dragging");pro.setPointerCapture(e.pointerId);const r=pro.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top});
+bearingRay.addEventListener("keydown",e=>{
+ const steps={ArrowRight:1,ArrowUp:1,ArrowLeft:-1,ArrowDown:-1};
+ if(e.key in steps)setAngle(bearingAngle+steps[e.key]);
+ else if(e.key==="Home")setAngle(0);
+ else if(e.key==="End")setAngle(359);
+ else return;
+ e.preventDefault();
+});
+setAngle(0);
+const pro=$("#protractor"),map=$("#mapCard"),proSvg=pro.querySelector("svg");let protractorDrag=null;
+pro.addEventListener("pointerdown",e=>{
+ if(protractorDrag||!e.isPrimary||e.button!==0)return;
+ const r=pro.getBoundingClientRect();
+ protractorDrag={pointerId:e.pointerId,rotate:Boolean(e.target.closest("#bearingRay")),ox:e.clientX-r.left,oy:e.clientY-r.top};
+ if(protractorDrag.rotate)bearingRay.focus({preventScroll:true});
+ e.preventDefault();pro.classList.add("dragging");pro.setPointerCapture(e.pointerId);
+});
 pro.addEventListener("pointermove",e=>{
-if(!drag)return;
+if(!protractorDrag||e.pointerId!==protractorDrag.pointerId)return;
+if(protractorDrag.rotate){
+ // Convert screen coordinates into SVG units, including the smaller phone size.
+ const point=new DOMPoint(e.clientX,e.clientY).matrixTransform(proSvg.getScreenCTM().inverse());
+ const dx=point.x-180,dy=point.y-180;
+ // Keep the last bearing when crossing the centre, where direction is undefined.
+ if(Math.hypot(dx,dy)>=24)setAngle(Math.atan2(dx,-dy)*180/Math.PI);
+ return;
+}
 const r=map.getBoundingClientRect();
-let x=e.clientX-r.left-ox,y=e.clientY-r.top-oy;
+let x=e.clientX-r.left-map.clientLeft-protractorDrag.ox,y=e.clientY-r.top-map.clientTop-protractorDrag.oy;
 const overX=pro.offsetWidth*.48,overY=pro.offsetHeight*.42;
 x=Math.max(-overX,Math.min(x,r.width-pro.offsetWidth+overX));
 y=Math.max(-overY,Math.min(y,r.height-pro.offsetHeight+overY));
 pro.style.left=x+"px";pro.style.top=y+"px"
 });
-pro.addEventListener("pointerup",()=>{drag=false;pro.classList.remove("dragging")});
+function endProtractorDrag(e){
+ if(!protractorDrag||e.pointerId!==protractorDrag.pointerId)return;
+ protractorDrag=null;pro.classList.remove("dragging");
+ if(pro.hasPointerCapture(e.pointerId))pro.releasePointerCapture(e.pointerId);
+}
+pro.addEventListener("pointerup",endProtractorDrag);
+pro.addEventListener("pointercancel",endProtractorDrag);
+pro.addEventListener("lostpointercapture",endProtractorDrag);
 </script>
 </body></html>
