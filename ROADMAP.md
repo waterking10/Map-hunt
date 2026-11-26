@@ -32,7 +32,7 @@ This roadmap reflects features verified on the repository's main branch. Work on
 - Clickable grid-square selection and a magnified tenths grid for six-figure references.
 - In-game skill lessons for map keys, grid references, bearings, distance, gradient, and topographic interpretation.
 - A draggable and rotatable virtual ruler.
-- A movable 360° protractor with an angle slider for its red sighting line.
+- A movable 360° protractor for measuring bearings clockwise from north.
 - Zoom, pan, and reset controls for original topographic sheets.
 - Numbered question navigation for revisiting unfinished work.
 
@@ -48,7 +48,8 @@ This roadmap reflects features verified on the repository's main branch. Work on
 
 ## In Progress
 
-No development item is marked In Progress on the committed main branch. Update this section only when active work is supported by repository evidence, and do not describe unmerged branch work as completed.
+- Direct red-line and endpoint dragging for the protractor, with one-degree mouse/touch adjustments, keyboard access, and no separate angle slider. Implemented and covered by focused browser checks on `codex/ship-protractor`; awaiting full-suite verification and approved merge.
+- Updated bearings tutorial recording and regression coverage for the direct-drag controls, included in the same pending change.
 
 ## Planned
 
@@ -68,7 +69,6 @@ No development item is marked In Progress on the committed main branch. Update t
 
 ### Geography tools
 
-- Make the protractor's red degree line directly draggable instead of relying on the separate angle slider.
 - Improve ruler, protractor, and map-tool integration and positioning on small screens.
 - Preserve calibrated measurements, bearing conventions, and accepted tolerances during tool changes.
 

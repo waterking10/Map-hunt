@@ -97,7 +97,7 @@ Distance and gradient questions display a calibrated ruler. Drag the ruler to mo
 
 ### Digital protractor
 
-Bearing questions display a 360° protractor. Drag the protractor over the starting symbol and use the angle slider to rotate the red sighting line clockwise from north toward the destination.
+Bearing questions display a 360° protractor. Drag its clear body or centre onto the starting symbol, then drag the red sighting line or its round endpoint toward the destination. Move slowly for one-degree adjustments and read the bearing clockwise from north. There is no separate angle slider. For keyboard use, press Tab to focus the red line, use the arrow keys for one-degree adjustments, Home for north, or End for 359°.
 
 ### Topographic sheets
 
@@ -105,7 +105,7 @@ Topographic questions provide zoom-in, zoom-out, and reset controls. The sheet c
 
 ## Mobile and Desktop Compatibility
 
-The interface includes responsive layouts for narrower screens and uses pointer-based dragging for map tools. Touch, mouse, and keyboard support should be checked whenever an affected interface changes. The current automated suite verifies gameplay logic in a desktop browser; responsive visual checks still require browser testing at phone and desktop widths.
+The interface includes responsive layouts for narrower screens and uses pointer-based dragging for map tools. The protractor tests cover phone and desktop widths, one-degree mouse and emulated-touch adjustments, keyboard control, and independent movement of the tool's body. Responsive visual checks and physical-device checks remain part of interface verification.
 
 ## Run Locally
 

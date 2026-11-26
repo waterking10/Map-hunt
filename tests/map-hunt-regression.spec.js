@@ -13,7 +13,7 @@ async function installSupabaseMock(page, { signedIn = true, insertError = null }
       user_metadata: { full_name: 'Fake Student' }
     } : null;
     window.__supabaseInserts = [];
-    window.supabase = {
+    const mockSupabase = {
       createClient: () => ({
         auth: {
           getSession: async () => ({ data: { session: user ? { user } : null }, error: null }),
@@ -29,6 +29,12 @@ async function installSupabaseMock(page, { signedIn = true, insertError = null }
         })
       })
     };
+    // The CDN bundle assigns this global after init scripts run. Keep tests local.
+    Object.defineProperty(window, 'supabase', {
+      configurable: true,
+      get: () => mockSupabase,
+      set() {}
+    });
   }, { hasSession: signedIn, errorMessage: insertError });
 }
 
@@ -81,8 +87,10 @@ async function startPlaythrough(page, { level, mapId, sheetId }) {
 async function showFakeStudentResult(page) {
   const externalRequests = [];
   await installSupabaseMock(page);
+  await page.route('https://**', route => route.abort());
   page.on('request', (request) => externalRequests.push(request.url()));
   await page.goto(gameUrl, { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#authStatus')).toHaveText('Signed in as fake.student@queenscollege.edu.bb');
   await page.evaluate(() => {
     localStorage.clear();
     challenge = {
@@ -251,6 +259,10 @@ async function completeEveryQuestion(page, scenario) {
 
   const testedPrompts = [];
   for (let questionIndex = 0; questionIndex < expectedCount; questionIndex += 1) {
+    // Explicit selection cannot skip a clue if its predecessor already auto-advanced.
+    const questionButton = page.locator('#questionJump button').nth(questionIndex);
+    await questionButton.click();
+    await expect(questionButton).toHaveClass(/active/);
     await dismissSkillPopup(page);
     const prompt = await page.locator('#question').textContent();
     const answer = expectedAnswer({
@@ -285,9 +297,14 @@ async function completeEveryQuestion(page, scenario) {
     await expect(page.locator('#xp')).toHaveText(String(scoreBefore + 80));
     await expect(page.locator('#gold')).toHaveText(String(scoreBefore + 80));
 
-    await page.locator('#nextQuestion').click();
+    if (questionIndex < expectedCount - 1) {
+      // Wait for the real auto-advance, including any topographic transition.
+      await expect(page.locator('#questionJump button').nth(questionIndex + 1)).toHaveClass(/active/);
+      await expect(page.locator('#realMapTransition')).not.toHaveClass(/show/);
+    }
   }
 
+  // The last correct answer finishes the island through the real automatic advance.
   await expect(page.locator('#results')).toHaveClass(/active/);
   await expect(page.locator('#finalScore')).toHaveText(`${expectedCount}/${expectedCount}`);
   await expect(page.locator('#accuracy')).toHaveText('100%');
