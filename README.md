@@ -10,7 +10,7 @@ Hints do not cost XP or gold. Rewards still depend on submitted attempts: a corr
 
 ## Gameplay tutorials
 
-For bearing questions, drag the protractor's clear body to centre it on the starting symbol. Drag the red line or its round endpoint handle to aim at the destination, then read the bearing clockwise from north. This works with a mouse, touch or pen. The slider and its arrow keys remain available for fine adjustments.
+For bearing questions, drag the protractor's clear body to centre it on the starting symbol. Drag the red line or its round endpoint handle to aim at the destination, then read the bearing clockwise from north. Move slowly for precise, one-degree adjustments with a mouse, touch or pen. For keyboard use, focus the red line with Tab and use the arrow keys to rotate it by one degree; Home points north and End selects 359°.
 
 The educational notes for four-figure grids, six-figure grids, distance, bearings, and gradient include short recordings made in the real Map Hunt interface. Open the matching notes lesson and select **Load … tutorial**. Videos are loaded only on request, include browser playback/fullscreen controls and a replay button, and are accompanied by a text alternative.
 

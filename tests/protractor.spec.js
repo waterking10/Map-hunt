@@ -22,6 +22,8 @@ async function openBearing(page, { positionTool = true } = {}) {
   }, positionTool);
   await page.locator('#protractor').scrollIntoViewIfNeeded();
   await expect(page.locator('#protractor')).toBeVisible();
+  await expect(page.locator('#angleSlider')).toHaveCount(0);
+  await expect(page.locator('#protractorControls input[type="range"]')).toHaveCount(0);
 }
 
 async function pointAt(page, bearing, radius = 150) {
@@ -34,8 +36,8 @@ async function pointAt(page, bearing, radius = 150) {
 }
 
 async function expectBearing(page, angle) {
-  await expect(page.locator('#angleSlider')).toHaveValue(String(angle));
-  await expect(page.locator('#angleSlider')).toHaveAttribute('aria-valuetext', `${String(angle).padStart(3, '0')} degrees`);
+  await expect(page.locator('#bearingRay')).toHaveAttribute('aria-valuenow', String(angle));
+  await expect(page.locator('#bearingRay')).toHaveAttribute('aria-valuetext', `${String(angle).padStart(3, '0')} degrees`);
   const actual = await page.locator('#bearingNeedle').evaluate(needle => {
     const dx = Number(needle.getAttribute('x2')) - Number(needle.getAttribute('x1'));
     const dy = Number(needle.getAttribute('y2')) - Number(needle.getAttribute('y1'));
@@ -62,11 +64,11 @@ for (const viewport of [
   test.describe(`protractor at ${viewport.name} width`, () => {
     test.use({ viewport: { width: viewport.width, height: viewport.height } });
 
-    test('dragging the ray measures clockwise through all quadrants without moving the tool', async ({ page }) => {
+    test('dragging the ray measures all quadrants and one-degree adjustments without moving the tool', async ({ page }) => {
       await openBearing(page);
       const before = await page.locator('#protractor').boundingBox();
       await startMouseRotation(page, 0);
-      for (const angle of [45, 90, 131, 180, 225, 270, 315, 359, 0, 1, 359]) {
+      for (const angle of [45, 90, 131, 132, 133, 132, 180, 225, 270, 315, 359, 0, 1, 359]) {
         const point = await pointAt(page, angle);
         await page.mouse.move(point.x, point.y, { steps: 4 });
         await expectBearing(page, angle);
@@ -107,21 +109,42 @@ for (const viewport of [
       await expect(page.locator('#protractor')).not.toHaveClass(/dragging/);
     });
 
-    test('the slider remains usable with the keyboard and stays synchronized with dragging', async ({ page }) => {
+    test('the red ray supports keyboard adjustments and stays synchronized with dragging', async ({ page }) => {
       await openBearing(page);
-      await page.locator('#angleSlider').fill('222');
+      const ray = page.getByRole('slider', { name: 'Bearing angle' });
+      await expect(ray).toHaveAttribute('tabindex', '0');
+      await expect(ray).toHaveAttribute('aria-valuemin', '0');
+      await expect(ray).toHaveAttribute('aria-valuemax', '359');
+      const before = await page.locator('#protractor').boundingBox();
+      await startMouseRotation(page, 0);
+      const southwest = await pointAt(page, 222);
+      await page.mouse.move(southwest.x, southwest.y, { steps: 8 });
+      await page.mouse.up();
       await expectBearing(page, 222);
-      await page.locator('#angleSlider').focus();
+      await ray.focus();
       await page.keyboard.press('ArrowRight');
       await expectBearing(page, 223);
+      await expect(page.locator('#bearingHandle')).toHaveCSS('stroke', 'rgb(24, 63, 98)');
       await page.keyboard.press('ArrowLeft');
       await expectBearing(page, 222);
-      await page.locator('#protractor').scrollIntoViewIfNeeded();
-      await startMouseRotation(page, 222);
-      const north = await pointAt(page, 0);
-      await page.mouse.move(north.x, north.y, { steps: 8 });
-      await page.mouse.up();
+      await page.keyboard.press('ArrowUp');
+      await expectBearing(page, 223);
+      await page.keyboard.press('ArrowDown');
+      await expectBearing(page, 222);
+      await page.keyboard.press('Home');
       await expectBearing(page, 0);
+      await page.keyboard.press('ArrowLeft');
+      await expectBearing(page, 359);
+      await page.keyboard.press('ArrowRight');
+      await expectBearing(page, 0);
+      await page.keyboard.press('End');
+      await expectBearing(page, 359);
+      await startMouseRotation(page, 359);
+      const northeast = await pointAt(page, 61);
+      await page.mouse.move(northeast.x, northeast.y, { steps: 8 });
+      await page.mouse.up();
+      await expectBearing(page, 61);
+      expect(await page.locator('#protractor').boundingBox()).toEqual(before);
     });
 
     test('a cancelled ray gesture releases rotation and allows a fresh drag', async ({ page }) => {
@@ -156,7 +179,7 @@ test.describe('touch protractor on a phone', () => {
     expect(box.x + box.width).toBeLessThanOrEqual(390);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     for (const angle of [0, 90, 180, 270]) {
-      await page.locator('#angleSlider').fill(String(angle));
+      await page.evaluate(value => setAngle(value), angle);
       await page.locator('#protractor').scrollIntoViewIfNeeded();
       const handle = await page.locator('#bearingHandle').boundingBox();
       expect(handle.x).toBeGreaterThanOrEqual(0);
@@ -171,7 +194,7 @@ test.describe('touch protractor on a phone', () => {
     const scrollBefore = await page.evaluate(() => window.scrollY);
     const north = await pointAt(page, 0);
     await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...north, id: 0 }] });
-    for (const angle of [45, 90, 135, 180, 225, 270, 359, 0]) {
+    for (const angle of [45, 90, 130, 131, 132, 131, 135, 180, 225, 270, 359, 0]) {
       const point = await pointAt(page, angle);
       await client.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ ...point, id: 0 }] });
       await expectBearing(page, angle);
