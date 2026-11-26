@@ -4,6 +4,7 @@
 
 - Replaced the protractor's separate angle slider with direct dragging of the red sighting line or endpoint, including one-degree mouse and touch adjustments.
 - Preserved independent protractor-body movement and added keyboard control and accessible angle values directly on the red line.
+- Kept the full protractor and its endpoint handle reachable inside the compact phone map.
 - Refreshed the bearings tutorial recording, preview, and capture script to demonstrate direct line dragging.
 - Added phone and desktop regression coverage for protractor dragging, fine adjustments, cancellation, and keyboard access.
 - Updated browser-test fixtures to keep sign-in mocked and follow the game's automatic question advancement without competing manual Next clicks.

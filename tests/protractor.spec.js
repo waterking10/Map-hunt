@@ -16,8 +16,9 @@ async function openBearing(page, { positionTool = true } = {}) {
     render();
     // A student can place the tool anywhere; keep every quadrant in view in this fixture.
     if (placeTool) {
-      document.querySelector('#protractor').style.left = '20px';
-      document.querySelector('#protractor').style.top = '80px';
+      const protractor = document.querySelector('#protractor');
+      protractor.style.left = '20px';
+      protractor.style.top = `${Math.max(0, Math.min(80, document.querySelector('#mapCard').clientHeight - protractor.offsetHeight - 4))}px`;
     }
   }, positionTool);
   await page.locator('#protractor').scrollIntoViewIfNeeded();
@@ -184,6 +185,13 @@ test.describe('touch protractor on a phone', () => {
       const handle = await page.locator('#bearingHandle').boundingBox();
       expect(handle.x).toBeGreaterThanOrEqual(0);
       expect(handle.x + handle.width).toBeLessThanOrEqual(390);
+      const map = await page.locator('#mapCard').boundingBox();
+      expect(handle.y).toBeGreaterThanOrEqual(map.y);
+      expect(handle.y + handle.height).toBeLessThanOrEqual(map.y + map.height);
+      expect(await page.evaluate(({ x, y }) => Boolean(document.elementFromPoint(x, y)?.closest('#bearingRay')), {
+        x: handle.x + handle.width / 2,
+        y: handle.y + handle.height / 2
+      })).toBe(true);
     }
   });
 
