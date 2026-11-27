@@ -12,9 +12,9 @@ Hints do not cost XP or gold. Rewards still depend on submitted attempts: a corr
 
 For bearing questions, drag the protractor's clear body to centre it on the starting symbol. Drag the red line or its round endpoint handle to aim at the destination, then read the bearing clockwise from north. Move slowly for precise, one-degree adjustments with a mouse, touch or pen. For keyboard use, focus the red line with Tab and use the arrow keys to rotate it by one degree; Home points north and End selects 359°.
 
-The educational notes for four-figure grids, six-figure grids, distance, bearings, and gradient include short recordings made in the real Map Hunt interface. Open the matching notes lesson and select **Load … tutorial**. Videos are loaded only on request, include browser playback/fullscreen controls and a replay button, and are accompanied by a text alternative.
+The educational notes for four-figure grids, six-figure grids, distance, bearings, and gradient include worked-example recordings made in the real Map Hunt interface. Opening a matching lesson starts its video automatically, muted and inline. Native controls let students pause, seek or enter fullscreen, and **Replay tutorial** starts the example again. If the browser blocks automatic playback, select **Play tutorial** to start it. Leaving the lesson pauses and unloads its video. The player reserves space below the picture so paused browser controls do not cover the instruction captions.
 
-The recordings use dedicated, unscored training examples so they teach the complete method without revealing an answer from the scored question set. Important steps use close map framing, large high-contrast captions, focused highlights, and 2–4 second reading pauses. The four-figure lesson explicitly marks the square's bottom-left corner before reading the easting and northing.
+The recordings use dedicated, unscored training markers and point pairs. Their examples are checked against the scored questions across all six islands, both learning levels and relevant topographic answers. Slower tool movements, close map views, short high-contrast captions and pauses of at least six seconds at key instructions give students time to follow each step. The four-figure lesson explicitly marks the square's bottom-left corner before reading the easting and northing.
 
 Regenerate all five WebM recordings with:
 
@@ -22,7 +22,7 @@ Regenerate all five WebM recordings with:
 npm run tutorials:generate
 ```
 
-The generator uses Playwright, fixed Map Hunt questions, and recording-only captions, cursor feedback, and focus highlights. It does not replace or mock the game's geography controls.
+The generator uses Playwright, dedicated training examples, and recording-only captions, cursor feedback and focus highlights. It checks example separation before recording and uses the game's actual calibrated ruler, protractor and grid controls.
 
 Decode each generated asset, check its dimensions and duration, and refresh the preview frames with:
 

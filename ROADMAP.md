@@ -49,7 +49,8 @@ This roadmap reflects features verified on the repository's main branch. Work on
 
 ## In Progress
 
-No implementation item is currently marked In Progress.
+- Tutorial playback and readability improvements on `codex/tutorial-readability`: muted autoplay, pause/replay controls, slower movements, longer instruction pauses, larger captions and closer map views. Implementation and recordings are being verified; this work is not yet merged or released.
+- Dedicated tutorial examples and validation against scored questions across all islands and both learning levels, with relevant topographic answers included in the comparison.
 
 ## Planned
 
@@ -74,8 +75,8 @@ No implementation item is currently marked In Progress.
 
 ### Tutorials
 
-- Create a video explaining four-figure and six-figure grid references.
-- Add short tutorials for individual geography tools.
+- Gather classroom feedback on tutorial pace, caption size and close-up views.
+- Consider additional tutorials for skills beyond the existing five worked examples.
 - Make instructional resources easy to reopen during gameplay.
 
 ### Interface and communication

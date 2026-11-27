@@ -111,12 +111,12 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 
 
 .skill-popup{
-  position:absolute;inset:0;z-index:40;display:none;align-items:center;justify-content:center;
+  position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;
   background:rgba(5,27,38,.86);padding:20px
 }
 .skill-popup.show{display:flex;animation:fadeIn .25s ease}
 .skill-popup-card{
-  width:min(680px,96%);max-height:90%;overflow:auto;
+  width:min(780px,96%);max-height:90%;overflow:auto;
   background:linear-gradient(135deg,#f5e3b3,#e8c477);
   border:5px solid #4a2d16;border-radius:22px;padding:24px;
   box-shadow:0 20px 55px rgba(0,0,0,.4)
@@ -135,10 +135,10 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
 .skill-notes p:last-child{margin-bottom:0}
 .gameplay-tutorial{margin-top:18px;padding:14px;border:3px solid #76502b;border-radius:14px;background:#fff8df}
 .gameplay-tutorial h3{margin:0 0 8px;color:#4a2d16;font-size:1.08rem}
-.gameplay-tutorial-load{width:100%;min-height:48px;border:2px solid #4b280f;border-radius:10px;background:#f4c64f;color:#3a210d;font-weight:800}
-.gameplay-tutorial-player{display:none;margin-top:12px}
-.gameplay-tutorial-player.show{display:block}
-.gameplay-tutorial video{display:block;width:100%;max-height:56vh;border:3px solid #4a2d16;border-radius:10px;background:#082f40}
+.gameplay-tutorial-play{width:100%;min-height:48px;border:2px solid #4b280f;border-radius:10px;background:#f4c64f;color:#3a210d;font-weight:800}
+.gameplay-tutorial-player{margin-top:12px}
+.gameplay-tutorial-status:empty{display:none}
+.gameplay-tutorial video{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;object-position:top;border:3px solid #4a2d16;border-radius:10px;background:#082f40}
 .gameplay-tutorial-replay{margin-top:8px;border:2px solid #76502b;border-radius:8px;padding:8px 12px;background:#fff4d7;font-weight:700}
 .gameplay-tutorial-alt{margin:10px 0 0;font-size:.92rem}
 .skill-example{
@@ -274,7 +274,10 @@ body{background:linear-gradient(#117693,#08374d);overflow-x:hidden}button,input{
   .topo-controls button:last-child{min-width:58px}
   .topo-help{left:7px;right:7px;bottom:7px;padding:5px 7px;font-size:11px;pointer-events:none}
   .skill-popup{position:fixed;padding:10px}
-  .skill-popup-card{max-height:calc(100dvh - 20px);padding:14px;border-width:4px}
+  .skill-popup-card{width:100%;max-height:calc(100dvh - 20px);padding:10px;border-width:4px}
+  .skill-notes{padding:8px;border-width:2px}
+  .gameplay-tutorial{padding:0;border:0;background:transparent}
+  .gameplay-tutorial video{border-width:2px}
 }
 
 </style>
@@ -1041,11 +1044,11 @@ skillLessons.gradient={icon:"⛰️",title:"Calculating Gradient",subtitle:"Expr
 `<p><b>Worked example:</b> Two points are 50 m apart vertically and 500 m apart horizontally. 500 ÷ 50 = 10, so the gradient is <b>1:10</b>.</p><p><b>Answer format:</b> Always type <b>1:10</b>, not 10, 0.1, or 10%.</p>`]};
 
 const gameplayTutorials={
-  fourFigure:{src:"assets/tutorials/four-figure-grid.webm",label:"Four-Figure Grid References",alt:"The video identifies the named feature, highlights the grid line immediately to its left and the line immediately below it, combines the easting before the northing, enters the four digits, and submits the answer."},
-  sixFigure:{src:"assets/tutorials/six-figure-grid.webm",label:"Six-Figure Grid References",alt:"The video identifies the feature's four-figure square, selects that square to open Map Hunt's expanded tenth-grid, reads three easting digits followed by three northing digits, enters all six digits, and submits the answer."},
-  distance:{src:"assets/tutorials/distance.webm",label:"Distance",alt:"The video identifies points A and B, positions and rotates Map Hunt's virtual ruler, reads the map measurement, applies the 1:50,000 scale where 1 cm equals 0.5 km, enters kilometres, and submits the answer."},
-  bearings:{src:"assets/tutorials/bearings.webm",label:"Bearings",alt:"The video identifies the start and destination, centres Map Hunt's protractor on the starting feature, keeps 000 degrees aligned with north, turns the red line clockwise to the destination, enters a three-figure bearing, and submits it."},
-  gradient:{src:"assets/tutorials/gradient.webm",label:"Gradient",alt:"The video reads the two marked elevations, subtracts them for vertical interval, measures A to B with Map Hunt's virtual ruler, converts the horizontal distance to metres, divides horizontal distance by vertical interval, enters the result as 1:n, and submits it."}
+  fourFigure:{src:"assets/tutorials/four-figure-grid.webm",label:"Four-Figure Grid References",alt:"A separate practice marker T is used. The video pauses at the square’s bottom-left corner, reads the easting before the northing, combines four digits, and shows how to submit."},
+  sixFigure:{src:"assets/tutorials/six-figure-grid.webm",label:"Six-Figure Grid References",alt:"A separate practice marker T is shown in a full tenths grid, then in a close-up. Reading pauses show eastings first and northings second before the six digits are entered."},
+  distance:{src:"assets/tutorials/distance.webm",label:"Distance",alt:"Separate practice points A and B are measured with the real ruler. Slow movement and reading pauses show the map distance, the 1:50,000 scale conversion, and the kilometre answer."},
+  bearings:{src:"assets/tutorials/bearings.webm",label:"Bearings",alt:"Separate practice points A and B are used. The protractor is centred on A with 000 degrees pointing north, and the red line is dragged clockwise towards B. Pauses show the scale reading and three-figure answer."},
+  gradient:{src:"assets/tutorials/gradient.webm",label:"Gradient",alt:"Separate practice elevations at A and B are read and subtracted. Pauses show the map measurement, conversion to metres, and horizontal distance divided by vertical interval before writing the gradient as 1:n."}
 };
 
 const skillStarts={0:"fourFigure",2:"directions",3:"sixFigure",5:"distance",6:"gradient",7:"bearings",9:"topo"};
@@ -1053,24 +1056,47 @@ let shownSkills=new Set();
 let currentSkillKey=null;
 let currentSkillSlide=0;
 
+function pauseGameplayTutorial(){
+  const video=$("#skillPopupNotes video");
+  if(video&&video.hasAttribute("src")){
+    video.pause();video.removeAttribute("src");video.load();
+  }
+}
+function closeSkillPopup(){
+  pauseGameplayTutorial();
+  $("#skillPopup").classList.remove("show");
+}
 function renderSkillSlide(){
   const lesson=skillLessons[currentSkillKey];
   if(!lesson)return;
   $("#skillPopupIcon").textContent=lesson.icon;
   $("#skillPopupTitle").textContent=lesson.title;
   $("#skillPopupSubtitle").textContent=`${lesson.subtitle} · Slide ${currentSkillSlide+1} of ${lesson.slides.length}`;
+  pauseGameplayTutorial();
   $("#skillPopupNotes").innerHTML=lesson.slides[currentSkillSlide];
   const tutorial=gameplayTutorials[currentSkillKey];
   if(tutorial&&currentSkillSlide===0){
     const section=document.createElement("section");
     section.className="gameplay-tutorial";
     section.setAttribute("aria-label",`${tutorial.label} gameplay tutorial`);
-    section.innerHTML=`<h3>▶ Watch Gameplay Tutorial</h3><button type="button" class="gameplay-tutorial-load">Load ${tutorial.label} tutorial</button><div class="gameplay-tutorial-player"><video controls playsinline preload="none" aria-label="${tutorial.label} gameplay tutorial"></video><button type="button" class="gameplay-tutorial-replay">↺ Replay tutorial</button></div><p class="gameplay-tutorial-alt"><b>Text alternative:</b> ${tutorial.alt}</p>`;
-    const load=section.querySelector(".gameplay-tutorial-load"),player=section.querySelector(".gameplay-tutorial-player"),video=section.querySelector("video");
-    load.addEventListener("click",()=>{if(!video.src){video.src=tutorial.src;video.load()}player.classList.add("show");load.hidden=true;video.focus()});
-    section.querySelector(".gameplay-tutorial-replay").addEventListener("click",()=>{video.currentTime=0;video.play()});
+    section.innerHTML=`<h3>▶ Watch Gameplay Tutorial</h3><div class="gameplay-tutorial-player"><video controls autoplay muted playsinline preload="metadata" aria-label="${tutorial.label} gameplay tutorial"></video><p class="gameplay-tutorial-status" role="status" aria-live="polite"></p><button type="button" class="gameplay-tutorial-play" hidden>Play tutorial</button><button type="button" class="gameplay-tutorial-replay">↺ Replay tutorial</button></div><p class="gameplay-tutorial-alt"><b>Text alternative:</b> ${tutorial.alt}</p>`;
+    const video=section.querySelector("video"),play=section.querySelector(".gameplay-tutorial-play"),status=section.querySelector(".gameplay-tutorial-status");
+    video.src=tutorial.src+"?v=readability-2";video.muted=true;video.defaultMuted=true;
+    video.addEventListener("play",()=>{play.hidden=true;status.textContent=""});
+    async function startTutorial(){
+      try{
+        await video.play();
+        play.hidden=true;status.textContent="";
+      }catch(error){
+        if(error.name==="AbortError"||!video.isConnected||!$("#skillPopup").classList.contains("show"))return;
+        play.hidden=false;status.textContent="The video could not start automatically. Select Play tutorial to try again.";
+      }
+    }
+    play.addEventListener("click",()=>{if(video.error)video.load();startTutorial()});
+    section.querySelector(".gameplay-tutorial-replay").addEventListener("click",()=>{video.currentTime=0;startTutorial()});
     const introduction=$("#skillPopupNotes").querySelector("p");
     if(introduction)introduction.after(section);else $("#skillPopupNotes").appendChild(section);
+    requestAnimationFrame(()=>{if(video.isConnected&&$("#skillPopup").classList.contains("show"))startTutorial()});
   }
 
   const dots=$("#skillSlideIndicator");
@@ -1110,7 +1136,7 @@ function keepPhoneAnswerVisible(){
 }
 document.addEventListener("focusin",event=>{if(event.target.id==="answerInput")setTimeout(keepPhoneAnswerVisible,120)});
 window.visualViewport?.addEventListener("resize",keepPhoneAnswerVisible);
-function show(id){screens.forEach(s=>$("#"+s).classList.toggle("active",s===id))}
+function show(id){if(id!=="game")pauseGameplayTutorial();screens.forEach(s=>$("#"+s).classList.toggle("active",s===id))}
 function render(){
  const q=questions[index];attempts=completedQuestionAttempts.get(index)||0;
  if(q.type==='distance'&&q.measurePair){MEASURED_POINT_PAIRS.distance=q.measurePair;setPointMarkers('distancePoints',q.measurePair,false)}
@@ -1350,7 +1376,7 @@ $("#nextSkillSlide").addEventListener("click",()=>{
     currentSkillSlide++;
     renderSkillSlide();
   }else{
-    $("#skillPopup").classList.remove("show");
+    closeSkillPopup();
   }
 });
 $("#previousQuestion").addEventListener("click",()=>{
@@ -1373,7 +1399,7 @@ function returnToHome(){
   $("#treasurePop").classList.remove("show");
   $("#zoomOverlay").classList.remove("show");
   $("#realMapTransition").classList.remove("show");
-  $("#skillPopup").classList.remove("show");
+  closeSkillPopup();
   document.getElementById("studentName").value=mapHuntSession?.user?displayNameFor(mapHuntSession.user):"";
   document.getElementById("studentClass").value="";
   document.querySelector('input[name="learningLevel"][value="third"]').checked=true;

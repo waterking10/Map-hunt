@@ -2,16 +2,20 @@
 
 ## Unreleased
 
+- Started lesson videos automatically with muted inline playback, native controls, replay and a manual Play fallback when the browser blocks autoplay.
+- Stopped and unloaded tutorial playback when students change or leave a lesson, widened the responsive player, and kept paused browser controls clear of instruction captions.
+- Reworked tutorial pacing and framing with slower movements, longer key-instruction pauses, larger captions and closer map views.
+- Checked dedicated training examples against scored questions across every island and both learning levels, including relevant topographic answers.
 - Replaced the protractor's separate angle slider with direct dragging of the red sighting line or endpoint, including one-degree mouse and touch adjustments.
 - Preserved independent protractor-body movement and added keyboard control and accessible angle values directly on the red line.
 - Kept the full protractor and its endpoint handle reachable inside the compact phone map.
 - Refreshed the bearings tutorial recording, preview, and capture script to demonstrate direct line dragging.
 - Added phone and desktop regression coverage for protractor dragging, fine adjustments, cancellation, and keyboard access.
 - Updated browser-test fixtures to keep sign-in mocked and follow the game's automatic question advancement without competing manual Next clicks.
-- Added five lazy-loaded instructional gameplay videos to the existing notes for four-figure grids, six-figure grids, distance, bearings, and gradient.
+- Added five instructional gameplay videos to the existing notes for four-figure grids, six-figure grids, distance, bearings, and gradient.
 - Added responsive native video controls, a replay action, and text alternatives without changing the existing lesson text.
 - Added a reproducible Playwright capture workflow using the real Map Hunt map, expanded grid, ruler, and protractor controls.
-- Refined all tutorial recordings with close map framing, larger contextual captions, focused highlights, and 2–4 second instructional freeze frames.
+- Refined all tutorial recordings with close map framing, larger contextual captions, focused highlights and instructional reading pauses.
 - Added dedicated unscored training examples so tutorial answers do not expose scored question answers.
 - Expanded the four-figure tutorial to mark the bottom-left corner, left easting line, and bottom northing line in sequence.
 - Added four-stage, question-specific hints for every supported geography question type.
