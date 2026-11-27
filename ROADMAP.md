@@ -49,7 +49,7 @@ This roadmap reflects features verified on the repository's main branch. Work on
 
 ## In Progress
 
-- Tutorial playback and readability improvements on `codex/tutorial-readability`: muted autoplay, pause/replay controls, slower movements, longer instruction pauses, larger captions and closer map views. Implementation and recordings are being verified; this work is not yet merged or released.
+- Tutorial playback and readability improvements on `codex/tutorial-readability`: muted autoplay, pause/replay controls, slower movements, longer instruction pauses, larger captions and closer map views. Implementation and all five recordings are verified, with all 45 browser tests passing; ready for review, not yet merged or released.
 - Dedicated tutorial examples and validation against scored questions across all islands and both learning levels, with relevant topographic answers included in the comparison.
 
 ## Planned
