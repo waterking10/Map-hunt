@@ -259,6 +259,8 @@ async function completeEveryQuestion(page, scenario) {
 
   const testedPrompts = [];
   for (let questionIndex = 0; questionIndex < expectedCount; questionIndex += 1) {
+    // The notes dialog covers navigation until its lesson has been closed.
+    await dismissSkillPopup(page);
     // Explicit selection cannot skip a clue if its predecessor already auto-advanced.
     const questionButton = page.locator('#questionJump button').nth(questionIndex);
     await questionButton.click();

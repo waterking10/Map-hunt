@@ -34,6 +34,8 @@ This roadmap reflects features verified on the repository's main branch. Work on
 - A draggable and rotatable virtual ruler.
 - A movable 360° protractor with a directly draggable red line and endpoint, one-degree mouse/touch adjustments, keyboard access, and no separate angle slider.
 - A refreshed bearings tutorial demonstrating direct dragging and fully reachable controls in the compact phone map.
+- Automatic muted tutorial playback, replay and pause controls, larger captions, closer map views and 6.5-second instruction holds across all five lessons.
+- Dedicated practice examples checked against all 134 scored questions, with independent example tests and decoded media verification.
 - Zoom, pan, and reset controls for original topographic sheets.
 - Numbered question navigation for revisiting unfinished work.
 
@@ -74,8 +76,8 @@ No implementation item is currently marked In Progress.
 
 ### Tutorials
 
-- Create a video explaining four-figure and six-figure grid references.
-- Add short tutorials for individual geography tools.
+- Gather classroom feedback on tutorial pace, caption size and close-up views.
+- Consider additional tutorials for skills beyond the existing five worked examples.
 - Make instructional resources easy to reopen during gameplay.
 
 ### Interface and communication

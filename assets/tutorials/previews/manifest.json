@@ -1,37 +1,102 @@
 [
   {
     "file": "four-figure-grid.webm",
-    "duration": 26.8,
+    "duration": 62.6,
     "width": 1280,
     "height": 720,
-    "preview": "assets\\tutorials\\previews\\four-figure-grid.png"
+    "preview": "assets\\tutorials\\previews\\four-figure-grid.png",
+    "captionFontPx": 64,
+    "minimumHoldSeconds": 6.5,
+    "instructionCount": 9,
+    "meanPixelDifference": 0.0527,
+    "example": {
+      "answer": "3122",
+      "catalogCount": 134,
+      "islandsChecked": 6,
+      "levelsChecked": [
+        "third",
+        "csec"
+      ]
+    }
   },
   {
     "file": "six-figure-grid.webm",
-    "duration": 25.72,
+    "duration": 72.08,
     "width": 1280,
     "height": 720,
-    "preview": "assets\\tutorials\\previews\\six-figure-grid.png"
+    "preview": "assets\\tutorials\\previews\\six-figure-grid.png",
+    "captionFontPx": 64,
+    "minimumHoldSeconds": 6.5,
+    "instructionCount": 10,
+    "meanPixelDifference": 0.0547,
+    "example": {
+      "answer": "325234",
+      "catalogCount": 134,
+      "islandsChecked": 6,
+      "levelsChecked": [
+        "third",
+        "csec"
+      ]
+    }
   },
   {
     "file": "distance.webm",
-    "duration": 22.92,
+    "duration": 59.84,
     "width": 1280,
     "height": 720,
-    "preview": "assets\\tutorials\\previews\\distance.png"
+    "preview": "assets\\tutorials\\previews\\distance.png",
+    "captionFontPx": 64,
+    "minimumHoldSeconds": 6.5,
+    "instructionCount": 8,
+    "meanPixelDifference": 0.0971,
+    "example": {
+      "answer": "2.60",
+      "catalogCount": 134,
+      "islandsChecked": 6,
+      "levelsChecked": [
+        "third",
+        "csec"
+      ]
+    }
   },
   {
     "file": "bearings.webm",
-    "duration": 26.52,
+    "duration": 71.96,
     "width": 1280,
     "height": 720,
-    "preview": "assets\\tutorials\\previews\\bearings.png"
+    "preview": "assets\\tutorials\\previews\\bearings.png",
+    "captionFontPx": 64,
+    "minimumHoldSeconds": 6.5,
+    "instructionCount": 9,
+    "meanPixelDifference": 0.0912,
+    "example": {
+      "answer": "150",
+      "catalogCount": 134,
+      "islandsChecked": 6,
+      "levelsChecked": [
+        "third",
+        "csec"
+      ]
+    }
   },
   {
     "file": "gradient.webm",
-    "duration": 26.84,
+    "duration": 73.2,
     "width": 1280,
     "height": 720,
-    "preview": "assets\\tutorials\\previews\\gradient.png"
+    "preview": "assets\\tutorials\\previews\\gradient.png",
+    "captionFontPx": 64,
+    "minimumHoldSeconds": 6.5,
+    "instructionCount": 10,
+    "meanPixelDifference": 0.0602,
+    "example": {
+      "answer": "1:25",
+      "catalogCount": 134,
+      "islandsChecked": 6,
+      "levelsChecked": [
+        "third",
+        "csec"
+      ]
+    }
   }
 ]

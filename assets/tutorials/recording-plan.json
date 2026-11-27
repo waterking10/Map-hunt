@@ -1,0 +1,1008 @@
+[
+  {
+    "file": "four-figure-grid.webm",
+    "type": "number",
+    "title": "Four-figure grid references",
+    "scenes": [
+      {
+        "key": "intro",
+        "text": "Four-figure grid references\nPractice example — not scored",
+        "startSeconds": 3.522,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 440 310 215",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "find-feature",
+        "text": "Find training marker T.",
+        "startSeconds": 10.035,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 440 310 215",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "square",
+        "text": "Find the square containing its centre.",
+        "startSeconds": 16.602,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 440 310 215",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "bottom-left",
+        "text": "Start at the square’s bottom-left corner.",
+        "startSeconds": 23.136,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 440 310 215",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "easting",
+        "text": "Read the left grid line first: 31.",
+        "startSeconds": 29.665,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 440 310 215",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "northing",
+        "text": "Read the bottom grid line second: 22.",
+        "startSeconds": 36.248,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 440 310 215",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "combine",
+        "text": "31 then 22 gives 3122.",
+        "startSeconds": 42.774,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 440 310 215",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "answer-entry",
+        "text": "Enter 3122, then select Submit Answer.",
+        "startSeconds": 49.553,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 440 310 215",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "complete",
+        "text": "Correct. The practice example is complete.",
+        "startSeconds": 56.299,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 440 310 215",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      }
+    ],
+    "example": {
+      "answer": "3122",
+      "prompt": "Give the four-figure grid reference for training marker T.",
+      "points": [
+        {
+          "x": 218,
+          "y": 558
+        }
+      ],
+      "catalogCount": 134,
+      "islandsChecked": 6,
+      "levelsChecked": [
+        "third",
+        "csec"
+      ],
+      "collisions": []
+    }
+  },
+  {
+    "file": "six-figure-grid.webm",
+    "type": "six",
+    "title": "Six-figure grid references",
+    "scenes": [
+      {
+        "key": "intro",
+        "text": "Six-figure grid references\nPractice example — not scored",
+        "startSeconds": 2.379,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 420 355 235",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "square",
+        "text": "Find training T in square 3223.",
+        "startSeconds": 8.923,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 420 355 235",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "tenths",
+        "text": "The enlarged grid divides the square into tenths.",
+        "startSeconds": 18.984,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "0 0 520 520",
+        "cameraTarget": "expanded-grid",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "easting-tenths",
+        "text": "Read across first: 5 tenths.",
+        "startSeconds": 26.176,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "0 210 350 310",
+        "cameraTarget": "expanded-grid",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "easting",
+        "text": "Write 32, then 5: easting 325.",
+        "startSeconds": 32.701,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "0 210 350 310",
+        "cameraTarget": "expanded-grid",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "northing-tenths",
+        "text": "Read up second: 4 tenths.",
+        "startSeconds": 39.22,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "0 210 350 310",
+        "cameraTarget": "expanded-grid",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "northing",
+        "text": "Write 23, then 4: northing 234.",
+        "startSeconds": 45.736,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "0 210 350 310",
+        "cameraTarget": "expanded-grid",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "combine",
+        "text": "325 then 234 gives 325234.",
+        "startSeconds": 52.32,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 420 355 235",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "answer-entry",
+        "text": "Enter 325234, then select Submit Answer.",
+        "startSeconds": 58.913,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 420 355 235",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "complete",
+        "text": "Correct. The practice example is complete.",
+        "startSeconds": 65.57,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "45 420 355 235",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      }
+    ],
+    "example": {
+      "answer": "325234",
+      "prompt": "Give the six-figure grid reference for training marker T.",
+      "points": [
+        {
+          "x": 290.4,
+          "y": 515.1
+        }
+      ],
+      "catalogCount": 134,
+      "islandsChecked": 6,
+      "levelsChecked": [
+        "third",
+        "csec"
+      ],
+      "collisions": []
+    }
+  },
+  {
+    "file": "distance.webm",
+    "type": "distance",
+    "title": "Distance and scale",
+    "scenes": [
+      {
+        "key": "intro",
+        "text": "Distance and scale\nPractice example — not scored",
+        "startSeconds": 2.684,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "100 350 650 260",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "points",
+        "text": "Measure the straight line from A to B.",
+        "startSeconds": 9.207,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "100 350 650 260",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "ruler-zero",
+        "text": "Place the ruler’s zero at the centre of A.",
+        "startSeconds": 20.718,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "140 395 580 230",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "measurement",
+        "text": "Read at the centre of B: 5.2 cm.",
+        "startSeconds": 27.237,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "140 395 580 230",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "scale",
+        "text": "At 1:50,000, 1 cm represents 0.5 km.",
+        "startSeconds": 33.759,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "140 395 580 230",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "calculation",
+        "text": "5.2 × 0.5 = 2.60 km.",
+        "startSeconds": 40.277,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "140 395 580 230",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "answer-entry",
+        "text": "Enter 2.60, then select Submit Answer.",
+        "startSeconds": 46.934,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "140 395 580 230",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "complete",
+        "text": "Correct. The practice example is complete.",
+        "startSeconds": 53.618,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "140 395 580 230",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      }
+    ],
+    "example": {
+      "answer": "2.60",
+      "prompt": "Measure training A to training B. At 1:50,000, give kilometres.",
+      "points": [
+        {
+          "x": 180,
+          "y": 460
+        },
+        {
+          "x": 596,
+          "y": 460
+        }
+      ],
+      "catalogCount": 134,
+      "islandsChecked": 6,
+      "levelsChecked": [
+        "third",
+        "csec"
+      ],
+      "collisions": []
+    }
+  },
+  {
+    "file": "bearings.webm",
+    "type": "bearing",
+    "title": "Bearings from north",
+    "scenes": [
+      {
+        "key": "intro",
+        "text": "Bearings from north\nPractice example — not scored",
+        "startSeconds": 2.759,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "110 125 400 430",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "points",
+        "text": "Start at training A. Aim towards training B.",
+        "startSeconds": 9.383,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "110 125 400 430",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "centre",
+        "text": "Centre the protractor on A. Keep 000° north.",
+        "startSeconds": 20.565,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "110 125 400 430",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "clockwise",
+        "text": "Bearings are measured clockwise from north.",
+        "startSeconds": 27.087,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "110 125 400 430",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "ray",
+        "text": "Drag the red line clockwise towards B.",
+        "startSeconds": 39.053,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "110 125 400 430",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "reading",
+        "text": "Read the scale: 150°.",
+        "startSeconds": 45.573,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "110 125 400 430",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "format",
+        "text": "Use three digits. The bearing is 150°.",
+        "startSeconds": 52.095,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "110 125 400 430",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "answer-entry",
+        "text": "Enter 150, then select Submit Answer.",
+        "startSeconds": 58.751,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "110 125 400 430",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "complete",
+        "text": "Correct. The practice example is complete.",
+        "startSeconds": 65.434,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "110 125 400 430",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      }
+    ],
+    "example": {
+      "answer": "150",
+      "prompt": "Measure the three-figure bearing from training A to training B.",
+      "points": [
+        {
+          "x": 310,
+          "y": 350
+        },
+        {
+          "x": 400,
+          "y": 505.88457268119896
+        }
+      ],
+      "catalogCount": 134,
+      "islandsChecked": 6,
+      "levelsChecked": [
+        "third",
+        "csec"
+      ],
+      "collisions": []
+    }
+  },
+  {
+    "file": "gradient.webm",
+    "type": "gradient",
+    "title": "Calculating gradient",
+    "scenes": [
+      {
+        "key": "intro",
+        "text": "Calculating gradient\nPractice example — not scored",
+        "startSeconds": 2.618,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "145 205 610 380",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "elevations",
+        "text": "A is 180 m high. B is 140 m high.",
+        "startSeconds": 9.161,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "145 205 610 380",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "vertical",
+        "text": "Vertical interval: 180 − 140 = 40 m.",
+        "startSeconds": 15.687,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "145 205 610 380",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "measurement",
+        "text": "Read the horizontal map distance: 2.0 cm.",
+        "startSeconds": 27.204,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "210 230 280 200",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "horizontal",
+        "text": "2.0 × 500 = 1000 m on the ground.",
+        "startSeconds": 33.717,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "210 230 280 200",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "method",
+        "text": "Divide horizontal distance by vertical interval.",
+        "startSeconds": 40.238,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "210 230 280 200",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "calculation",
+        "text": "1000 ÷ 40 = 25.",
+        "startSeconds": 46.755,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "210 230 280 200",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "format",
+        "text": "Write the gradient as a ratio: 1:25.",
+        "startSeconds": 53.278,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "210 230 280 200",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 558,
+          "width": 1248,
+          "height": 150,
+          "top": 558,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "answer-entry",
+        "text": "Enter 1:25, then select Submit Answer.",
+        "startSeconds": 59.93,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "210 230 280 200",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      },
+      {
+        "key": "complete",
+        "text": "Correct. The practice example is complete.",
+        "startSeconds": 66.626,
+        "holdSeconds": 6.5,
+        "captionFontPx": 64,
+        "viewBox": "210 230 280 200",
+        "cameraTarget": "map",
+        "captionBounds": {
+          "x": 16,
+          "y": 535.21875,
+          "width": 1248,
+          "height": 172.78125,
+          "top": 535.21875,
+          "right": 1264,
+          "bottom": 708,
+          "left": 16
+        }
+      }
+    ],
+    "example": {
+      "answer": "1:25",
+      "prompt": "Calculate the gradient from training A (180 m) to training B (140 m). Enter 1:n.",
+      "points": [
+        {
+          "x": 250,
+          "y": 320
+        },
+        {
+          "x": 410,
+          "y": 320
+        }
+      ],
+      "catalogCount": 134,
+      "islandsChecked": 6,
+      "levelsChecked": [
+        "third",
+        "csec"
+      ],
+      "collisions": []
+    }
+  }
+]
