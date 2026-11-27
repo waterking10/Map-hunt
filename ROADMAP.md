@@ -34,6 +34,8 @@ This roadmap reflects features verified on the repository's main branch. Work on
 - A draggable and rotatable virtual ruler.
 - A movable 360° protractor with a directly draggable red line and endpoint, one-degree mouse/touch adjustments, keyboard access, and no separate angle slider.
 - A refreshed bearings tutorial demonstrating direct dragging and fully reachable controls in the compact phone map.
+- Automatic muted tutorial playback, replay and pause controls, larger captions, closer map views and 6.5-second instruction holds across all five lessons.
+- Dedicated practice examples checked against all 134 scored questions, with independent example tests and decoded media verification.
 - Zoom, pan, and reset controls for original topographic sheets.
 - Numbered question navigation for revisiting unfinished work.
 
@@ -49,8 +51,7 @@ This roadmap reflects features verified on the repository's main branch. Work on
 
 ## In Progress
 
-- Tutorial playback and readability improvements on `codex/tutorial-readability`: muted autoplay, pause/replay controls, slower movements, longer instruction pauses, larger captions and closer map views. Implementation and all five recordings are verified, with all 45 browser tests passing; ready for review, not yet merged or released.
-- Dedicated tutorial examples and validation against scored questions across all islands and both learning levels, with relevant topographic answers included in the comparison.
+No implementation item is currently marked In Progress.
 
 ## Planned
 
